@@ -1,0 +1,7 @@
+$ D:\anaconda\python.exe tools/gates.py schema
+exit=1
+--- stdout ---
+
+--- stderr ---
+BLOCKED schema: No tests mapped for REQ-FUNC-001
+

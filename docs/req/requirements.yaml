@@ -1,0 +1,623 @@
+# GradeAide consolidated requirements registry (D1, member C).
+# Status: proposed baseline for D review. No human approval is claimed here.
+# Source proposals: docs/member-a/requirements-candidates.yaml,
+# docs/member-b/requirements-proposal.yaml, docs/member-e/requirements-proposal.yaml.
+# ID decisions: docs/req/requirement-id-map.yaml.
+# Machine validation: docs/req/req-schema.json; evidence in docs/req/evidence/.
+
+- id: REQ-FUNC-001
+  type: functional
+  statement: "A teacher can import one UTF-8 essay and one rubric containing 1 to 10 criteria; the system rejects malformed, oversized, ambiguous or non-finite input instead of coercing it."
+  fit_criterion:
+    metric: "invalid_import_accepted_count"
+    threshold: "0"
+    verification: "test/offline/test_calculator.py::CalculatorTests.test_invalid_rubric_rejected; test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay; test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected"
+  priority: Must
+  source: "Project brief D1; C functional analysis; A docs/member-a/interface-contract.md and src/contracts.py"
+  tradeoff: "Strict bounded input rejects ambiguous files instead of guessing or silently truncating them."
+  status: proposed
+  owner: C
+  notes: "The working implementation uses a rubric object with id, version and criteria; D must freeze the final exchange shape."
+
+- id: REQ-FUNC-002
+  type: functional
+  statement: "For every rubric criterion the AI feedback component returns advisory text feedback, a suggested score, a confidence value and an evidence quote derived from the supplied essay."
+  fit_criterion:
+    metric: "feedback_contract_violation_count"
+    threshold: "0"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract"
+  priority: Must
+  source: "Project brief sections 1 and 3; C user story US-002; A feedback_engine.py"
+  tradeoff: "A real provider dependency and latency are accepted in exchange for genuine AI feedback rather than canned text."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-003
+  type: functional
+  statement: "Model advice is accepted only when every rubric criterion appears exactly once with a known ID, a finite in-range suggested score, a confidence of at least 0.80 and no client-supplied final score that overrides the calculator."
+  fit_criterion:
+    metric: "invalid_advice_accepted_count"
+    threshold: "0"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria; test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score"
+  priority: Must
+  source: "C functional analysis; B REQ-INV-002; A feedback_engine.validate_feedback"
+  tradeoff: "Strict schema validation rejects creative but unusable model output and asks a human to review."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-004
+  type: functional
+  statement: "The deterministic calculator converts accepted criterion scores into one final percentage using the rubric weights, with exact arithmetic and a single final rounding to two decimal places using ROUND_HALF_UP."
+  fit_criterion:
+    metric: "final_score_calculation_mismatch_count"
+    threshold: "0"
+    verification: "test/offline/test_calculator.py::CalculatorTests.test_weighted_result_and_bounds; test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division; test/offline/test_calculator.py::CalculatorTests.test_different_maxima_rounding_and_external_context"
+  priority: Must
+  source: "Project brief safety boundary; C functional analysis; A src/score_calculator.py"
+  tradeoff: "Fixed arithmetic and rounding policy remove numerical discretion in exchange for reproducible grades."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-005
+  type: functional
+  statement: "Creating a grade proposal stores the essay, rubric and validated advisory advice as pending review and never creates a final grade before an authenticated human approval."
+  fit_criterion:
+    metric: "grades_created_before_human_approval"
+    threshold: "0"
+    verification: "test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited; test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected"
+  priority: Must
+  source: "Project brief authority boundary; C functional analysis; A grade_store.create"
+  tradeoff: "The teacher must perform an explicit approval step instead of receiving an automatic final grade."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-006
+  type: functional
+  statement: "Approving a proposal recomputes the final score from the calculator, binds the approval to the exact proposal hash and persists an immutable audit record with the reviewer identity, accepted scores, timestamp and calculator version."
+  fit_criterion:
+    metric: "incomplete_or_unapproved_grade_record_count"
+    threshold: "0"
+    verification: "test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected; test/offline/test_store.py::StoreTests.test_failed_audit_insert_rolls_back_status_and_grade; test/offline/test_store.py::StoreTests.test_escalation_requires_every_score_and_reason"
+  priority: Must
+  source: "C functional analysis; B REQ-INV-003 and REQ-INV-006; A grade_store.approve"
+  tradeoff: "Approval latency and review effort are accepted in exchange for accountable, auditable grade writes."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-007
+  type: functional
+  statement: "A teacher can retrieve a pending or approved record and see both the advisory feedback and the authoritative final score; an unknown ID is refused and a missing database is not created by a read-only show command."
+  fit_criterion:
+    metric: "record_lookup_contract_violation_count"
+    threshold: "0"
+    verification: "test/offline/test_store.py::StoreTests.test_unknown_id_is_refused; test/offline/test_cli.py::CliTests.test_missing_database_show_does_not_create_file"
+  priority: Must
+  source: "C functional analysis; C user story US-005"
+  tradeoff: "Read-only inspection never mutates state, at the cost of an explicit error when no database exists."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-008
+  type: functional
+  statement: "When advice is missing, duplicated, unknown, uncertain, below the confidence threshold, over budget or affected by a provider error, the workflow escalates to a human and neither invents a score nor writes a final grade."
+  fit_criterion:
+    metric: "unsafe_automatic_grade_count"
+    threshold: "0"
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates; test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport; test/offline/test_feedback.py::FeedbackTests.test_context_boundary_counts_utf8_bytes"
+  priority: Must
+  source: "Project brief safety boundary; C functional analysis; B REQ-INV-002"
+  tradeoff: "More human review and visible failures are preferred over silent default scores."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-009
+  type: functional
+  statement: "Retrying an approved identical submission is idempotent and returns the original record; reusing a submission identifier with different essay, rubric or advice content is rejected without overwriting the original."
+  fit_criterion:
+    metric: "duplicate_or_overwritten_grade_count"
+    threshold: "0"
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent; test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history"
+  priority: Must
+  source: "C functional analysis; B REQ-INV-008"
+  tradeoff: "Explicit conflict handling is preferred over last-write-wins convenience."
+  status: proposed
+  owner: C
+
+- id: REQ-FUNC-010
+  type: functional
+  statement: "The command-line operator can create a proposal, approve it with an explicit reviewer identity and reason, and show the result across separate processes without hidden network calls or credential storage."
+  fit_criterion:
+    metric: "cli_operator_lifecycle_regression_count"
+    threshold: "0"
+    verification: "test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection; test/offline/test_cli.py::CliTests.test_invalid_fixture_envelope_escalates_without_traceback"
+  priority: Must
+  source: "C functional analysis; A src/cli.py; C user story US-006"
+  tradeoff: "A small explicit CLI is preferred over a larger UI that would add unreviewed surface area."
+  status: proposed
+  owner: C
+
+- id: REQ-INV-001
+  type: invariant
+  statement: "The final persisted score equals the deterministic calculator output for the accepted scores and rubric; model totals never override or replace it."
+  fit_criterion:
+    metric: "authority_escape_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_model_total_cannot_override; test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited"
+  priority: Must
+  source: "B proposal REQ-INV-001; project brief safety boundary; C consolidated"
+  tradeoff: "Model discretion is sacrificed for reproducible and auditable scores."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-002
+  type: invariant
+  statement: "Missing, duplicate, unknown or uncertain criterion advice must escalate without a numeric final grade and without persistence of an approved grade."
+  fit_criterion:
+    metric: "unsafe_automatic_grade_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates; test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score"
+  priority: Must
+  source: "B proposal REQ-INV-002; project brief safety boundary; C consolidated"
+  tradeoff: "Additional human review is accepted to eliminate silent numeric defaults."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-003
+  type: invariant
+  statement: "No grade is persisted without authentic human approval bound to the exact submission, rubric and advice; a client-supplied name, flag or boolean is not authentication. This also absorbs E's authenticated-verifier proposal."
+  fit_criterion:
+    metric: "unauthorized_write_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected; test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected"
+  priority: Must
+  source: "B proposal REQ-INV-003; E proposal REQ-SEC-003 (merged); project brief authority boundary"
+  tradeoff: "Approval latency and verifier integration are accepted in exchange for accountable grade writes."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-004
+  type: invariant
+  statement: "The system rejects non-finite or boolean numbers, invalid weights, out-of-range scores, duplicate criteria and mismatched criterion IDs before calculating or writing any grade."
+  fit_criterion:
+    metric: "accepted_invalid_numeric_input_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_numeric_inputs_rejected; test/offline/test_calculator.py::CalculatorTests.test_invalid_scores_rejected"
+  priority: Must
+  source: "B proposal REQ-INV-004; C consolidated; A contracts.py"
+  tradeoff: "Strict validation is preferred over permissive coercion."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-005
+  type: invariant
+  statement: "Identical essay, rubric and accepted scores always produce the same final percentage using exact arithmetic and exactly one round-half-up step to two decimal places; intermediate rounding is forbidden."
+  fit_criterion:
+    metric: "differing_results_for_identical_input_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_exact_weighted_score; test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division"
+  priority: Must
+  source: "B proposal REQ-INV-005; A exact Fraction implementation; C resolution wording"
+  tradeoff: "A fixed arithmetic and rounding policy limits numeric flexibility."
+  status: proposed
+  owner: B
+  notes: "B proposed Decimal; A implements exact Fraction with an integer half-up step. C keeps the observable rule implementation-neutral and records the difference for D."
+
+- id: REQ-INV-006
+  type: invariant
+  statement: "Every persisted grade preserves the advisory scores, authoritative score, rubric and essay digests, and human reviewer identity in one durable record that can be reconstructed after restart."
+  fit_criterion:
+    metric: "incomplete_audit_record_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources; test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record"
+  priority: Must
+  source: "B proposal REQ-INV-006; project brief audit requirement; C consolidated"
+  tradeoff: "Additional storage and hashing are accepted for a reconstructable audit trail."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-007
+  type: invariant
+  statement: "The advisory feedback component has no grade-store write authority and cannot execute instructions embedded in essays or model text; prompt injection remains advisory. This absorbs E's no-write and injection proposals."
+  fit_criterion:
+    metric: "advisory_side_effect_or_injection_escape_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory; test/governance/test_gates.py::GateTests.test_forbidden_feedback_import"
+  priority: Must
+  source: "B proposal REQ-INV-007; E proposals REQ-SEC-001 and REQ-SEC-005 (merged); project brief"
+  tradeoff: "More orchestration code is accepted to keep the AI component non-authoritative."
+  status: proposed
+  owner: B
+
+- id: REQ-INV-008
+  type: invariant
+  statement: "Retrying an approved identical submission is idempotent; conflicting content under the same submission identifier is rejected without overwriting the original grade."
+  fit_criterion:
+    metric: "duplicate_or_overwritten_grade_count"
+    threshold: 0
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent; test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history"
+  priority: Must
+  source: "B proposal REQ-INV-008; C consolidated"
+  tradeoff: "Explicit conflict handling is preferred over last-write-wins."
+  status: proposed
+  owner: B
+
+- id: REQ-QUAL-001
+  type: quality
+  statement: "The AI feedback component is replaceable without changing the calculator or grade store; no feedback module may import the grade-store module or perform authoritative writes."
+  fit_criterion:
+    metric: "forbidden_dependency_count"
+    threshold: "0"
+    verification: "test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries; test/governance/test_gates.py::GateTests.test_forbidden_feedback_import"
+  priority: Must
+  source: "CS5351分工.md member D quality direction (ASR: modifiability); C drafted quality requirement pending D review"
+  tradeoff: "A narrower feedback module requires explicit orchestration but protects the authority boundary."
+  status: proposed
+  owner: C
+  notes: "D must confirm this as the quality-attribute scenario and add any missing measurable targets."
+
+- id: REQ-QUAL-002
+  type: quality
+  statement: "Every approved grade is auditable: a reviewer can reconstruct the advisory scores, authoritative score, rubric and essay identity, and reviewer from durable records after a process restart."
+  fit_criterion:
+    metric: "unreconstructable_grade_record_count"
+    threshold: "0"
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources; test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record"
+  priority: Must
+  source: "Project brief auditability; C quality analysis pending D review"
+  tradeoff: "Storing hashes and audit metadata adds record size but supports independent review."
+  status: proposed
+  owner: C
+
+- id: REQ-QUAL-003
+  type: quality
+  statement: "The deterministic offline suite runs without network access or an API key, so grading logic and authority boundaries can be verified in a clean environment."
+  fit_criterion:
+    metric: "offline_tests_requiring_network_or_secret"
+    threshold: "0"
+    verification: "test/offline suite; docs/member-b/VALIDATION.md; CI offline job"
+  priority: Must
+  source: "Project brief D8 offline/live separation; C quality analysis pending D review"
+  tradeoff: "Live-provider behavior needs a separate opt-in suite, so some failures are only visible there."
+  status: proposed
+  owner: C
+
+- id: REQ-QUAL-004
+  type: quality
+  statement: "The same inputs produce the same proposal and grade across separate processes and restarts; reopening the database preserves the exact audit record and score."
+  fit_criterion:
+    metric: "cross_process_score_or_record_differences"
+    threshold: "0"
+    verification: "test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection; test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record"
+  priority: Must
+  source: "C quality analysis; A restart evidence; project brief reproducibility"
+  tradeoff: "Persistent SQLite state and explicit hashes add operational steps but make results repeatable."
+  status: proposed
+  owner: C
+
+- id: REQ-QUAL-005
+  type: quality
+  statement: "The durable audit record does not create a second raw copy of the essay; it identifies the essay by hash while the working proposal remains the only payload that contains the text."
+  fit_criterion:
+    metric: "raw_essay_copies_in_audit_record"
+    threshold: "0"
+    verification: "test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources (field check to be strengthened by B/A)"
+  priority: Should
+  source: "C privacy analysis; project brief privacy and audit requirements; pending D/E review"
+  tradeoff: "Hash-only audit records reduce exposure but cannot reproduce the essay text by themselves."
+  status: proposed
+  owner: C
+  notes: "TBC: the current test checks audit fields but does not explicitly assert absence of a second essay copy; B/A must add that assertion before this is marked verified."
+
+- id: REQ-PERF-001
+  type: performance
+  statement: "The deterministic calculator has a warm-run p95 latency at or below 10 ms for a ten-criterion rubric on the documented local environment."
+  fit_criterion:
+    metric: "calculator_latency_ms_p95"
+    threshold: "<= 10 ms p95 over 1000 warm calls"
+    verification: "evidence/benchmark.json; docs/member-a/verification-results.md; rerun the local benchmark and record Python/OS and fixture"
+  priority: Should
+  source: "A proposal REQ-PERF-001; CS5351分工.md member A performance direction"
+  tradeoff: "A local measured target is preferred over an unverified hardware-independent SLA."
+  status: proposed
+  owner: A
+  notes: "Threshold accepted as a Should target; A must confirm the exact fixture and measured p95."
+
+- id: REQ-PERF-002
+  type: performance
+  statement: "Every provider request uses a configured blocking-operation timeout of 30 seconds by default and performs exactly zero automatic retries; a timeout becomes an explicit escalation."
+  fit_criterion:
+    metric: "timeout_configuration_and_automatic_retry_count"
+    threshold: "30 s default; 0 automatic retries"
+    verification: "test/offline/test_http.py::HttpTests.test_delayed_header_times_out; test/offline/test_http.py::HttpTests.test_slow_trickle_is_stopped_by_connected_deadline; test/offline/test_feedback.py::FeedbackTests.test_transport_failure_escalates_without_retry_or_secrets"
+  priority: Must
+  source: "A proposal REQ-PERF-002; C consolidated"
+  tradeoff: "A temporary provider failure needs a visible human-triggered retry instead of hidden retries and charges."
+  status: proposed
+  owner: A
+
+- id: REQ-PERF-003
+  type: performance
+  statement: "Live inference meets a provisional p95 end-to-end latency target of 30 seconds over at least 20 measured attempts on the selected deployment, with failures reported separately."
+  fit_criterion:
+    metric: "live_end_to_end_latency_ms_p95"
+    threshold: "<= 30000 ms p95 over >= 20 attempts"
+    verification: "evidence/live-results.json; docs/member-a/live-verification.md; replay fixed cases and record model, prompt hash and environment"
+  priority: Should
+  source: "A proposal REQ-PERF-003; C consolidated"
+  tradeoff: "The target remains provisional until the final deployment and prompt are frozen."
+  status: proposed
+  owner: A
+  notes: "A historical run reports a much lower p95; D/E must confirm the deployment target before this becomes a release gate."
+
+- id: REQ-COST-001
+  type: cost
+  statement: "An inference attempt makes at most one model request and supplies an output cap of 1024 tokens by default."
+  fit_criterion:
+    metric: "provider_call_count_and_requested_max_tokens"
+    threshold: "<= 1 call per attempt; max_tokens = 1024 by default"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract; inspect the actual request body in the local HTTP fixture"
+  priority: Must
+  source: "A proposal REQ-COST-001; C consolidated"
+  tradeoff: "Shorter feedback and more escalations are preferred over unbounded output cost."
+  status: proposed
+  owner: A
+
+- id: REQ-COST-002
+  type: cost
+  statement: "The assembled model context is checked against an explicit UTF-8 byte budget of 12000 bytes by default before any request; overflow makes zero model calls."
+  fit_criterion:
+    metric: "serialized_context_utf8_bytes"
+    threshold: "<= 12000 bytes by default; 0 calls on overflow"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_context_boundary_counts_utf8_bytes; test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport"
+  priority: Must
+  source: "A proposal REQ-COST-002; C consolidated"
+  tradeoff: "A byte proxy is conservative and dependency-free but is not an exact provider token count."
+  status: proposed
+  owner: A
+
+- id: REQ-COST-003
+  type: cost
+  statement: "Before inference, the system compares an estimated cost against a configured per-attempt budget using explicit input and output prices; an over-budget attempt makes zero calls."
+  fit_criterion:
+    metric: "preflight_estimated_cost_in_configured_currency"
+    threshold: "estimate <= configured budget; 0 calls if over budget"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport; test/offline/test_feedback.py::FeedbackTests.test_configuration_rejects_unsafe_endpoints_prices_and_limits"
+  priority: Must
+  source: "A proposal REQ-COST-003; C consolidated"
+  tradeoff: "An application estimate is not a supplier billing guarantee; account-level spend limits remain separate."
+  status: proposed
+  owner: A
+
+- id: REQ-COST-004
+  type: cost
+  statement: "Actual provider token usage, the configured estimate, prompt/model identity and elapsed time remain distinguishable for every attempt; missing or invalid usage is recorded as unknown, never as zero."
+  fit_criterion:
+    metric: "known_usage_or_explicit_unknown_rate"
+    threshold: "100%; missing or invalid usage never recorded as zero"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_missing_or_invalid_usage_never_becomes_zero; test/offline/test_feedback.py::FeedbackTests.test_provider_over_output_cap_escalates_but_usage_survives"
+  priority: Must
+  source: "A proposal REQ-COST-004; C consolidated"
+  tradeoff: "Providers without usable usage accounting cannot silently pass automatic feedback acceptance."
+  status: proposed
+  owner: A
+
+- id: REQ-COST-005
+  type: cost
+  statement: "Long essays and over-budget attempts escalate visibly without truncating content, producing an automatic grade, or making a provider request."
+  fit_criterion:
+    metric: "over_limit_calls_and_automatic_grades"
+    threshold: "0 calls; 0 automatic final grades; original content retained within the storage limit"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport; test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay"
+  priority: Must
+  source: "A proposal REQ-COST-005; C consolidated"
+  tradeoff: "Long-text compaction is deferred to an approved D architecture change so summarization cannot erase grading evidence."
+  status: proposed
+  owner: A
+
+- id: REQ-GOV-B01
+  type: governance
+  statement: "Tests for implementation changes require verified independent human approval before implementation; an AI cannot self-approve."
+  fit_criterion:
+    metric: "unapproved_implementation_merges"
+    threshold: "0"
+    verification: "test/governance/test_gates.py::GateTests.test_approval_requires_human; test/governance/test_gates.py::GateTests.test_self_approval_rejected"
+  priority: Must
+  source: "B proposal REQ-GOV-B01; project brief blocking gate 1"
+  tradeoff: "Two pull requests per feature add review effort but keep tests ahead of code."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-B02
+  type: governance
+  statement: "Every commit receives static checks; safety-critical pull requests also need contract, permission, API-surface and ADR review by a human."
+  fit_criterion:
+    metric: "unchecked_safety_change_merges"
+    threshold: "0"
+    verification: "test/governance/test_gates.py::GateTests.test_forbidden_feedback_import; .github/workflows/ci.yml static-analysis job"
+  priority: Must
+  source: "B proposal REQ-GOV-B02; project brief blocking gate 2"
+  tradeoff: "Additional CI time is accepted for safety-critical changes."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-B03
+  type: governance
+  statement: "The official requirements registry validates against the official JSON schema and every fit criterion is mapped to at least one test or evidence item."
+  fit_criterion:
+    metric: "invalid_or_untraced_requirement_count"
+    threshold: "0"
+    verification: "tools/gates.py schema; scripts/validate_requirements.py; docs/req/evidence/registry-validation.json"
+  priority: Must
+  source: "B proposal REQ-GOV-B03; project brief D4 and blocking gate 3"
+  tradeoff: "Requirement changes require test and evidence updates in the same change."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-B04
+  type: governance
+  statement: "Changes to prompts, model settings or the feedback engine replay a fixed real-model evaluation before merge and block below-threshold results."
+  fit_criterion:
+    metric: "below_threshold_semantic_merges"
+    threshold: "0"
+    verification: "test/governance/test_semantic_eval.py::SemanticTests.test_adversarial_non_escalation_fails; .github/workflows/ci.yml semantic job"
+  priority: Must
+  source: "B proposal REQ-GOV-B04; project brief blocking gate 4"
+  tradeoff: "Evaluation consumes API budget and time."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-B05
+  type: governance
+  statement: "All previous deterministic test suites run on every change; removing or weakening a test requires a separate approved baseline change."
+  fit_criterion:
+    metric: "regression_escape_count"
+    threshold: "0"
+    verification: "test/governance/test_gates.py::GateTests.test_history_test_change_rejected; .github/workflows/ci.yml regression job"
+  priority: Must
+  source: "B proposal REQ-GOV-B05; project brief blocking gate 5"
+  tradeoff: "Full-suite execution increases CI time but preserves historical guarantees."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-B06
+  type: governance
+  statement: "Every code, prompt or gate change adds an AI-use log entry describing the agent identity, exact changed paths and human review status; historical entries are never rewritten."
+  fit_criterion:
+    metric: "unlogged_change_merges"
+    threshold: "0"
+    verification: "test/governance/test_gates.py::GateTests.test_log_must_cover_changed_paths; test/governance/test_gates.py::GateTests.test_log_cannot_rewrite_history"
+  priority: Must
+  source: "B proposal REQ-GOV-B06; project brief blocking gate 6"
+  tradeoff: "Mandatory audit maintenance adds overhead to every change."
+  status: proposed
+  owner: B
+
+- id: REQ-GOV-E01
+  type: governance
+  statement: "The project permission model is default-deny with explicit per-path whitelists; no agent may self-grant or broaden its own permissions."
+  fit_criterion:
+    metric: "self_granted_permission_count"
+    threshold: "0"
+    verification: ".opencode/permissions.jsonc; docs/verification/permissions-snapshot.json (to be produced by A/B); test/governance/test_gates.py"
+  priority: Must
+  source: "E proposal REQ-GOV-E01; project brief D3 default-deny requirement"
+  tradeoff: "Frequent explicit allowlists replace permissive defaults."
+  status: proposed
+  owner: E
+
+- id: REQ-GOV-E02
+  type: governance
+  statement: "The score_calculator module is frozen; any modification requires an architecture decision record and independent human approval on the exact change."
+  fit_criterion:
+    metric: "unapproved_calculator_change_count"
+    threshold: "0"
+    verification: "branch protection + ADR + CODEOWNERS + .opencode/permissions.jsonc deny edit src/score_calculator.py"
+  priority: Must
+  source: "E proposal REQ-GOV-E02; project brief D3 safety-critical change rule"
+  tradeoff: "Changes to the authority module are slower but review-bound."
+  status: proposed
+  owner: E
+
+- id: REQ-GOV-E03
+  type: governance
+  statement: "Each architectural element maps to exactly one module; new work extends the baseline and never silently replaces an existing module contract."
+  fit_criterion:
+    metric: "unmapped_or_duplicated_module_count"
+    threshold: "0"
+    verification: "docs/code-governance/structural-constraints.md; static module-boundary check to be implemented by A/B"
+  priority: Must
+  source: "E proposal REQ-GOV-E03; project brief D3 structural constraints"
+  tradeoff: "Explicit one-to-one module mapping replaces ad-hoc cross-module helpers."
+  status: proposed
+  owner: E
+
+- id: REQ-GOV-E04
+  type: governance
+  statement: "The coding agent may call only tools listed in the MCP tool manifest for its role; role-inappropriate or unlisted tools are denied."
+  fit_criterion:
+    metric: "unlisted_tool_invocation_count"
+    threshold: "0"
+    verification: "docs/code-governance/mcp-tool-manifest.md; .opencode/permissions.jsonc role rules"
+  priority: Must
+  source: "E proposal REQ-GOV-E04; project brief D3 mcp-tool-manifest requirement"
+  tradeoff: "A curated tool surface replaces unrestricted agent capability."
+  status: proposed
+  owner: E
+
+- id: REQ-GOV-C01
+  type: governance
+  statement: "A requirement change updates the consolidated registry, ID map, traceability evidence, affected tests and AI-use log in the same change; no orphan requirement may remain."
+  fit_criterion:
+    metric: "orphan_requirement_change_count"
+    threshold: "0"
+    verification: "scripts/validate_requirements.py; docs/req/requirement-id-map.yaml; tools/gates.py ai-log"
+  priority: Must
+  source: "C requirements-governance analysis; project brief D1/D4 co-evolution requirement"
+  tradeoff: "Every requirement edit carries documentation and test work, which slows unilateral changes."
+  status: proposed
+  owner: C
+
+- id: REQ-GOV-C02
+  type: governance
+  statement: "The consolidated registry is the single source of requirement IDs; architecture, tests, CI evidence and review records may reference only registered IDs."
+  fit_criterion:
+    metric: "unregistered_requirement_reference_count"
+    threshold: "0"
+    verification: "scripts/validate_requirements.py; tools/gates.py schema"
+  priority: Must
+  source: "C requirements-governance analysis; project brief machine-readable registry"
+  tradeoff: "New ideas must pass through the registry before they become architecture or test commitments."
+  status: proposed
+  owner: C
+
+- id: REQ-SEC-002
+  type: security
+  statement: "The AI feedback component must not invent grading criteria outside the rubric; every suggested score is validated against exactly the rubric IDs and allowed range."
+  fit_criterion:
+    metric: "fabricated_criteria_count"
+    threshold: "0"
+    verification: "test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria; test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates"
+  priority: Must
+  source: "E proposal REQ-SEC-002; project brief AI must not fabricate rubric-absent standards"
+  tradeoff: "Strict validator and escalation replace trusting free-form model advice."
+  status: proposed
+  owner: E
+
+- id: REQ-SEC-004
+  type: security
+  statement: "No API key, token or secret is stored in source, prompts, config, logs, CI artifacts or the repository; credentials are injected from the runtime environment only."
+  fit_criterion:
+    metric: "committed_secret_count"
+    threshold: "0"
+    verification: "secret scan in CI; .opencode/permissions.jsonc deny .env reads (to be implemented by A/B); test/offline/test_feedback.py::FeedbackTests.test_settings_repr_does_not_disclose_key"
+  priority: Must
+  source: "E proposal REQ-SEC-004; project brief prohibition on submitting API keys"
+  tradeoff: "Environment-injected credentials require deployment setup instead of checked-in keys."
+  status: proposed
+  owner: E
+
+- id: REQ-SEC-006
+  type: security
+  statement: "The calculator runs least privilege: deterministic arithmetic only, with no LLM, network, filesystem or dynamic-import dependency."
+  fit_criterion:
+    metric: "privileged_import_count"
+    threshold: "0"
+    verification: "test/governance/test_gates.py::GateTests.test_calculator_network_import_rejected; test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries"
+  priority: Must
+  source: "E proposal REQ-SEC-006; project brief frozen calculator; C consolidated"
+  tradeoff: "A restricted import surface replaces a general-purpose module."
+  status: proposed
+  owner: E
+
+- id: REQ-SEC-007
+  type: security
+  statement: "Imported JSON rejects duplicate keys and non-finite constants, imported text is valid UTF-8 within an explicit byte limit, and no ambiguous input can be coerced into a score."
+  fit_criterion:
+    metric: "ambiguous_or_unbounded_input_accepted_count"
+    threshold: "0"
+    verification: "test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected; test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay"
+  priority: Must
+  source: "C security analysis; A contracts.py parse_json/read_text; project brief safety boundary"
+  tradeoff: "Strict parsers reject some technically parseable but ambiguous files."
+  status: proposed
+  owner: C

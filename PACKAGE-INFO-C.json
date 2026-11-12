@@ -1,0 +1,33 @@
+{
+  "project": "CS5351 GradeAide",
+  "kind": "C-only extract",
+  "owner": "member C",
+  "role": "requirements engineering (D1)",
+  "date": "2026-11-12",
+  "status": "draft_ready",
+  "human_review": "not obtained",
+  "contents": {
+    "registry": "docs/req/requirements.yaml",
+    "schema": "docs/req/req-schema.json",
+    "prd": "docs/req/prd.yaml",
+    "id_map": "docs/req/requirement-id-map.yaml",
+    "review": "docs/req/requirements-review-record.md",
+    "validation": "docs/req/validation-report.md",
+    "evidence": "docs/req/evidence/",
+    "handoff": "docs/member-c/00-C-交付说明.md",
+    "validator": "scripts/validate_requirements.py"
+  },
+  "counts": {
+    "requirements": 47,
+    "types": 7,
+    "source_proposals": 32,
+    "traceability_mapped": "14/47",
+    "traceability_unmapped": 33
+  },
+  "not_included": [
+    "A implementation, B tools/tests, E governance files",
+    "full project README/PDF/git bundle"
+  ],
+  "full_snapshot": "../5351-C.zip",
+  "checksums": "SHA256SUMS.txt"
+}

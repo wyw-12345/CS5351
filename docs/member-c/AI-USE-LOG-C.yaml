@@ -1,0 +1,34 @@
+- id: AI-C-REQ-20261112-001
+  date: '2026-11-12'
+  agent: OpenCode with DeepSeek V4.1 Flash (this session); not a human reviewer
+  purpose: Consolidate A/B/E requirement proposals into the D1 formal registry, schema,
+    PRD and ID map; preserve all eight invariants and record every merge decision
+    instead of silently dropping proposals.
+  files:
+  - docs/req/requirements.yaml
+  - docs/req/req-schema.json
+  - docs/req/prd.yaml
+  - docs/req/requirement-id-map.yaml
+  - docs/req/requirements-review-record.md
+  - docs/req/traceability-handoff.yaml
+  - docs/req/validation-report.md
+  human_review: pending; no human review, signature or approval is claimed
+  evidence: docs/req/evidence/registry-validation.json; docs/req/evidence/gates-schema.txt
+  limitations: Schema and registry structure pass; traceability is incomplete and
+    the CI gate is blocked. Quality, performance and cost thresholds still need D/A
+    confirmation.
+- id: AI-C-REQ-20261112-002
+  date: '2026-11-12'
+  agent: OpenCode with DeepSeek V4.1 Flash (this session); not a human reviewer
+  purpose: Add a reproducible local validator for the D1 registry, schema, ID map
+    and traceability status; record the real gate outputs without editing tests or
+    fabricating mappings.
+  files:
+  - scripts/validate_requirements.py
+  - docs/req/evidence/registry-validation.json
+  - docs/req/evidence/gates-schema.txt
+  - docs/req/evidence/gates-proposal.txt
+  human_review: pending; no approval claimed
+  evidence: docs/req/validation-report.md
+  limitations: The script reports schema PASS separately from traceability BLOCKED;
+    it is not a replacement for tools/gates.py in CI.

@@ -1,0 +1,7 @@
+$ D:\anaconda\python.exe tools/gates.py proposal
+exit=1
+--- stdout ---
+
+--- stderr ---
+BLOCKED proposal: Untraced test: test_live_api.py:test_real_provider_smoke
+

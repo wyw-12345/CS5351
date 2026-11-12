@@ -1,0 +1,262 @@
+schema_version: 1
+document: GradeAide requirement ID consolidation map
+date: '2026-11-12'
+owner: C (requirements engineering, D1)
+status: proposed; no human approval claimed
+registry: docs/req/requirements.yaml
+source_files:
+  - docs/member-a/requirements-candidates.yaml
+  - docs/member-b/requirements-proposal.yaml
+  - docs/member-e/requirements-proposal.yaml
+
+summary:
+  source_proposals: 32
+  accepted_unchanged: 29
+  merged: 3
+  new_by_c: 18
+  rejected: 0
+  deferred: 0
+  formal_registry_entries: 47
+
+decision_legend:
+  accepted: "The proposal becomes a formal requirement, normally with the same ID."
+  merged: "The proposal is absorbed by a stronger requirement; no duplicate formal ID is created."
+  remapped: "The proposal becomes a formal requirement under a different ID."
+  deferred: "The proposal is retained for discussion but not in the current baseline."
+  rejected: "The proposal is not adopted; the reason must be recorded."
+
+mappings:
+  # A: performance and cost proposals
+  - proposal_id: REQ-PERF-001
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-PERF-001
+    rationale: "Calculator p95 target retained as a Should; A must confirm the measured fixture."
+  - proposal_id: REQ-PERF-002
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-PERF-002
+    rationale: "30-second timeout and zero automatic retries retained as a Must."
+  - proposal_id: REQ-PERF-003
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-PERF-003
+    rationale: "Live p95 target retained as a provisional Should until deployment is frozen."
+  - proposal_id: REQ-COST-001
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-COST-001
+    rationale: "One request and 1024-token default output cap retained."
+  - proposal_id: REQ-COST-002
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-COST-002
+    rationale: "12000-byte context budget retained with zero calls on overflow."
+  - proposal_id: REQ-COST-003
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-COST-003
+    rationale: "Preflight cost check retained; vendor prices remain operator-supplied."
+  - proposal_id: REQ-COST-004
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-COST-004
+    rationale: "Usage observability retained; missing usage can never become zero."
+  - proposal_id: REQ-COST-005
+    source: docs/member-a/requirements-candidates.yaml
+    decision: accepted
+    formal_id: REQ-COST-005
+    rationale: "Over-budget and long-text escalation retained; no silent truncation."
+
+  # B: invariants
+  - proposal_id: REQ-INV-001
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-001
+    rationale: "Final score authority retained unchanged."
+  - proposal_id: REQ-INV-002
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-002
+    rationale: "Unsafe automatic grading ban retained unchanged."
+  - proposal_id: REQ-INV-003
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-003
+    rationale: "Human approval binding retained; absorbs E REQ-SEC-003."
+  - proposal_id: REQ-INV-004
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-004
+    rationale: "Invalid numeric input rejection retained unchanged."
+  - proposal_id: REQ-INV-005
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-005
+    rationale: "Deterministic one-rounding rule retained; wording is implementation-neutral because A uses exact Fraction and B proposed Decimal."
+  - proposal_id: REQ-INV-006
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-006
+    rationale: "Durable audit record requirement retained unchanged."
+  - proposal_id: REQ-INV-007
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-007
+    rationale: "Advisory-only and injection containment retained; absorbs E REQ-SEC-001 and REQ-SEC-005."
+  - proposal_id: REQ-INV-008
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-INV-008
+    rationale: "Idempotent retry and conflict rejection retained unchanged."
+
+  # B: governance gates
+  - proposal_id: REQ-GOV-B01
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B01
+    rationale: "Test-approval gate retained."
+  - proposal_id: REQ-GOV-B02
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B02
+    rationale: "Static-analysis gate retained."
+  - proposal_id: REQ-GOV-B03
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B03
+    rationale: "Schema and traceability gate retained."
+  - proposal_id: REQ-GOV-B04
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B04
+    rationale: "Semantic-evaluation gate retained."
+  - proposal_id: REQ-GOV-B05
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B05
+    rationale: "Regression gate retained."
+  - proposal_id: REQ-GOV-B06
+    source: docs/member-b/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-B06
+    rationale: "AI-use-log gate retained."
+
+  # E: security and governance
+  - proposal_id: REQ-SEC-001
+    source: docs/member-e/requirements-proposal.yaml
+    decision: merged
+    formal_id: REQ-INV-007
+    rationale: "Exact duplicate of the no-write-authority half of B REQ-INV-007; keeping a separate ID would duplicate the same zero-tolerance invariant."
+  - proposal_id: REQ-SEC-002
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-SEC-002
+    rationale: "No fabricated rubric criteria is distinct from B REQ-INV-002; retained as a security control."
+  - proposal_id: REQ-SEC-003
+    source: docs/member-e/requirements-proposal.yaml
+    decision: merged
+    formal_id: REQ-INV-003
+    rationale: "Authenticated human approval is the same obligation as B REQ-INV-003; the invariant is the stronger zero-tolerance statement."
+  - proposal_id: REQ-SEC-004
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-SEC-004
+    rationale: "No committed secrets is distinct; retained."
+  - proposal_id: REQ-SEC-005
+    source: docs/member-e/requirements-proposal.yaml
+    decision: merged
+    formal_id: REQ-INV-007
+    rationale: "Prompt-injection containment is already the second half of B REQ-INV-007; merged to avoid two tests for one invariant."
+  - proposal_id: REQ-SEC-006
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-SEC-006
+    rationale: "Calculator least privilege is a distinct structural control; retained."
+  - proposal_id: REQ-GOV-E01
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-E01
+    rationale: "Default-deny permission model retained."
+  - proposal_id: REQ-GOV-E02
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-E02
+    rationale: "Frozen calculator and ADR approval retained."
+  - proposal_id: REQ-GOV-E03
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-E03
+    rationale: "One module per architectural element retained."
+  - proposal_id: REQ-GOV-E04
+    source: docs/member-e/requirements-proposal.yaml
+    decision: accepted
+    formal_id: REQ-GOV-E04
+    rationale: "MCP tool manifest restriction retained."
+
+new_requirements:
+  - formal_id: REQ-FUNC-001
+    owner: C
+    rationale: "C functional scope: import and validate one essay plus one weighted rubric."
+  - formal_id: REQ-FUNC-002
+    owner: C
+    rationale: "C functional scope: real LLM returns per-criterion advisory feedback."
+  - formal_id: REQ-FUNC-003
+    owner: C
+    rationale: "C functional scope: validate model advice against exactly the rubric."
+  - formal_id: REQ-FUNC-004
+    owner: C
+    rationale: "C functional scope: deterministic weighted final score."
+  - formal_id: REQ-FUNC-005
+    owner: C
+    rationale: "C functional scope: proposal creation cannot create a grade."
+  - formal_id: REQ-FUNC-006
+    owner: C
+    rationale: "C functional scope: approval recomputes and persists an audit record."
+  - formal_id: REQ-FUNC-007
+    owner: C
+    rationale: "C functional scope: retrieve and display both advisory and authoritative values."
+  - formal_id: REQ-FUNC-008
+    owner: C
+    rationale: "C functional scope: escalation instead of silent defaults."
+  - formal_id: REQ-FUNC-009
+    owner: C
+    rationale: "C functional scope: idempotent retry and conflict rejection."
+  - formal_id: REQ-FUNC-010
+    owner: C
+    rationale: "C functional scope: explicit CLI operator workflow."
+  - formal_id: REQ-QUAL-001
+    owner: C
+    rationale: "C quality draft pending D: feedback replaceability without touching authority modules."
+  - formal_id: REQ-QUAL-002
+    owner: C
+    rationale: "C quality draft pending D: auditability after restart."
+  - formal_id: REQ-QUAL-003
+    owner: C
+    rationale: "C quality draft pending D: offline determinism without network or secrets."
+  - formal_id: REQ-QUAL-004
+    owner: C
+    rationale: "C quality draft pending D: cross-process reproducibility."
+  - formal_id: REQ-QUAL-005
+    owner: C
+    rationale: "C quality draft pending D: hash-only audit record; verification assertion is still TBC."
+  - formal_id: REQ-GOV-C01
+    owner: C
+    rationale: "C governance: requirement changes co-evolve with ID map, traceability, tests and AI-use log."
+  - formal_id: REQ-GOV-C02
+    owner: C
+    rationale: "C governance: the registry is the single source of requirement IDs."
+  - formal_id: REQ-SEC-007
+    owner: C
+    rationale: "C security: bounded and unambiguous import parsing (duplicate keys, non-finite values, UTF-8, size)."
+
+unresolved_mappings:
+  - issue: "B's proposed interface names differ from A's implementation (calculate vs calculate_score, validate_advice vs validate_feedback, record_grade vs GradeStore)."
+    owner: D
+    impact: "Requirements are interface-neutral; D must freeze the architecture interface before A/B align tests."
+  - issue: "B's test-map and test docstrings do not yet reference the new functional/quality/performance/cost/security IDs."
+    owner: B
+    impact: "tools/gates.py schema can validate the registry but blocks at traceability. C does not edit tests to manufacture a pass."
+  - issue: "A uses exact Fraction arithmetic; B proposed Decimal."
+    owner: D
+    impact: "REQ-INV-005 keeps the observable exact-half-up rule and records the implementation difference."

@@ -1,0 +1,266 @@
+schema_version: 1
+document: GradeAide product requirements document
+version: 0.1.0-c
+date: '2026-11-12'
+owner: C (requirements engineering, D1)
+status: proposed baseline for D review; no human approval claimed
+registry: docs/req/requirements.yaml
+schema: docs/req/req-schema.json
+id_map: docs/req/requirement-id-map.yaml
+
+problem: >
+  Teachers need per-criterion feedback on student essays, but a free-running LLM
+  cannot be trusted to decide the final grade. Feedback must remain useful and
+  specific while the recorded score must be reproducible, bounded and auditable.
+
+goal: >
+  GradeAide lets a teacher submit one essay and one weighted rubric, obtains
+  advisory per-criterion feedback and suggested scores from a real LLM, and
+  receives a final score that only deterministic code can produce. Any uncertain,
+  missing, malformed or over-budget case escalates to a human instead of being
+  silently scored.
+
+core_principle: "AI is advisory; deterministic code is authoritative."
+authority_boundary:
+  advisory:
+    - AI feedback text
+    - per-criterion suggested scores
+    - model confidence and evidence quotes
+  authoritative:
+    - final score calculated by score_calculator
+    - persisted grade record written by grade_store after authenticated approval
+
+personas:
+  - id: PERSONA-TEACHER
+    name: Course teacher or teaching assistant
+    goals:
+      - Reduce repetitive rubric-by-rubric feedback work.
+      - Keep final grades consistent and explainable.
+      - Review and approve every recorded grade.
+  - id: PERSONA-REVIEWER
+    name: Independent human reviewer
+    goals:
+      - Verify that the stored score equals the calculator output.
+      - Inspect the advisory advice and the accepted scores.
+  - id: PERSONA-OPERATOR
+    name: Local operator running the CLI
+    goals:
+      - Use documented offline commands without hidden network calls.
+      - Configure model credentials through the environment only.
+
+scope:
+  in_scope:
+    - One essay plus one weighted rubric per grading request.
+    - Per-criterion advisory feedback, suggested score, confidence and evidence quote.
+    - Deterministic weighted final score with exact rounding.
+    - Human approval and durable audit record.
+    - Escalation for uncertain, malformed, unsafe, over-budget or provider-failure cases.
+    - Offline deterministic verification and opt-in live provider verification.
+  out_of_scope:
+    - Multi-tenant web UI, account management or LMS integration.
+    - Automatic grade approval without a human.
+    - Plagiarism detection.
+    - Model training or fine-tuning.
+    - Long-essay summarization or chunking; deferred to an approved architecture change.
+    - Replacing the teacher's professional judgement.
+
+assumptions:
+  - The teacher supplies a rubric whose weights sum exactly to 1 and whose criteria have positive maximum scores.
+  - The provider offered to the application is an HTTP JSON chat-completions endpoint configured by the operator.
+  - No API key is stored in the repository or logs.
+  - Real grades require a real human reviewer; automated test fixtures are not human approval.
+
+user_stories:
+  - id: US-001
+    as_a: teacher
+    i_want: to submit one essay and one weighted rubric
+    so_that: the system can grade against my own criteria rather than a generic standard
+    acceptance_criteria:
+      - The import rejects malformed UTF-8, oversized input, duplicate JSON keys and non-finite numbers.
+      - Rubrics contain 1 to 10 unique criteria with positive maximum scores and weights summing exactly to 1.
+      - The imported essay and rubric are identified by hashes in the proposal.
+    requirements: [REQ-FUNC-001, REQ-SEC-007, REQ-INV-004]
+
+  - id: US-002
+    as_a: teacher
+    i_want: per-criterion feedback with a suggested score and supporting quote
+    so_that: I can review the reasoning before deciding the final grade
+    acceptance_criteria:
+      - Every rubric criterion receives exactly one advisory entry.
+      - Each entry contains a suggested score, confidence and evidence quote.
+      - A top-level model final score is ignored and never becomes authoritative.
+    requirements: [REQ-FUNC-002, REQ-FUNC-003, REQ-INV-001]
+
+  - id: US-003
+    as_a: teacher
+    i_want: a deterministic final score calculated from the accepted scores and rubric weights
+    so_that: identical inputs always produce the same recorded grade
+    acceptance_criteria:
+      - The calculator validates all inputs before computing.
+      - Exact arithmetic is used and rounding happens once, to two decimals, with ROUND_HALF_UP.
+      - The persisted score equals the calculator output.
+    requirements: [REQ-FUNC-004, REQ-INV-005, REQ-INV-001]
+
+  - id: US-004
+    as_a: teacher
+    i_want: uncertain or malformed advice to stop the workflow and ask me to review
+    so_that: the system never invents a grade when the evidence is insufficient
+    acceptance_criteria:
+      - Missing, duplicate, unknown, uncertain or low-confidence criteria escalate.
+      - Provider errors, over-budget input and oversized essays escalate.
+      - No escalation path creates a final grade or a silent zero.
+    requirements: [REQ-FUNC-008, REQ-INV-002, REQ-COST-005]
+
+  - id: US-005
+    as_a: teacher
+    i_want: to review a pending proposal and see both advisory and authoritative values
+    so_that: I can approve, correct or reject it knowingly
+    acceptance_criteria:
+      - A pending proposal has no final score.
+      - Retrieval shows the advisory scores, accepted scores and calculator result after approval.
+      - Unknown IDs are refused and read-only commands do not create a database.
+    requirements: [REQ-FUNC-005, REQ-FUNC-007]
+
+  - id: US-006
+    as_a: teacher
+    i_want: to approve a proposal with my identity and an explicit reason
+    so_that: the recorded grade is attributable and auditable
+    acceptance_criteria:
+      - Approval is bound to the exact proposal hash.
+      - The audit record contains reviewer identity, accepted scores, final score, timestamp and calculator version.
+      - A stale or missing approval is rejected and the original record is unchanged.
+    requirements: [REQ-FUNC-006, REQ-INV-003, REQ-INV-006]
+
+  - id: US-007
+    as_a: reviewer
+    i_want: to reconstruct why a grade was recorded
+    so_that: I can audit the seam between AI advice and deterministic authority
+    acceptance_criteria:
+      - The durable record survives a process restart.
+      - The record includes hashes for the essay, rubric and advice.
+      - Reopening the store verifies integrity before returning the record.
+    requirements: [REQ-INV-006, REQ-QUAL-002, REQ-QUAL-004]
+
+  - id: US-008
+    as_a: operator
+    i_want: a small CLI that works offline for deterministic operations and opts in explicitly for live model calls
+    so_that: I can verify the system without leaking credentials or making hidden requests
+    acceptance_criteria:
+      - Offline tests run without network or an API key.
+      - Live tests are explicitly opt-in.
+      - Provider requests use a 30-second default timeout and zero automatic retries.
+    requirements: [REQ-FUNC-010, REQ-QUAL-003, REQ-PERF-002]
+
+  - id: US-009
+    as_a: security reviewer
+    i_want: the AI component to be unable to write grades or execute embedded instructions
+    so_that: prompt injection or a compromised model cannot corrupt authoritative records
+    acceptance_criteria:
+      - The feedback module has no grade-store write authority.
+      - Static checks forbid the grade-store import from the feedback module.
+      - Adversarial essay text remains advisory and cannot escalate privileges.
+    requirements: [REQ-INV-007, REQ-QUAL-001, REQ-SEC-006]
+
+  - id: US-010
+    as_a: cost owner
+    i_want: each inference attempt to have a bounded request count, output cap, context budget and preflight cost check
+    so_that: a single essay cannot create unbounded spend or hide retries
+    acceptance_criteria:
+      - At most one model request per attempt and max_tokens=1024 by default.
+      - Context is at most 12000 UTF-8 bytes by default; overflow makes zero calls.
+      - Actual usage is recorded or explicitly marked unknown, never zero.
+    requirements: [REQ-COST-001, REQ-COST-002, REQ-COST-003, REQ-COST-004, REQ-COST-005]
+
+workflow:
+  - step: 1
+    actor: teacher
+    action: Import essay and rubric.
+    output: Pending proposal payload with validated inputs and hashes.
+  - step: 2
+    actor: feedback_engine
+    action: Assemble bounded context and request advisory feedback from the configured LLM.
+    output: Raw advisory advice or an explicit escalation.
+  - step: 3
+    actor: validator
+    action: Validate criteria, scores, confidence and evidence quotes against the rubric.
+    output: Ready-to-review advice or escalation; never an authoritative score.
+  - step: 4
+    actor: teacher
+    action: Review advice, choose accepted scores and approve with identity and reason.
+    output: Approval bound to the proposal hash.
+  - step: 5
+    actor: score_calculator
+    action: Compute the final score with exact arithmetic and one HALF_UP rounding.
+    output: Authoritative percentage string.
+  - step: 6
+    actor: grade_store
+    action: Atomically persist the grade and audit record; verify idempotency and integrity on reads.
+    output: Durable grade record.
+
+acceptance_summary:
+  must:
+    - All eight invariants have zero-tolerance fit criteria.
+    - Every Must requirement has an intended test or evidence item, even where the current test suite has not yet mapped it.
+    - No AI output can create, overwrite or approve a final grade.
+  should:
+    - Calculator p95 and live p95 are measured on the documented environment.
+    - Audit records avoid a second raw essay copy.
+  could:
+    - Add richer operator diagnostics once the architecture is frozen.
+  wont:
+    - Automatic approval, hidden retries, silent truncation, or model-chosen final grades.
+
+open_questions:
+  - id: OQ-001
+    owner: D
+    question: Which requirement IDs and interfaces become authoritative in the architecture trace matrix?
+    impact: The current implementation uses calculate_score, validate_feedback and GradeStore, while B's proposal uses calculate, validate_advice and record_grade.
+  - id: OQ-002
+    owner: D
+    question: Confirm the quality-attribute thresholds for modifiability, auditability and reproducibility.
+    impact: QUAL requirements are drafted by C but D owns the architecture drivers.
+  - id: OQ-003
+    owner: A
+    question: Confirm the measured calculator p95 and the final live deployment latency target.
+    impact: PERF-001/003 remain Should targets until D/A agree on the release gate.
+  - id: OQ-004
+    owner: B
+    question: Add per-test REQ docstrings and test-map entries for the new functional, quality, performance, cost, governance and security IDs.
+    impact: tools/gates.py schema currently blocks at traceability, not at schema validation.
+  - id: OQ-005
+    owner: E
+    question: Confirm the final permission model and whether the trusted approval verifier is a local CLI identity or an external token service.
+    impact: INV-003 and SEC-003 require an authenticated boundary; the current local reviewer string is a working assumption.
+  - id: OQ-006
+    owner: C
+    question: Resolve whether the rubric exchange shape is a list (B proposal) or an object with id/version/criteria (A implementation).
+    impact: FUNC-001 and FUNC-004 statements avoid the shape, but D/A must freeze it.
+
+traceability_summary:
+  registry_entries: 47
+  types_covered:
+    - functional
+    - invariant
+    - quality
+    - performance
+    - cost
+    - governance
+    - security
+  invariants: 8
+  proposal_sources:
+    - docs/member-a/requirements-candidates.yaml
+    - docs/member-b/requirements-proposal.yaml
+    - docs/member-e/requirements-proposal.yaml
+  unresolved:
+    - Quality thresholds await D review.
+    - Performance and cost thresholds await A confirmation.
+    - Traceability test mapping awaits B/A updates.
+
+glossary:
+  advisory: "Output that may inform a human but cannot decide or persist a grade."
+  authoritative: "The deterministic calculator result and the approved grade record."
+  fit_criterion: "metric + threshold + verification, machine-checkable."
+  invariant: "A non-negotiable rule with a zero-tolerance fit criterion."
+  escalation: "Stop the automatic path and hand the case to a human; no final grade is created."
+  proposal: "A stored pending review containing essay, rubric and advisory advice."
+  approval: "Authenticated human authorization bound to the exact proposal hash."

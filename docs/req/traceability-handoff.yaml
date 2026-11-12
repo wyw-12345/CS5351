@@ -1,0 +1,126 @@
+schema_version: 1
+document: "Requirements-to-evidence handoff plan (not evidence of passing tests)"
+date: '2026-11-12'
+owner: C
+status: draft_ready
+important: >
+  This file is a plan for D/A/B. It is deliberately NOT docs/verification/test-map.yaml:
+  writing a test locator there without a REAL test would manufacture traceability and is
+  forbidden by the project governance. tools/gates.py traceability therefore remains
+  blocked until the named owners add tests with per-test REQ docstrings.
+
+already_mapped_by_b:
+  note: "B's proposed map is retained in docs/verification/test-map.yaml for its 14 IDs. C did not silently delete it."
+  ids:
+    - REQ-INV-001
+    - REQ-INV-002
+    - REQ-INV-003
+    - REQ-INV-004
+    - REQ-INV-005
+    - REQ-INV-006
+    - REQ-INV-007
+    - REQ-INV-008
+    - REQ-GOV-B01
+    - REQ-GOV-B02
+    - REQ-GOV-B03
+    - REQ-GOV-B04
+    - REQ-GOV-B05
+    - REQ-GOV-B06
+
+needs_real_test_or_evidence:
+  functional:
+    owner: A
+    suggested_files:
+      - test/offline/test_calculator.py
+      - test/offline/test_feedback.py
+      - test/offline/test_store.py
+      - test/offline/test_cli.py
+    ids:
+      - REQ-FUNC-001
+      - REQ-FUNC-002
+      - REQ-FUNC-003
+      - REQ-FUNC-004
+      - REQ-FUNC-005
+      - REQ-FUNC-006
+      - REQ-FUNC-007
+      - REQ-FUNC-008
+      - REQ-FUNC-009
+      - REQ-FUNC-010
+    action: "Add per-test docstrings naming the REQ ID and add the exact locators to docs/verification/test-map.yaml."
+
+  quality:
+    owner: D
+    suggested_files:
+      - test/offline/test_cli.py
+      - test/offline/test_store.py
+      - test/offline/test_authority_boundary.py
+    ids:
+      - REQ-QUAL-001
+      - REQ-QUAL-002
+      - REQ-QUAL-003
+      - REQ-QUAL-004
+      - REQ-QUAL-005
+    action: "D confirms the quality thresholds; B/A add or strengthen the assertions, especially REQ-QUAL-005."
+
+  performance:
+    owner: A
+    suggested_files:
+      - evidence/benchmark.json
+      - evidence/live-results.json
+      - test/offline/test_http.py
+    ids:
+      - REQ-PERF-001
+      - REQ-PERF-002
+      - REQ-PERF-003
+    action: "Bind each threshold to a measured fixture and keep historical evidence dates distinct from the final deployment run."
+
+  cost:
+    owner: A
+    suggested_files:
+      - test/offline/test_feedback.py
+    ids:
+      - REQ-COST-001
+      - REQ-COST-002
+      - REQ-COST-003
+      - REQ-COST-004
+      - REQ-COST-005
+    action: "Keep the controlled HTTP fixture as evidence; do not record vendor prices that the operator did not supply."
+
+  governance:
+    owner: B
+    suggested_files:
+      - test/governance/test_gates.py
+      - tools/gates.py
+      - .github/workflows/ci.yml
+    ids:
+      - REQ-GOV-E01
+      - REQ-GOV-E02
+      - REQ-GOV-E03
+      - REQ-GOV-E04
+      - REQ-GOV-C01
+      - REQ-GOV-C02
+    action: "E04/E01 need a real permissions snapshot; C01/C02 are validated by scripts/validate_requirements.py and the AI-use log gate."
+
+  security:
+    owner: E
+    suggested_files:
+      - test/offline/test_feedback.py
+      - test/offline/test_authority_boundary.py
+      - test/governance/test_gates.py
+    ids:
+      - REQ-SEC-002
+      - REQ-SEC-004
+      - REQ-SEC-006
+      - REQ-SEC-007
+    action: "Add a real secret scan and a permissions snapshot; do not claim either before they exist."
+
+blocking_rule:
+  description: >
+    The schema gate must first prove the registry validates. The traceability gate must then
+    prove every requirement has a real test. C should not report a single green status for both.
+  expected_current_result: "schema validation PASS; traceability BLOCKED"
+  do_not:
+    - "Do not add fake test files."
+    - "Do not add test-map locators that do not contain the REQ ID in the test function docstring."
+    - "Do not remove requirements to make the gate pass."
+    - "Do not rewrite or weaken historical tests without a separately approved tests-only change."
