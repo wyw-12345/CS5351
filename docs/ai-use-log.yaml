@@ -1,0 +1,293 @@
+- id: AI-B-PREP-20261106-001
+  date: '2026-11-06'
+  agent: Codex (GPT-6), not OpenCode
+  purpose: 'Generate member B preparation: proposed requirements, verification tools
+    and adversarial tests; no application implementation'
+  files:
+  - .github/CODEOWNERS
+  - .github/workflows/ci.yml
+  - pyproject.toml
+  - requirements-ci.txt
+  - test/fixtures/semantic-cases.json
+  - test/governance/test_gates.py
+  - test/governance/test_semantic_eval.py
+  - test/live/test_real_model.py
+  - test/offline/test_authority_boundary.py
+  - tools/__init__.py
+  - tools/check_suite.py
+  - tools/gates.py
+  - tools/github_setup.py
+  - tools/mutation_check.py
+  - tools/run_ci_gate.py
+  - tools/run_full.py
+  - tools/semantic_eval.py
+  evidence: transcripts/B-session-notes-2026-11-06.md; docs/member-b/VALIDATION.md
+  human_review: pending; no tests or implementation approval is claimed
+  scope: B preparation only; C/D/E/A handoff absent
+- id: AI-B-PREP-20261106-002
+  date: '2026-11-06'
+  agent: Codex (GPT-6), not OpenCode
+  purpose: Implement six fail-closed CI gates; fix review scope binding and independent
+    semantic validation; add real local checks
+  files:
+  - .github/workflows/ci.yml
+  - pyproject.toml
+  - requirements-ci.txt
+  - test/governance/test_gates.py
+  - test/governance/test_semantic_eval.py
+  - tools/__init__.py
+  - tools/check_suite.py
+  - tools/gates.py
+  - tools/github_setup.py
+  - tools/mutation_check.py
+  - tools/run_ci_gate.py
+  - tools/run_full.py
+  - tools/semantic_eval.py
+  evidence: docs/member-b/VALIDATION.md; artifacts/ local check logs
+  human_review: pending; bootstrap preparation is not a preapproved implementation
+- id: AI-B-PREP-20261106-003
+  date: '2026-11-06'
+  agent: Codex (GPT-6), not OpenCode
+  purpose: Resolve mypy score-map narrowing, align current GitHub API version and
+    provide a local Windows verification runner
+  files:
+  - tools/semantic_eval.py
+  - tools/gates.py
+  - tools/github_setup.py
+  - tools/verify-b.ps1
+  evidence: docs/member-b/VALIDATION.md
+  human_review: pending; local validation is not human approval
+- id: AI-HANDOFF-20261107-001
+  date: '2026-11-07'
+  agent: Codex
+  purpose: Package existing member B work for team handoff, with Chinese guide, copyable
+    AI continuation prompt, role cards and truthful state tracking
+  files:
+  - 00_交接说明_先读我.md
+  - 01_AI接力提示词_复制给AI.md
+  - README.md
+  - handoff/records/README.md
+  - handoff/roles/A_实现与启动.md
+  - handoff/roles/B_验证与CI.md
+  - handoff/roles/C_需求工程.md
+  - handoff/roles/D_软件架构.md
+  - handoff/roles/E_编码治理.md
+  - handoff/交接记录模板.md
+  - handoff/接力状态.yaml
+  - handoff/环境与检查.md
+  - handoff/打包验证.md
+  - handoff/records/2026-11-07-B-交接整理.md
+  evidence: handoff/打包验证.md; package PACKAGE-INFO.json and SHA256SUMS.txt
+  human_review: User requested handoff packaging; no application plan, tests or teammate
+    approval is claimed
+- id: AI-E-GOV-20261111-001
+  date: '2026-11-11'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: Draft member E coding governance (D3) and security/governance requirement
+    proposals; no application implementation
+  files:
+  - AGENTS.md
+  - docs/code-governance/structural-constraints.md
+  - docs/code-governance/mcp-tool-manifest.md
+  - .opencode/permissions.jsonc
+  - .opencode/rules.md
+  - .agent/rules.md
+  - docs/member-e/requirements-proposal.yaml
+  - docs/member-e/01-handoff-to-A.md
+  - docs/member-e/draft-opencode-rules.md
+  - handoff/records/2026-11-11-E-治理.md
+  - handoff/接力状态.yaml
+  evidence: handoff/records/2026-11-11-E-治理.md
+  human_review: pending; no approval claimed; .opencode/rules.md is human-owned and
+    not signed by AI
+  scope: E D3 governance draft and security/governance requirement proposals; C/D
+    baselines still absent
+- id: AI-A-20261107-01
+  date: '2026-11-07'
+  actor: Codex, with read-only research delegation
+  purpose: Read the division and original project PDF, inspect local course references,
+    research comparable repositories and official APIs, and prepare the member A plan
+    and interface contract.
+  inputs:
+  - CS5351分工.md
+  - CS5351-2026-2027-project.pdf
+  - selected CS5351 RE/SA and B3 governance materials
+  - public primary-source documentation
+  outputs: &id001
+  - ../成员A_实施计划与验收清单.md
+  - ../成员A_网络与课程资料参考.md
+  - Prompt.md
+  - AGENTS.md
+  - docs/member-a/interface-contract.md
+  - docs/member-a/requirements-candidates.yaml
+  human_intervention: The user deferred live API tests until local key configuration,
+    then explicitly approved the concrete plan and test strategy before implementation.
+  evidence: docs/member-a/approval-record.md
+  limitations: The record covers this task, not earlier team work. No formal C/D/E/B
+    acceptance or student contribution hours are inferred.
+  agent: Codex, with read-only research delegation
+  files: *id001
+  human_review: The user deferred live API tests until local key configuration, then
+    explicitly approved the concrete plan and test strategy before implementation.
+- id: AI-A-20261107-02
+  date: '2026-11-07'
+  actor: Codex implementation subagent supervised by Codex root
+  purpose: Implement and verify the user-approved member A baseline; record any actual
+    OpenCode invocation separately in evidence.
+  inputs:
+  - AGENTS.md
+  - Prompt.md
+  - docs/member-a/interface-contract.md
+  - approved T1-T7 plan
+  outputs: &id002
+  - src/
+  - test/
+  - prompts/
+  - scripts/
+  - examples/
+  - README.md
+  - .github/workflows/member-a.yml
+  human_intervention: User approved the initial plan. No later human gate acceptance
+    has been recorded at log creation.
+  verification: Actual results are recorded in docs/member-a/verification-results.md
+    after execution; this log is not evidence of a passing run.
+  limitations: Runtime live inference is deferred. OpenCode and Codex provenance must
+    remain distinguishable.
+  agent: Codex implementation subagent supervised by Codex root
+  files: *id002
+  human_review: User approved the initial plan. No later human gate acceptance has
+    been recorded at log creation.
+- id: AI-A-20261108-03
+  date: '2026-11-08'
+  actor: Codex continuation implementation agent, read-only reviewer and root
+  purpose: Complete interrupted baseline, correct exact rounding, usage retention,
+    provider validation, state integrity and live evaluation opt-in; run final verification.
+  human_intervention: User explicitly requested continuation; initial approved scope
+    retained. No fabricated stage acceptance.
+  verification: 43 offline passed; 2 live skipped; Ruff/mypy/pip check/restart/benchmark
+    passed. See evidence/verification-run.json and docs/member-a/verification-results.md.
+  limitations: No real API calls or GitHub execution; failed OpenCode attempt remains
+    distinct from Codex authorship.
+  agent: Codex continuation implementation agent, read-only reviewer and root
+  files: []
+  human_review: User explicitly requested continuation; initial approved scope retained.
+    No fabricated stage acceptance.
+- id: AI-A-20261108-LIVE
+  date: '2026-11-08'
+  actor: Codex root
+  human_intervention: User configured .env and requested independent lookup of DeepSeek
+    V4.1 Flash settings.
+  changes: Explicit dotenv launcher, optional thinking mode, non-secret conservative
+    cost settings; no calculator/store change.
+  verification: 45 offline tests; 2 live tests passed; 20/20 fixed evaluation, p95
+    2062 ms. Total 27 real calls. See live-verification.md.
+  limitations: Semantic human acceptance pending; cost is conservative estimate, not
+    actual bill.
+  agent: Codex root
+  files: []
+  human_review: User configured .env and requested independent lookup of DeepSeek
+    V4.1 Flash settings.
+- id: AI-ABE-MERGE-20261111
+  date: '2026-11-11'
+  agent: Codex
+  purpose: Merge existing A implementation and B/E preparation; preserve conflicts
+    and update handoff. No fabricated approvals.
+  files:
+  - README.md
+  - 00_交接说明_先读我.md
+  - handoff/
+  - docs/ai-use-log.yaml
+  - pyproject.toml
+  - .gitignore
+  - requirements-app.txt
+  - PACKAGE-INFO.json
+  - SHA256SUMS.txt
+  human_review: User requested merge and packaging; formal team review pending.
+  evidence: handoff/records/2026-11-11-ABE-合并.md; handoff/verification/results.json
+- id: AI-ABE-DOC-RELOCATE-20261111
+  date: '2026-11-11'
+  agent: Codex
+  purpose: User requested removing or relocating three member A root documents; moved
+    to docs/member-a and repaired navigation links.
+  files:
+  - README.md
+  - docs/member-a/
+  - 00_交接说明_先读我.md
+  - PACKAGE-INFO.json
+  - SHA256SUMS.txt
+  human_review: User explicitly requested document cleanup; no new formal acceptance
+    claimed.
+  evidence: handoff/verification/document-relocation.json
+- id: AI-C-REQ-20261112-001
+  date: '2026-11-12'
+  agent: OpenCode with DeepSeek V4.1 Flash (this session); not a human reviewer
+  purpose: 'Consolidate A/B/E requirement proposals into the D1 formal registry,
+    schema, PRD and ID map; preserve all eight invariants and record every merge
+    decision instead of silently dropping proposals.'
+  files:
+  - docs/req/requirements.yaml
+  - docs/req/req-schema.json
+  - docs/req/prd.yaml
+  - docs/req/requirement-id-map.yaml
+  - docs/req/requirements-review-record.md
+  - docs/req/traceability-handoff.yaml
+  - docs/req/validation-report.md
+  human_review: pending; no human review, signature or approval is claimed
+  evidence: docs/req/evidence/registry-validation.json; docs/req/evidence/gates-schema.txt
+  limitations: 'Schema and registry structure pass; traceability is incomplete and
+    the CI gate is blocked. Quality, performance and cost thresholds still need
+    D/A confirmation.'
+- id: AI-C-REQ-20261112-002
+  date: '2026-11-12'
+  agent: OpenCode with DeepSeek V4.1 Flash (this session); not a human reviewer
+  purpose: 'Add a reproducible local validator for the D1 registry, schema, ID map
+    and traceability status; record the real gate outputs without editing tests or
+    fabricating mappings.'
+  files:
+  - scripts/validate_requirements.py
+  - docs/req/evidence/registry-validation.json
+  - docs/req/evidence/gates-schema.txt
+  - docs/req/evidence/gates-proposal.txt
+  human_review: pending; no approval claimed
+  evidence: docs/req/validation-report.md
+  limitations: 'The script reports schema PASS separately from traceability BLOCKED;
+    it is not a replacement for tools/gates.py in CI.'
+- id: AI-E-GOV-20261112-001
+  date: '2026-11-12'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: 'Backfill member E D3 governance against C 0.1.0-c and D ADR-0001..0004;
+    add fractions allowlist, os-in-engine hard gate, key/credential boundary and
+    runtime isolation to the governance files.'
+  files:
+  - AGENTS.md
+  - docs/code-governance/structural-constraints.md
+  - docs/code-governance/mcp-tool-manifest.md
+  - .opencode/permissions.jsonc
+  - .opencode/rules.md
+  - .agent/rules.md
+  - docs/member-e/draft-opencode-rules.md
+  - docs/member-e/01-handoff-to-A.md
+  - docs/member-e/requirements-proposal.yaml
+  - handoff/records/2026-11-12-E-治理.md
+  - handoff/接力状态.yaml
+  human_review: pending; no approval claimed; .opencode/rules.md is human-owned and not
+    signed by AI
+  evidence: handoff/records/2026-11-12-E-治理.md
+  limitations: 'E governance remains awaiting_review; .opencode/rules.md human completion
+    and permissions syntax verification against the installed OpenCode version are
+    still outstanding.'
+- id: AI-E-GOV-20261116-001
+  date: '2026-11-16'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: 'Complete the human-owned .opencode/rules.md from the member-e draft, per
+    owner E instruction; reconcile rules against C 0.1.0-c and D ADR-0001..0004.'
+  files:
+  - .opencode/rules.md
+  - docs/member-e/draft-opencode-rules.md
+  - handoff/records/2026-11-16-E-rules完成.md
+  - handoff/接力状态.yaml
+  human_review: owner E (member) directed completion on 2026-11-16; final human sign-off
+    recorded in handoff, not fabricated by AI
+  evidence: handoff/records/2026-11-16-E-rules完成.md
+  limitations: 'Permissions.jsonc still needs syntax verification against the installed
+    OpenCode version; remaining governance files remain awaiting_review.'

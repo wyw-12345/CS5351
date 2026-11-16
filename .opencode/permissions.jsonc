@@ -1,0 +1,98 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // GradeAide project-level permission model (D3, owner E).
+  // STATUS: D3 baseline, backfilled against D's permission-model.md + ADR-0002/0003.
+  // HUMAN-OWNED: an AI drafts in docs/member-e/; only a human edits/approves this file.
+  // Verify rule syntax against the installed OpenCode version:
+  //   V2 uses `permissions` with action/resource/effect (allow|deny|ask).
+  //   V1 used `permission`/`bash`/`task`. The course path is `.opencode/permissions.jsonc`.
+  // Semantics: ordered rules, LAST match wins. `deny` always blocks; `ask` waits for a human.
+  // A/B must bind this file via docs/verification/permissions-snapshot.json
+  // (permissions_sha256 + feedback_grade_store_write=false).
+
+  "permissions": [
+    // ---- 1. Secrets & keys: credential/signing material is never read or written ----
+    { "action": "read", "resource": "*.env", "effect": "deny" },
+    { "action": "read", "resource": "*.env.*", "effect": "deny" },
+    { "action": "read", "resource": "*.pem", "effect": "deny" },
+    { "action": "read", "resource": "*.key", "effect": "deny" },
+    { "action": "read", "resource": "~/.gradeaide/**", "effect": "deny" },
+    { "action": "edit", "resource": "*.env*", "effect": "deny" },
+
+    // ---- 2. Authority boundary: no agent writes durable grade records ----
+    // The grade store is the ONLY runtime writer; the coding agent never edits grade data.
+    { "action": "edit", "resource": "data/**", "effect": "deny" },
+    { "action": "edit", "resource": "grades/**", "effect": "deny" },
+
+    // ---- 3. Frozen calculator: edits require ADR + independent human approval ----
+    { "action": "edit", "resource": "src/score_calculator.py", "effect": "deny" },
+    { "action": "edit", "resource": "src/grade_store.py", "effect": "ask" },
+
+    // ---- 4. Governance self-protection: no self-granted permissions ----
+    { "action": "edit", "resource": ".opencode/**", "effect": "deny" },
+    { "action": "edit", "resource": ".agent/**", "effect": "deny" },
+    { "action": "edit", "resource": ".github/**", "effect": "deny" },
+    { "action": "edit", "resource": "docs/verification/**", "effect": "deny" },
+
+    // ---- 5. Git: never push to protected refs, force, or delete ----
+    { "action": "shell", "resource": "git push*", "effect": "deny" },
+    { "action": "shell", "resource": "git push --force*", "effect": "deny" },
+    { "action": "shell", "resource": "git branch -D *", "effect": "deny" },
+
+    // ---- 6. External directories: ask before leaving the project ----
+    { "action": "external_directory", "resource": "*", "effect": "ask" },
+
+    // ---- 7. Allowed working surface (whitelist) ----
+    { "action": "read", "resource": "*", "effect": "allow" },
+    { "action": "glob", "resource": "*", "effect": "allow" },
+    { "action": "grep", "resource": "*", "effect": "allow" },
+    { "action": "edit", "resource": "src/feedback_engine.py", "effect": "allow" },
+    { "action": "edit", "resource": "src/cli.py", "effect": "allow" },
+    { "action": "edit", "resource": "src/contracts.py", "effect": "allow" },
+    { "action": "edit", "resource": "test/**", "effect": "allow" },
+    { "action": "edit", "resource": "docs/**", "effect": "allow" },
+    { "action": "edit", "resource": "prompts/**", "effect": "allow" },
+    { "action": "edit", "resource": "config/model.json", "effect": "allow" },
+    { "action": "edit", "resource": "requirements-app.txt", "effect": "allow" },
+
+    // ---- 8. Shell allowlist (build/verify only); broad shell asks first ----
+    { "action": "shell", "resource": "*", "effect": "ask" },
+    { "action": "shell", "resource": "python -m unittest*", "effect": "allow" },
+    { "action": "shell", "resource": "python tools/gates.py*", "effect": "allow" },
+    { "action": "shell", "resource": "python tools/check_suite.py*", "effect": "allow" },
+    { "action": "shell", "resource": "python scripts/validate_requirements.py*", "effect": "allow" },
+    { "action": "shell", "resource": "python -m ruff*", "effect": "allow" },
+    { "action": "shell", "resource": "python -m mypy*", "effect": "allow" },
+    { "action": "shell", "resource": "python -m pip check*", "effect": "allow" },
+    { "action": "shell", "resource": "python -m pip_audit*", "effect": "allow" },
+    { "action": "shell", "resource": "git status*", "effect": "allow" },
+    { "action": "shell", "resource": "git diff*", "effect": "allow" },
+    { "action": "shell", "resource": "git log*", "effect": "allow" },
+    { "action": "shell", "resource": "git add*", "effect": "allow" },
+    { "action": "shell", "resource": "git commit*", "effect": "allow" }
+  ],
+
+  // ---- Agents: narrower role rules appended after the global list ----
+  "agents": {
+    "plan": {
+      "description": "Produce execution plan and scope; read-only",
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "deny" }
+      ]
+    },
+    "verify": {
+      "description": "Run tests, lint, type checks, gates and secret/dependency scans; read-only",
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "python -m unittest*", "effect": "allow" },
+        { "action": "shell", "resource": "python tools/*", "effect": "allow" },
+        { "action": "shell", "resource": "python scripts/*", "effect": "allow" },
+        { "action": "shell", "resource": "python -m ruff*", "effect": "allow" },
+        { "action": "shell", "resource": "python -m mypy*", "effect": "allow" },
+        { "action": "shell", "resource": "python -m pip check*", "effect": "allow" },
+        { "action": "shell", "resource": "python -m pip_audit*", "effect": "allow" }
+      ]
+    }
+  }
+}
