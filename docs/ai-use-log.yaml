@@ -291,3 +291,65 @@
   evidence: handoff/records/2026-11-16-E-rules完成.md
   limitations: 'Permissions.jsonc still needs syntax verification against the installed
     OpenCode version; remaining governance files remain awaiting_review.'
+
+- id: AI-A-RELAY-20261117-001
+  date: '2026-11-17'
+  agent: Codex (GPT-6), not OpenCode
+  purpose: Reintegrate existing member A work directly on E, preserving the documented five-module and offline/live layout; remove prior out-of-role additions; verify locally and update the handoff.
+  raw_session_path: 'C:/Users/Ting/.codex/sessions/2026/11/07/rollout-2026-11-07T23-19-09-01a1b697-93e3-7af0-9e48-c7f55e7f1ca6.jsonl'
+  source: Existing local A candidate and archived 41ab9b5; E base c59d1aa1b0d731cb318a4482208148727c357c86
+  human_review: User authorized rebuilding and branch replacement; independent tests-only and exact-head approval not obtained.
+  evidence: handoff/records/2026-11-17-A-实现整合.md
+  limitations: Local checks only this round; live evidence historical; B formal gates and E deployment isolation remain pending.
+  files:
+  - ".gitignore"
+  - "Prompt.md"
+  - "README.md"
+  - "config/model.json"
+  - "docs/ai-use-log.yaml"
+  - "docs/member-a/interface-contract.md"
+  - "docs/member-a/requirements-candidates.yaml"
+  - "docs/member-a/verification-results.md"
+  - "evidence/benchmark.json"
+  - "evidence/live-results.json"
+  - "examples/accepted-scores.json"
+  - "examples/essay.txt"
+  - "examples/provider-fixture.json"
+  - "examples/rubric.json"
+  - "handoff/records/2026-11-17-A-实现整合.md"
+  - "handoff/verification/all-offline.txt"
+  - "handoff/verification/restart.txt"
+  - "handoff/verification/results.json"
+  - "handoff/接力状态.yaml"
+  - "prompts/prompt_v1.0.yaml"
+  - "prompts/prompt_v1.1.yaml"
+  - "prompts/prompt_v1.2.yaml"
+  - "requirements-app.txt"
+  - "requirements-ci.txt"
+  - "scripts/__init__.py"
+  - "scripts/benchmark.py"
+  - "scripts/demo_restart.py"
+  - "scripts/evaluate_live.py"
+  - "scripts/live_from_env.py"
+  - "src/__init__.py"
+  - "src/cli.py"
+  - "src/contracts.py"
+  - "src/feedback_engine.py"
+  - "src/grade_store.py"
+  - "src/score_calculator.py"
+  - "test/__init__.py"
+  - "test/live/__init__.py"
+  - "test/live/fixed-cases.json"
+  - "test/live/test_live_api.py"
+  - "test/offline/__init__.py"
+  - "test/offline/test_boundaries.py"
+  - "test/offline/test_calculator.py"
+  - "test/offline/test_cli.py"
+  - "test/offline/test_env_launcher.py"
+  - "test/offline/test_feedback.py"
+  - "test/offline/test_http.py"
+  - "test/offline/test_live_runner.py"
+  - "test/offline/test_migration.py"
+  - "test/offline/test_revision.py"
+  - "test/offline/test_store.py"
+  - "test/support.py"

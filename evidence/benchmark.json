@@ -1,0 +1,14 @@
+{
+  "requirement": "REQ-PERF-001",
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "warmup_calls": 50,
+  "measured_calls": 1000,
+  "criteria": 10,
+  "p50_ms": 0.151,
+  "p95_ms": 0.2246,
+  "max_ms": 0.4248,
+  "target_p95_ms": 10,
+  "target_met": true,
+  "scope": "local deterministic calculation only; no inference/network"
+}

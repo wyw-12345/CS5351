@@ -1,0 +1,62 @@
+{
+  "status": "member-A proposals; C owns the consolidated registry and schema",
+  "date": "2026-11-07",
+  "requirements": [
+    {
+      "id": "REQ-PERF-001", "type": "performance", "priority": "Should",
+      "statement": "The deterministic calculator should have a warm-run p95 latency at or below 10 ms for a ten-criterion rubric.",
+      "fit_criterion": {"metric": "calculator_latency_ms_p95", "threshold": "<=10 ms over 1000 warm calls", "verification": "Run the local benchmark; record Python/OS, count, p50/p95/max and fixture. Do not include LLM/network time."},
+      "source": "CS5351分工.md section 7, member A performance; initial candidate threshold",
+      "tradeoff": "Prioritize reproducible measurement over claiming a hardware-independent SLA."
+    },
+    {
+      "id": "REQ-PERF-002", "type": "performance", "priority": "Must",
+      "statement": "Every provider request must use a configured blocking-operation timeout (default 30 seconds), without automatic retries.",
+      "fit_criterion": {"metric": "timeout_configuration_and_attempt_count", "threshold": "default 30 seconds; exactly 0 retries", "verification": "A controlled local HTTP endpoint delays its response and returns errors; assert escalation and one attempt. Socket timeouts are not an absolute workflow deadline."},
+      "source": "Course SA bounded failure paths; Python urllib.request documentation",
+      "tradeoff": "Temporary provider failures require a visible new human-triggered attempt instead of hidden retries and charges."
+    },
+    {
+      "id": "REQ-PERF-003", "type": "performance", "priority": "Should",
+      "statement": "Live inference should meet a provisional p95 end-to-end latency target of 30 seconds on the selected deployment.",
+      "fit_criterion": {"metric": "live_end_to_end_latency_ms_p95", "threshold": "<=30000 ms over at least 20 measured attempts, failures reported separately", "verification": "After API configuration, replay fixed cases and record all attempt latencies, error rate, model, prompt hash, hardware/network and cold/warm conditions. Pending until actually run."},
+      "source": "Member A candidate, requires C/D agreement and provider-specific evidence",
+      "tradeoff": "Keep this a Should until measured; never use calculator latency as inference evidence."
+    },
+    {
+      "id": "REQ-COST-001", "type": "cost", "priority": "Must",
+      "statement": "An inference attempt makes at most one model request and supplies an output cap, default 1024 tokens.",
+      "fit_criterion": {"metric": "provider_call_count_and_max_tokens", "threshold": "calls <=1 per attempt; requested max_tokens=1024 by default", "verification": "Inspect the actual request body with a local HTTP test server, including error/timeout paths; report actual usage independently."},
+      "source": "Member A cost responsibility and bounded invocation design",
+      "tradeoff": "Shorter feedback and more escalations are preferable to unbounded output/retry cost."
+    },
+    {
+      "id": "REQ-COST-002", "type": "cost", "priority": "Must",
+      "statement": "Apply an explicit UTF-8 byte budget to the assembled model context, default 12000 bytes, before any model request.",
+      "fit_criterion": {"metric": "serialized_context_utf8_bytes", "threshold": "<=12000 bytes by default; overflow makes zero model calls", "verification": "Check English, Chinese and boundary inputs. Include standing constraints, rubric, task and essay in budget accounting. Report bytes as bytes, not exact tokenizer output."},
+      "source": "Course layered-context and token-budget material, adapted to a minimal provider-neutral baseline",
+      "tradeoff": "A byte proxy is conservative and dependency-free, but must not be presented as exact provider tokenization."
+    },
+    {
+      "id": "REQ-COST-003", "type": "cost", "priority": "Must",
+      "statement": "Before inference, compare an estimated cost against a configured per-attempt budget using explicit input/output prices.",
+      "fit_criterion": {"metric": "preflight_estimated_cost_in_configured_currency", "threshold": "estimate <= configured budget; excess makes zero calls", "verification": "Verify decimal arithmetic, zero/exact/over-budget boundaries, invalid price rejection and immutable pricing metadata; no current vendor price is invented."},
+      "source": "Member A token/budget responsibility; provider price supplied by operator",
+      "tradeoff": "An application estimate is not a supplier billing guarantee; account-level spend limits remain separate."
+    },
+    {
+      "id": "REQ-COST-004", "type": "cost", "priority": "Must",
+      "statement": "Keep actual provider token usage, configured estimate, prompt/model identity and elapsed time distinguishable for every attempt.",
+      "fit_criterion": {"metric": "known_usage_or_explicit_unknown_rate", "threshold": "100%; missing/invalid usage is never recorded as zero", "verification": "Test positive integer usage, missing/negative/bool usage, over-cap usage and non-success responses; unknown usage escalates and remains visible."},
+      "source": "Course observability/traceability and member A cost requirements",
+      "tradeoff": "Providers without usable usage accounting cannot silently pass the automatic feedback acceptance path."
+    },
+    {
+      "id": "REQ-COST-005", "type": "cost", "priority": "Must",
+      "statement": "Long essays and over-budget attempts escalate visibly without truncating content, producing an automatic grade, or making a provider request.",
+      "fit_criterion": {"metric": "over_limit_calls_and_automatic_grades", "threshold": "0 calls; 0 automatic final grades; original content retained under the storage limit", "verification": "Negative cases exceed context and cost caps; assert escalation and no final grade. File-size limits must be explicit errors, not silent truncation."},
+      "source": "CS5351分工.md safety boundary; long-text behavior selected in the approved member A plan",
+      "tradeoff": "Long-text chunking/compaction is deferred to an approved D architecture change so summarization cannot erase grading evidence."
+    }
+  ]
+}

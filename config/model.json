@@ -1,0 +1,10 @@
+{
+  "model": "deepseek-flash",
+  "prompt_path": "prompts/prompt_v1.2.yaml",
+  "confidence_threshold": "0.80",
+  "max_input_bytes": 12000,
+  "max_output_tokens": 1024,
+  "timeout_seconds": 30,
+  "automatic_retries": 0,
+  "configuration_source": "Review descriptor only; src.cli.settings_from_env reads GRADEAIDE_* at runtime. Configure endpoint, key, model, prices and budget in the operator environment. No credentials here."
+}

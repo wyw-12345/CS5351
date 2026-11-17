@@ -1,0 +1,17 @@
+{
+  "model": "synthetic-fixture",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "message": {
+        "role": "assistant",
+        "content": "{\"criteria\": [{\"criterion_id\": \"content\", \"suggested_score\": \"8\", \"feedback\": \"The claim includes a practical action and a maintenance limitation. Add evidence about water savings.\", \"evidence_quote\": \"storage systems need regular cleaning\", \"uncertain\": false, \"confidence\": 0.9}, {\"criterion_id\": \"structure\", \"suggested_score\": \"7\", \"feedback\": \"The paragraph moves from a claim to a proposal and a limitation. Strengthen transitions.\", \"evidence_quote\": \"Schools can install collection tanks\", \"uncertain\": false, \"confidence\": 0.9}]}"
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 400,
+    "completion_tokens": 180,
+    "total_tokens": 580
+  }
+}
