@@ -1,0 +1,12 @@
+{
+  "status": "draft-retrospective-acceptance-no-implementation-approval",
+  "baseline_sha": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
+  "implementation_paths": [],
+  "requirement_ids": ["REQ-FUNC-004", "REQ-FUNC-005", "REQ-FUNC-008", "REQ-FUNC-009",
+    "REQ-INV-001", "REQ-INV-002", "REQ-INV-003", "REQ-INV-004", "REQ-INV-005", "REQ-INV-006",
+    "REQ-INV-007", "REQ-INV-008", "REQ-QUAL-002", "REQ-QUAL-003", "REQ-QUAL-005", "REQ-PERF-001",
+    "REQ-GOV-B03", "REQ-GOV-C02", "REQ-SEC-002"],
+  "test_paths": ["test/offline/test_authority_boundary.py", "test/governance/test_b_local_evidence.py",
+    "test/offline/test_migration.py", "test/offline/test_revision.py", "test/live/test_live_api.py"],
+  "rationale": "First independent B review of the existing A integration. Existing A code predates this test PR; future implementation changes need a prior reviewed test plan of their own."
+}

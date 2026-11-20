@@ -28,7 +28,7 @@ def advice(value=None):
 
 class ConfidenceTests(unittest.TestCase):
     def test_boundaries(self):
-        """REQ-FUNC-003/008: missing, invalid, below threshold and inclusive boundary."""
+        """REQ-FUNC-003, REQ-FUNC-008: missing, invalid, below threshold and inclusive boundary."""
         for value, reason in [(None, "invalid_confidence"), (True, "invalid_confidence"),
                               ("NaN", "invalid_confidence"), (float("inf"), "invalid_or_unavailable_provider_response"),
                               (-0.1, "invalid_confidence"), (1.1, "invalid_confidence"),
@@ -95,7 +95,7 @@ class SignedStoreTests(unittest.TestCase):
                                       record, scores, reason))
 
     def test_approved_score_and_private_audit(self):
-        """REQ-INV-001/003/006 / REQ-QUAL-005: signed approval recomputes; audit has no essay."""
+        """REQ-INV-001, REQ-INV-003, REQ-INV-006 / REQ-QUAL-005: signed approval recomputes; audit has no essay."""
         self.assertIsNone(self.record["final_score"])
         result = self.approve()
         self.assertEqual(result["final_score"], "72.00")
@@ -127,7 +127,7 @@ class SignedStoreTests(unittest.TestCase):
         self.assertIsNone(self.store.get(other["id"])["final_score"])
 
     def test_rubric_version_and_reason_bound(self):
-        """REQ-INV-003/006: rubric version and human resolution reason are signed."""
+        """REQ-INV-003, REQ-INV-006: rubric version and human resolution reason are signed."""
         for field, value in [("rubric_version", "changed"), ("reason", "changed"),
                              ("submission_id", "changed")]:
             signed = self.signed()
@@ -177,7 +177,7 @@ class SignedStoreTests(unittest.TestCase):
         self.assertEqual(self.store.connection.execute("SELECT count(*) FROM grades").fetchone()[0], 0)
 
     def test_read_detects_resigned_digest_tampering(self):
-        """REQ-INV-001/003: recalculated hashes cannot hide altered signed scores."""
+        """REQ-INV-001, REQ-INV-003: recalculated hashes cannot hide altered signed scores."""
         result = self.approve()
         audit = result["audit"]
         audit["accepted_scores"]["content"] = "9"
@@ -189,7 +189,7 @@ class SignedStoreTests(unittest.TestCase):
             self.store.get(self.record["id"])
 
     def test_reopen_and_default_deny(self):
-        """REQ-INV-003/006: restart re-verifies signature using operator trust configuration."""
+        """REQ-INV-003, REQ-INV-006: restart re-verifies signature using operator trust configuration."""
         first = self.approve()
         with GradeStore(self.path, trusted_keys=self.trust) as reopened:
             self.assertEqual(reopened.get(first["id"]), first)
