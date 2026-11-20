@@ -1,0 +1,133 @@
+# Member E — security + governance requirement proposals (Stage 1).
+# Status: proposed. Owner E submits these for C to merge/dedupe/remap into the
+# official docs/req/requirements.yaml. IDs are provisional and follow B's proposal
+# schema (docs/member-b/proposal-schema.json). Verification strings name concrete
+# checks; checks that do not exist yet are marked "to be implemented by A/B".
+#
+# MERGE OUTCOME (C baseline 0.1.0-c, docs/req/requirement-id-map.yaml):
+#   REQ-SEC-001 -> merged into REQ-INV-007
+#   REQ-SEC-003 -> merged into REQ-INV-003
+#   REQ-SEC-005 -> merged into REQ-INV-007
+#   REQ-SEC-002 / REQ-SEC-004 / REQ-SEC-006 -> accepted unchanged
+#   REQ-GOV-E01..E04 -> accepted unchanged
+- id: REQ-SEC-001
+  type: security
+  statement: The feedback engine has no write authority over the grade store; the permission
+    layer denies any write path and static checks forbid the grade-store import.
+  fit_criterion:
+    metric: unauthorized_grade_store_write_count
+    threshold: 0
+    verification: 'tools/gates.py safety; test/governance/test_gates.py::GateTests.test_forbidden_feedback_import'
+  priority: Must
+  source: Group allocation authority boundary and member E security direction
+  tradeoff: More orchestration and review overhead in exchange for an advisory component
+    that cannot corrupt authoritative records.
+  status: proposed
+- id: REQ-SEC-002
+  type: security
+  statement: The AI feedback component must not invent grading criteria outside the rubric;
+    every suggested score is validated against exactly the rubric IDs and range.
+  fit_criterion:
+    metric: fabricated_criteria_count
+    threshold: 0
+    verification: 'feedback_engine.validate_advice; test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates'
+  priority: Must
+  source: Group allocation AI must not fabricate rubric-absent standards
+  tradeoff: Strict schema validation of model output instead of trusting free-form advice.
+  status: proposed
+- id: REQ-SEC-003
+  type: security
+  statement: Grade persistence requires authenticated, non-repudiable human approval whose
+    identity comes from a trusted verifier, never from a client-supplied name or flag.
+  fit_criterion:
+    metric: unauthenticated_write_count
+    threshold: 0
+    verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected'
+  priority: Must
+  source: Group allocation grade-store approval boundary; member E security direction
+  tradeoff: Approval latency and verifier integration in exchange for accountable writes.
+  status: proposed
+- id: REQ-SEC-004
+  type: security
+  statement: No API key, token, or secret is stored in source, prompts, config, logs, CI
+    artifacts, or the repository; credentials are injected from the runtime environment only.
+  fit_criterion:
+    metric: committed_secret_count
+    threshold: 0
+    verification: 'secret scan in CI + .opencode/permissions.jsonc deny *.env read (to be implemented by A/B)'
+  priority: Must
+  source: Course prohibition on submitting API keys; member E security direction
+  tradeoff: Environment-injected credentials require deployment setup instead of checked-in keys.
+  status: proposed
+- id: REQ-SEC-005
+  type: security
+  statement: Adversarial essays and injected prompt text cannot cause side effects or
+    privilege escalation; the advisory component treats all model text as untrusted data.
+  fit_criterion:
+    metric: injection_side_effect_count
+    threshold: 0
+    verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory'
+  priority: Must
+  source: B invariant REQ-INV-007 and member E security direction
+  tradeoff: Validator and escaping discipline instead of executing model-returned text.
+  status: proposed
+- id: REQ-SEC-006
+  type: security
+  statement: The calculator runs least privilege: deterministic Decimal arithmetic only,
+    with no LLM, network, filesystem, or dynamic-import dependency.
+  fit_criterion:
+    metric: privileged_import_count
+    threshold: 0
+    verification: 'test/governance/test_gates.py::GateTests.test_calculator_network_import_rejected'
+  priority: Must
+  source: Group allocation frozen calculator; member E security direction
+  tradeoff: A restricted import surface instead of a general-purpose module.
+  status: proposed
+- id: REQ-GOV-E01
+  type: governance
+  statement: The project permission model is default-deny with an explicit per-path
+    whitelist; no agent may self-grant or broaden its own permissions.
+  fit_criterion:
+    metric: self_granted_permission_count
+    threshold: 0
+    verification: '.opencode/permissions.jsonc + docs/verification/permissions-snapshot.json (snapshot by A/B)'
+  priority: Must
+  source: Course D2/D3 default-deny permission model; member E governance direction
+  tradeoff: Frequent explicit allowlists instead of a permissive default.
+  status: proposed
+- id: REQ-GOV-E02
+  type: governance
+  statement: The score_calculator module is frozen; any modification requires an architecture
+    decision record and independent human approval on the exact change.
+  fit_criterion:
+    metric: unapproved_calculator_change_count
+    threshold: 0
+    verification: 'branch protection + ADR + CODEOWNERS + .opencode/permissions.jsonc deny edit src/score_calculator.py'
+  priority: Must
+  source: Group allocation frozen calculator; course D3 safety-critical change rule
+  tradeoff: Slower, review-bound changes to the authority module instead of quick fixes.
+  status: proposed
+- id: REQ-GOV-E03
+  type: governance
+  statement: Each architectural element maps to exactly one module; new work extends the
+    baseline and never silently replaces an existing module contract.
+  fit_criterion:
+    metric: unmapped_or_duplicated_module_count
+    threshold: 0
+    verification: 'docs/code-governance/structural-constraints.md + static module-boundary check (to be implemented by A/B)'
+  priority: Must
+  source: Course D3 structural constraints; member E governance direction
+  tradeoff: Explicit one-to-one module mapping instead of ad-hoc cross-module helpers.
+  status: proposed
+- id: REQ-GOV-E04
+  type: governance
+  statement: The coding agent may call only tools listed in the MCP tool manifest for its
+    role; role-inappropriate or unlisted tools are denied.
+  fit_criterion:
+    metric: unlisted_tool_invocation_count
+    threshold: 0
+    verification: 'docs/code-governance/mcp-tool-manifest.md + .opencode/permissions.jsonc role rules'
+  priority: Must
+  source: Course D3 mcp-tool-manifest requirement; member E governance direction
+  tradeoff: A curated tool surface instead of unrestricted agent capability.
+  status: proposed

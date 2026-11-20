@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-17",
+  "scope": "local only; no live API calls in this rebuild",
+  "checks": [
+    {
+      "check": "all-offline",
+      "command": "python -X utf8 -m unittest discover -s test/offline -v",
+      "exit_code": 0,
+      "evidence": "handoff/verification/all-offline.txt"
+    },
+    {
+      "check": "restart",
+      "command": "python -X utf8 -m scripts.demo_restart",
+      "exit_code": 0,
+      "evidence": "handoff/verification/restart.txt"
+    },
+    {
+      "check": "benchmark",
+      "command": "python -X utf8 -m scripts.benchmark",
+      "exit_code": 0,
+      "evidence": "evidence/benchmark.json"
+    }
+  ]
+}

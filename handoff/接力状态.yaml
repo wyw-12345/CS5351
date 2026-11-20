@@ -1,0 +1,97 @@
+schema_version: 1
+updated_on: '2026-11-17'
+project: GradeAide
+scope: Existing A implementation integrated on E; local checks passed; independent review and B acceptance pending.
+sequence:
+- C
+- D
+- E
+- A
+- B
+next_role: B
+next_action: B reads the A handoff, supplies its formal verification artifacts and obtains independent test and exact-head review before acceptance.
+source_baseline_before_handoff_docs: 46c4554f19115d51fda1c694c0758a6f9488af9a
+status_semantics:
+  pending: Work not delivered or not verified.
+  draft_ready: Draft files exist; required review is not complete.
+  awaiting_review: Ready for a named real human review; evidence not yet supplied.
+  completed: Artifacts, applicable checks and required real review evidence are complete.
+roles:
+  C:
+    status: draft_ready
+    detail: 'D1 baseline delivered: 47 requirements across seven types, schema, PRD,
+      ID map, review record and validation evidence. No human review or signature is
+      claimed. Schema format passes; traceability is blocked at 33 unmapped IDs.'
+    task_card: handoff/roles/C_需求工程.md
+    input: docs/member-a/requirements-candidates.yaml; docs/member-b/requirements-proposal.yaml;
+      docs/member-e/requirements-proposal.yaml
+    expected_output:
+    - docs/req/requirements.yaml
+    - docs/req/req-schema.json
+    - docs/req/prd.yaml
+    - docs/req/requirement-id-map.yaml
+    - docs/req/requirements-review-record.md
+    - docs/req/validation-report.md
+    review_evidence: docs/req/requirements-review-record.md (pending real reviewers);
+      docs/req/evidence/registry-validation.json; docs/req/evidence/gates-schema.txt
+    next: D
+  D:
+    status: pending
+    task_card: handoff/roles/D_软件架构.md
+    expected_output:
+    - architecture-blueprint.md
+    - docs/architecture/
+    review_evidence: null
+    next: E
+  E:
+    status: awaiting_review
+    detail: D3 governance backfilled against C 0.1.0-c and D ADR-0001..0004 (AGENTS.md,
+      structural-constraints, mcp-tool-manifest, .opencode/permissions.jsonc, .agent/rules.md);
+      .opencode/rules.md completed by owner E on 2026-11-16; permissions.jsonc syntax
+      verification against the installed OpenCode version and human review still pending.
+    task_card: handoff/roles/E_编码治理.md
+    expected_output:
+    - AGENTS.md
+    - .opencode/permissions.jsonc
+    - .opencode/rules.md
+    - .agent/rules.md
+    review_evidence: null
+    next: A
+  A:
+    status: awaiting_review
+    task_card: handoff/roles/A_实现与启动.md
+    expected_output:
+    - Prompt.md
+    - prompts/
+    - src/
+    - test/
+    plan_approval: Earlier conversation approved the A plan; current user authorized rebuilding the existing A integration. Not independent PR approval.
+    tests_approval: Original member A plan/test strategy approved; B formal approval
+      workflow pending
+    next: B
+    detail: ADR-aligned existing implementation integrated; 65 local offline tests and signed process restart passed. Formal review pending.
+    handoff_record: handoff/records/2026-11-17-A-实现整合.md
+    evidence: handoff/verification/results.json
+  B:
+    status: draft_ready
+    detail: Preparation verified locally; official integration and human review pending.
+    task_card: handoff/roles/B_验证与CI.md
+    evidence: docs/member-b/VALIDATION.md
+    verification_date: '2026-11-06'
+    tool_self_tests_passed: 35
+    tool_mutants_killed: 6
+    application_acceptance: pending
+    next: team-report-and-demo
+external_state:
+  github_url: https://github.com/wyw-12345/CS5351/tree/feat/member-a
+  branch_protection: not_configured
+  authenticated_reviewers: []
+  real_model_evaluation: A historical live evidence present in evidence/; no new API
+    calls; B semantic evaluation pending
+  full_raw_agent_transcripts: pending
+  team_report: pending
+  demo_video: pending
+update_rule: Inspect real files and latest records before changing status; preserve
+  historical evidence dates.
+
+current_git_observation: E has C/D/E documents but no B tools, governance tests, CI or official snapshots; historical B metrics above do not prove current branch acceptance.
