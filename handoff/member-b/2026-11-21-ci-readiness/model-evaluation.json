@@ -1,0 +1,23 @@
+{
+  "status": "proposed-awaiting-human-review",
+  "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
+  "test_baseline_sha": "5f05f01b685e5ebd574996f08fcb9d546371800e",
+  "model": "deepseek-flash",
+  "prompt_path": "prompts/prompt_v1.2.yaml",
+  "prompt_sha256": "f60a427951c9be559c316795f76481f246e7255a16f746ec1b1db3b638415369",
+  "evaluation_path": "test/live/fixed-cases.json",
+  "dataset_sha256": "67f89aaba09b30b9276ce941d9570b9a9c6be02695e68681e19b21677f1022ca",
+  "evaluation_approved": false,
+  "live": false,
+  "case_count": 5,
+  "required_environment": [
+    "GRADEAIDE_ENDPOINT",
+    "GRADEAIDE_MODEL",
+    "GRADEAIDE_API_KEY",
+    "GRADEAIDE_INPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_OUTPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_MAX_COST",
+    "GRADEAIDE_PRICE_SOURCE"
+  ],
+  "provenance": "A version 1.2 and fixed synthetic cases; no provider requests made for this snapshot."
+}
