@@ -1,0 +1,12 @@
+# Proposed plan; NONE of these application mutations have been run without A's source.
+status: pending-upstream-and-human-approval
+workspace_rule: disposable worktree only; never edit production or the user's working tree
+mutants:
+  - {id: M-INV-001, requirement: REQ-INV-001, change: Trust model final_score instead of calculator, killed_by: test_model_total_cannot_override}
+  - {id: M-INV-002, requirement: REQ-INV-002, change: Replace missing criterion with zero, killed_by: test_invalid_advice_escalates}
+  - {id: M-INV-003, requirement: REQ-INV-003, change: Bypass trusted approval verifier, killed_by: test_unapproved_write_is_rejected}
+  - {id: M-INV-004, requirement: REQ-INV-004, change: Remove range or finite validation, killed_by: test_invalid_numeric_inputs_rejected}
+  - {id: M-INV-005, requirement: REQ-INV-005, change: Round half-even or round per criterion, killed_by: test_exact_weighted_score}
+  - {id: M-INV-006, requirement: REQ-INV-006, change: Omit hash metadata or trust client reviewer name, killed_by: test_audit_records_both_sources}
+  - {id: M-INV-007, requirement: REQ-INV-007, change: Let feedback validator write to grade store, killed_by: test_prompt_injection_stays_advisory}
+  - {id: M-INV-008, requirement: REQ-INV-008, change: Append duplicate or overwrite conflict, killed_by: test_retry_is_idempotent}

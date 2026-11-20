@@ -373,3 +373,47 @@
   - test/offline/test_authority_boundary.py
   - test/offline/test_migration.py
   - test/offline/test_revision.py
+
+- id: AI-B-GATES-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached
+  purpose: Integrate the six B gate candidates on merged main and verify they block when release evidence is missing.
+  source: 'main fab81cb; previously verified review candidates in PR #4 and docs/member-b-ci-readiness'
+  human_review: Independent exact-head review, policy activation and release acceptance pending.
+  evidence: handoff/records/2026-11-21-b-ci-candidate.md
+  limitations: The PR workflow uses no live grading credentials. Current permission, branch protection and semantic evidence
+    are pending.
+  files:
+  - .github/workflows/ci.yml
+  - docs/ai-use-log.yaml
+  - docs/architecture/adr/ADR-B0005-verification-rollout.md
+  - docs/code-governance/verification-constraints.md
+  - docs/member-b/02-interface-contract.md
+  - docs/member-b/03-test-approval-process.md
+  - docs/member-b/04-github-setup.md
+  - docs/member-b/proposal-schema.json
+  - docs/member-b/requirements-proposal.yaml
+  - docs/verification/api-surface.json
+  - docs/verification/application-mutations.yaml
+  - docs/verification/implementation-approvals.json
+  - docs/verification/model-evaluation.json
+  - docs/verification/permissions-snapshot.json
+  - docs/verification/policy.json
+  - docs/verification/test-map.yaml
+  - handoff/records/2026-11-21-b-ci-candidate.md
+  - test/governance/test_b_current_semantic.py
+  - test/governance/test_b_integration_guards.py
+  - test/governance/test_b_module_snapshot.py
+  - test/governance/test_gates.py
+  - test/governance/test_semantic_eval.py
+  - test/live/test_performance.py
+  - tools/__init__.py
+  - tools/application_mutation_check.py
+  - tools/check_suite.py
+  - tools/gates.py
+  - tools/github_setup.py
+  - tools/integration_checks.py
+  - tools/mutation_check.py
+  - tools/run_ci_gate.py
+  - tools/semantic_eval.py
