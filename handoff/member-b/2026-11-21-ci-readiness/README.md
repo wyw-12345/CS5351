@@ -12,11 +12,17 @@ Input: A `10f5b8d`, B tests-only draft PR #5 at `5f05f01`, and historical B cand
 
 - Candidate `tools/gates.py schema` stops on REQ-PERF-003; C's strict validator lists ten missing executable locators. Keep failures visible until they have real tests or reviewed evidence.
 - `tools/gates.py readiness` and `tools/semantic_eval.py` refuse the pending human baseline. No active reviewer list, prior approved tests baseline, or reviewed current model run is verified.
-- `python -m mypy --no-incremental src tools` on the current A code and older B tools reports one compatibility error. The old evaluator calls `Settings.from_env()`; A moved configuration to `src.cli.settings_from_env()`. Align the evaluator to the approved CLI/configuration boundary before wiring CI.
+- `python -m mypy --no-incremental src tools` on the current A code and older B tools reported one compatibility error. The old evaluator called `Settings.from_env()`, which A replaced with `src.cli.settings_from_env()`.
+
+## Verified evaluator update
+
+`candidate/` contains the updated evaluator and three offline regression cases as an overlay for the historical gate candidate. The evaluator uses A's current config entry point, validates finite confidence including decimal strings, and checks that escalation is an expected result backed by valid advice. A provider failure, malformed advice, or fabricated quote cannot count as a correct escalation. Paid replay requires an approved model config, that config's live flag, and explicit runtime live opt-in.
+
+To reproduce, start from A plus B test PR #5 in a disposable directory. Copy the historical B gate tools from PR #4 and their `tools/__init__.py` and pending policy template, then overlay only `candidate/`. With `GRADEAIDE_LIVE=0`, run the old `test_semantic_eval.py` and new `test_b_current_semantic.py` using unittest discovery in `test/governance`. Both suites passed (7 + 3 tests), as did mypy on `src tools` (13 files) and Ruff on the two updated candidate files. Evaluation still awaits real review and authorization.
 
 ## Next CI candidate
 
-1. Update the evaluator to use the current CLI-injected settings, approved prompt/dataset paths, expected escalation reasons, and the numeric/string confidence contract. Add offline fixture checks first, including explicit refusal of paid execution without review and opt-in.
+1. Review the evaluator overlay against the current CLI, prompt and fixed-set contract. Confirm actual model and cost before any live evidence collection.
 2. Use one line-ending convention for the checked-in snapshots, verification code, and review record. Match the exact A API and E configuration SHA; record runtime proof separately. The older permission gate hashes raw checkout bytes, so the cross-platform comparison needs updating before these normalized hashes are used.
 3. Bring in reviewed gate tests and the six named jobs. Confirm that the runner distinguishes tests-only review, implementation with prior reviewed tests, and the human-owned transition for historical integration. Backfilled review data cannot establish approval-before-code.
 4. Keep CI and protection activation tied to valid GitHub configuration, real independent exact-HEAD reviews, and administrator-controlled required checks. Record any bootstrap decision as a separate human-reviewed change with its limits.
