@@ -1,0 +1,672 @@
+{
+  "status": "awaiting-independent-human-review",
+  "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
+  "line_endings": "SHA256 after CRLF to LF",
+  "source_sha256": {
+    "src/feedback_engine.py": "164228418c298aaf9909cc2a8d61d38fce1d70a601be34e1bb2085ce1f718f92",
+    "src/score_calculator.py": "b06b1ca5602770eaf2c17f2badcd6ac61d8b54887522f2768ff9f01386ac44bf",
+    "src/grade_store.py": "62af265668dace08716a73917dd84b03a6c0cded28256c0856d2bdfb7e6b10fe",
+    "src/contracts.py": "a83cf28add2878a1cc5b2f86415ddb15a06007e6e4f2603e87a92d86ef94b669",
+    "src/cli.py": "60bca042b197201d5eb04309ae2d983dfdf0ecceb3281a6233f73b60faf26f95"
+  },
+  "modules": {
+    "feedback_engine": {
+      "Settings": {
+        "signature": {
+          "bases": []
+        },
+        "methods": {
+          "validate": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                }
+              ],
+              "returns": "None",
+              "async": false
+            }
+          }
+        },
+        "fields": {
+          "endpoint": "str",
+          "model": "str",
+          "api_key": "str",
+          "input_price": "str",
+          "output_price": "str",
+          "max_cost": "str",
+          "timeout": "float",
+          "max_output_tokens": "int",
+          "max_input_bytes": "int",
+          "max_response_bytes": "int",
+          "price_source": "str",
+          "thinking": "str | None"
+        }
+      },
+      "request_json": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "body",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "settings",
+              "kind": "positional",
+              "annotation": "Settings",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "ConfidenceError": {
+        "signature": {
+          "bases": [
+            "ValidationError"
+          ]
+        },
+        "methods": {},
+        "fields": {}
+      },
+      "confidence_value": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "Decimal",
+          "async": false
+        },
+        "methods": {}
+      },
+      "escalation_reason": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "feedback",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            }
+          ],
+          "returns": "str | None",
+          "async": false
+        },
+        "methods": {}
+      },
+      "validate_feedback": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            },
+            {
+              "name": "essay",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "rubric",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "evaluate": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "essay",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "rubric",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "settings",
+              "kind": "positional",
+              "annotation": "Settings",
+              "default": null
+            },
+            {
+              "name": "transport",
+              "kind": "positional",
+              "annotation": "Callable[[dict[str, Any], Settings], dict[str, Any]]",
+              "default": "request_json"
+            },
+            {
+              "name": "mode",
+              "kind": "keyword_only",
+              "annotation": "str",
+              "default": "'live'"
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      }
+    },
+    "score_calculator": {
+      "calculate_score": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "rubric",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "scores",
+              "kind": "positional",
+              "annotation": "dict[str, str]",
+              "default": null
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      }
+    },
+    "grade_store": {
+      "approval_binding": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "record",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "scores",
+              "kind": "positional",
+              "annotation": "dict[str, str]",
+              "default": null
+            },
+            {
+              "name": "reviewer",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "reason",
+              "kind": "positional",
+              "annotation": "str",
+              "default": "''"
+            }
+          ],
+          "returns": "dict[str, str]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "sign_approval": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "private_key",
+              "kind": "positional",
+              "annotation": "Ed25519PrivateKey",
+              "default": null
+            },
+            {
+              "name": "key_id",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "binding",
+              "kind": "positional",
+              "annotation": "dict[str, str]",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "GradeStore": {
+        "signature": {
+          "bases": []
+        },
+        "methods": {
+          "__init__": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                },
+                {
+                  "name": "path",
+                  "kind": "positional",
+                  "annotation": "str | Path",
+                  "default": null
+                },
+                {
+                  "name": "trusted_keys",
+                  "kind": "keyword_only",
+                  "annotation": "dict[str, Any] | None",
+                  "default": "None"
+                },
+                {
+                  "name": "migrate_legacy",
+                  "kind": "keyword_only",
+                  "annotation": "bool",
+                  "default": "False"
+                }
+              ],
+              "returns": null,
+              "async": false
+            }
+          },
+          "close": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                }
+              ],
+              "returns": "None",
+              "async": false
+            }
+          },
+          "create": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                },
+                {
+                  "name": "essay",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": null
+                },
+                {
+                  "name": "rubric",
+                  "kind": "positional",
+                  "annotation": "dict[str, Any]",
+                  "default": null
+                },
+                {
+                  "name": "advice",
+                  "kind": "positional",
+                  "annotation": "dict[str, Any]",
+                  "default": null
+                },
+                {
+                  "name": "submission_id",
+                  "kind": "keyword_only",
+                  "annotation": "str | None",
+                  "default": "None"
+                }
+              ],
+              "returns": "dict[str, Any]",
+              "async": false
+            }
+          },
+          "get": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                },
+                {
+                  "name": "proposal_id",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": null
+                }
+              ],
+              "returns": "dict[str, Any]",
+              "async": false
+            }
+          },
+          "approve": {
+            "signature": {
+              "parameters": [
+                {
+                  "name": "self",
+                  "kind": "positional",
+                  "annotation": null,
+                  "default": null
+                },
+                {
+                  "name": "proposal_id",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": null
+                },
+                {
+                  "name": "proposal_hash",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": null
+                },
+                {
+                  "name": "scores",
+                  "kind": "positional",
+                  "annotation": "dict[str, str]",
+                  "default": null
+                },
+                {
+                  "name": "reviewer",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": null
+                },
+                {
+                  "name": "reason",
+                  "kind": "positional",
+                  "annotation": "str",
+                  "default": "''"
+                },
+                {
+                  "name": "approval",
+                  "kind": "keyword_only",
+                  "annotation": "Any",
+                  "default": "None"
+                }
+              ],
+              "returns": "dict[str, Any]",
+              "async": false
+            }
+          }
+        },
+        "fields": {}
+      }
+    },
+    "contracts": {
+      "ValidationError": {
+        "signature": {
+          "bases": [
+            "ValueError"
+          ]
+        },
+        "methods": {},
+        "fields": {}
+      },
+      "parse_json": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "text",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            }
+          ],
+          "returns": "Any",
+          "async": false
+        },
+        "methods": {}
+      },
+      "read_text": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "path",
+              "kind": "positional",
+              "annotation": "str | Path",
+              "default": null
+            },
+            {
+              "name": "limit",
+              "kind": "positional",
+              "annotation": "int",
+              "default": "100000"
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      },
+      "canonical": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      },
+      "digest": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      },
+      "exact_keys": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            },
+            {
+              "name": "keys",
+              "kind": "positional",
+              "annotation": "set[str]",
+              "default": null
+            },
+            {
+              "name": "label",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "text_value": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            },
+            {
+              "name": "label",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "maximum",
+              "kind": "positional",
+              "annotation": "int",
+              "default": "2000"
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      },
+      "decimal_value": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            },
+            {
+              "name": "label",
+              "kind": "positional",
+              "annotation": "str",
+              "default": null
+            },
+            {
+              "name": "maximum",
+              "kind": "positional",
+              "annotation": "Decimal",
+              "default": "Decimal('1000000')"
+            }
+          ],
+          "returns": "Decimal",
+          "async": false
+        },
+        "methods": {}
+      },
+      "validate_rubric": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "rubric",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "validate_scores": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "rubric",
+              "kind": "positional",
+              "annotation": "dict[str, Any]",
+              "default": null
+            },
+            {
+              "name": "scores",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "dict[str, str]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "validate_essay": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "essay",
+              "kind": "positional",
+              "annotation": "Any",
+              "default": null
+            }
+          ],
+          "returns": "str",
+          "async": false
+        },
+        "methods": {}
+      }
+    },
+    "cli": {
+      "settings_from_env": {
+        "signature": {
+          "parameters": [],
+          "returns": "Settings",
+          "async": false
+        },
+        "methods": {}
+      },
+      "trusted_keys_from_env": {
+        "signature": {
+          "parameters": [],
+          "returns": "dict[str, Any]",
+          "async": false
+        },
+        "methods": {}
+      },
+      "main": {
+        "signature": {
+          "parameters": [
+            {
+              "name": "argv",
+              "kind": "positional",
+              "annotation": "list[str] | None",
+              "default": "None"
+            }
+          ],
+          "returns": "int",
+          "async": false
+        },
+        "methods": {}
+      }
+    }
+  }
+}
