@@ -436,3 +436,21 @@
   - tools/mutation_check.py
   - tools/run_ci_gate.py
   - tools/semantic_eval.py
+
+- id: AI-B-GATES-FOLLOWUP-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: 'Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached'
+  purpose: Verify D7 protection readback without mutations to GitHub and complete B's exact-retry application mutation check.
+  source: 'PR #8 first Actions run 44778695021; isolated rehearsal with tests-only PR #9'
+  human_review: Exact-head review and repository approval pending.
+  evidence: handoff/records/2026-11-21-b-ci-candidate.md
+  limitations: Local and read-only server checks. No runtime, OpenCode policy, or repository settings changes.
+  files:
+  - docs/ai-use-log.yaml
+  - docs/member-b/04-github-setup.md
+  - docs/verification/test-map.yaml
+  - handoff/records/2026-11-21-b-ci-candidate.md
+  - test/governance/test_b_protection_readback.py
+  - tools/application_mutation_check.py
+  - tools/github_setup.py

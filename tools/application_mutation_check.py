@@ -27,6 +27,11 @@ MUTANTS = [
      'return result\n        except Exception:\n            if self.connection.in_transaction:\n                self.connection.execute("ROLLBACK")',
      'return result\n        except Exception:\n            if self.connection.in_transaction:\n                self.connection.execute("COMMIT")',
      "test.offline.test_store.StoreTests.test_failed_audit_insert_rolls_back_status_and_grade"),
+    ("INV-008-retry", "src/grade_store.py",
+     'raise ValidationError("submission content conflict")\n            else:',
+     'raise ValidationError("submission content conflict")\n'
+     '                raise ValidationError("identical retry rejected")\n            else:',
+     "test.offline.test_revision.SignedStoreTests.test_idempotency_and_conflicts"),
 ]
 
 
@@ -62,7 +67,6 @@ def main() -> int:
                             "baseline_passed": True, "mutation_compiles": True})
     results.extend([
         {"mutant": "INV-003-signing", "status": "NOT RUN", "reason": "Signed A behavior exists; current mutation evidence is pending"},
-        {"mutant": "INV-008-idempotency", "status": "NOT RUN", "reason": "Submission identity exists; current mutation evidence is pending"},
         {"mutant": "INV-007-advisory-authority", "status": "NOT RUN", "reason": "E runtime isolation evidence pending; gate import mutant is separate"},
     ])
     target = ROOT / "artifacts/application-mutations.json"

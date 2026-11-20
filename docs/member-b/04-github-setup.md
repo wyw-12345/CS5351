@@ -1,40 +1,29 @@
-# D7 — real GitHub setup and readback
+# D7 rollout and GitHub readback
 
-Local Git history is created in this directory. No GitHub remote/account authorization was supplied; no remote URL or protection success is claimed.
+GradeAide uses [wyw-12345/CS5351](https://github.com/wyw-12345/CS5351). [PR #8](https://github.com/wyw-12345/CS5351/pull/8) contains B's gate candidate. Its first [Actions run](https://github.com/wyw-12345/CS5351/actions/runs/44778695021) exercised all six jobs. Branch protection and reviewed baseline policy were still pending at that readback.
 
-## Create and push
+## Owner and independent review
 
-1. Use your authenticated GitHub account to create a **private** `gradeaide` repository (avoid publishing student submissions). Or use the provided script with an environment-only API token; its default mode prints the exact API payload without changing anything:
+1. Review the exact candidate SHA, the D7 rollout ADR and the repository's historical merge evidence. PR #6 merged prior implementation and tests; its review API returned no reviews. The rollout decision should record that history and the evidence the owner has accepted for the starting baseline.
+2. Establish the reviewed policy on the protected base with real independent reviewer identities and a real `CODEOWNERS` assignment. Use test-approval ancestry for future changes. Confirm E's runtime/tool and policy evidence and current semantic evidence before treating the release checks as active. GitHub's review entry, the branch settings and the run results are separate sources of evidence.
+3. The repository administrator creates and protects the reviewed `test-baselines` branch and configures `main`. Keep approval review on both. Require all six checks on `main`; keep successful status checks optional on `test-baselines` so independently reviewed red tests can precede implementation.
 
-   ```powershell
-   .\.venv\Scripts\python tools/github_setup.py ACTUAL_OWNER/gradeaide --create
-   # After inspecting the real owner and payload, execute with existing account authorization:
-   .\.venv\Scripts\python tools/github_setup.py ACTUAL_OWNER/gradeaide --create --apply
-   ```
+Configure the intended protection through GitHub Settings, or inspect this repository's exact payload locally before the administrator applies it:
 
-   `ACTUAL_OWNER` is instructional text, not a real repository. Replace it. Do not commit a token; use GitHub Desktop, `gh auth login`, or an environment variable. This script accepts only personal account creation; an organization repo needs its administrators' approved process.
-2. Add the actual remote and push this preparation history using your normal authenticated Git client. Create `test-baselines` from the approved governance baseline and push it too. Never force-push another member's work.
-3. Replace README's “not yet connected” field with the verified real URL. Add independent real teammate reviewer usernames to the protected `docs/verification/policy.json`; do not list only the author. Set status to `active` only through a real human-reviewed governance baseline.
-4. Generate `.github/CODEOWNERS` with real independent usernames for `/src/score_calculator.py`, `/src/grade_store.py`, `/src/feedback_engine.py`, `/.github/`, `/tools/`, `/.opencode/`, `/.agent/`, `/docs/verification/`, `/AGENTS.md`. The initial commented file is not enforcement. Required general PR review plus explicit CODEOWNERS ensures safety/governance paths receive review.
-
-## Protect both branches
-
-After both branches exist, dry-run then apply:
-
-```powershell
-.\.venv\Scripts\python tools/github_setup.py ACTUAL_OWNER/gradeaide
-.\.venv\Scripts\python tools/github_setup.py ACTUAL_OWNER/gradeaide --apply
+```text
+python tools/github_setup.py wyw-12345/CS5351
 ```
 
-`main`: all six exact check contexts, strict up-to-date base, one independent review, code-owner review, dismiss stale approvals, review latest push, resolve conversations, enforce admins, no force push/deletion. `test-baselines`: same human review constraints, but no required green application check so a deliberately failing test can be approved **before implementation**. Do not merge source code into test-baselines. Its tests-only nature is checked later by the implementation gate.
+After configuration an authorized account can verify the live response without changing the repository:
 
-The API script reads protection back. Preserve the actual API readback/screenshot and workflow run links in the PR memo. A JSON file in the repository alone does not enable server-side protection. If the account plan does not support private-repository protection, document the actual API failure and choose a team-approved supported account/organization; do not silently publish the project or claim protection is active.
+```text
+python tools/github_setup.py wyw-12345/CS5351 --check
+```
 
-## Operational details
+The command reads both branch protection endpoints. It checks admin enforcement, force pushes and deletion, conversation resolution, stale-review dismissal, CODEOWNERS and latest-push review, bypass allowances, and the expected six required checks on an up-to-date main. It also checks that the tests-only branch has no required status checks. The request uses an existing authorized `GH_TOKEN` or `GITHUB_TOKEN` from the environment. GitHub requires Administration read access for a fine-grained credential to read these settings. [GitHub branch-protection API](https://docs.github.com/en/rest/branches/branch-protection#get-branch-protection)
 
-- Add the real model API key as `GRADEAIDE_API_KEY` through GitHub Secrets after A aligns the provider contract. Never expose it to unreviewed fork code; fork semantic jobs fail and a maintainer uses a reviewed trusted branch.
-- Review-triggered API evidence needs **rerun jobs** after a real approval; no fake review event file is accepted.
-- Initial push may have an all-zero before SHA and missing upstream files, so its gate failures are expected. Never rewrite the diff to HEAD~1 to manufacture a pass.
-- Before final submission verify six actual check runs on a real PR, a deliberately blocked negative PR, protection readback, commit history, real URL in README and no tracked credentials.
+## Record current evidence
 
-Sources: [GitHub branch protection REST API](https://docs.github.com/en/rest/branches/branch-protection), [protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches), [workflow security](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target).
+- Save the verified branch settings or readback, the owner-reviewed baseline SHA, and real review and workflow links in the handoff record. Confirm the actual CODEOWNERS identities separately from the server's code-owner setting.
+- Rerun the exact-head workflow after independent review. Save a demonstrably blocked PR to show enforcement.
+- Keep provider credentials outside the candidate PR workflow. A/B should use an authorized model replay from an approved environment to gather current real evidence. Preserve the model, prompt and dataset fingerprints, consent and review together with its run.
