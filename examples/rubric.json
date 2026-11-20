@@ -1,0 +1,8 @@
+{
+  "id": "synthetic-water-essay",
+  "version": "1.0",
+  "criteria": [
+    {"id": "content", "description": "A clear claim with supporting reasons and a limitation.", "max_score": "10", "weight": "0.6"},
+    {"id": "structure", "description": "Ideas follow a clear and connected order.", "max_score": "10", "weight": "0.4"}
+  ]
+}

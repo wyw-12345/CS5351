@@ -1,17 +1,15 @@
 schema_version: 1
-updated_on: '2026-11-12'
+updated_on: '2026-11-17'
 project: GradeAide
-scope: C D1 and D D2 delivered for review; integrated acceptance pending.
+scope: Existing A implementation integrated on E; local checks passed; independent review and B acceptance pending.
 sequence:
 - C
 - D
 - E
 - A
 - B
-next_role: D
-next_action: D reads C's registry/schema/PRD/ID map, freezes the runtime interface
-  and authority boundary, and maps every REQ to a component, test/evidence and monitor.
-  C's baseline is draft_ready, not human-approved.
+next_role: B
+next_action: B reads the A handoff, supplies its formal verification artifacts and obtains independent test and exact-head review before acceptance.
 source_baseline_before_handoff_docs: 46c4554f19115d51fda1c694c0758a6f9488af9a
 status_semantics:
   pending: Work not delivered or not verified.
@@ -67,13 +65,12 @@ roles:
     - prompts/
     - src/
     - test/
-    plan_approval: User approval recorded in docs/member-a/approval-record.md; not
-      GitHub tests-only PR approval
+    plan_approval: Earlier conversation approved the A plan; current user authorized rebuilding the existing A integration. Not independent PR approval.
     tests_approval: Original member A plan/test strategy approved; B formal approval
       workflow pending
     next: B
-    detail: Runnable CLI, SQLite, scoring, tests and historical live evidence merged.
-      B proposed interface incompatible; C/D/E review pending.
+    detail: ADR-aligned existing implementation integrated; 65 local offline tests and signed process restart passed. Formal review pending.
+    handoff_record: handoff/records/2026-11-17-A-实现整合.md
     evidence: handoff/verification/results.json
   B:
     status: draft_ready
@@ -86,7 +83,7 @@ roles:
     application_acceptance: pending
     next: team-report-and-demo
 external_state:
-  github_url: null
+  github_url: https://github.com/wyw-12345/CS5351/tree/feat/member-a
   branch_protection: not_configured
   authenticated_reviewers: []
   real_model_evaluation: A historical live evidence present in evidence/; no new API
@@ -96,3 +93,5 @@ external_state:
   demo_video: pending
 update_rule: Inspect real files and latest records before changing status; preserve
   historical evidence dates.
+
+current_git_observation: E has C/D/E documents but no B tools, governance tests, CI or official snapshots; historical B metrics above do not prove current branch acceptance.
