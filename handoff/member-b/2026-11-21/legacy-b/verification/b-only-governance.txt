@@ -1,0 +1,91 @@
+test_public_api_changes_with_keyword_only_defaults (test_b_integration_guards.BIntegrationGuardTests.test_public_api_changes_with_keyword_only_defaults)
+REQ-GOV-B02, REQ-GOV-C02: approve signature changes alter the snapshot. ... ok
+test_public_api_reports_signatures_and_methods (test_b_integration_guards.BIntegrationGuardTests.test_public_api_reports_signatures_and_methods)
+REQ-GOV-B02, REQ-GOV-C02: public API snapshots name exact callables. ... ok
+test_registered_test_ids_reject_prefix_confusion (test_b_integration_guards.BIntegrationGuardTests.test_registered_test_ids_reject_prefix_confusion)
+REQ-GOV-C02: prefixes or extensions of registered IDs are not registered. ... ok
+test_registered_test_ids_reject_unknown_ids (test_b_integration_guards.BIntegrationGuardTests.test_registered_test_ids_reject_unknown_ids)
+REQ-GOV-C02, REQ-GOV-B03: one known ID cannot mask an unregistered ID. ... ok
+test_requirement_change_requires_coevolution (test_b_integration_guards.BIntegrationGuardTests.test_requirement_change_requires_coevolution)
+REQ-GOV-C01, REQ-GOV-C02, REQ-GOV-B03: requirement edits co-evolve. ... ok
+test_script_and_dependency_manifests_are_implementation (test_b_integration_guards.BIntegrationGuardTests.test_script_and_dependency_manifests_are_implementation)
+REQ-GOV-B02, REQ-GOV-B06: scripts and dependency manifests need gates and logs. ... ok
+test_script_change_requires_ai_log_entry (test_b_integration_guards.BIntegrationGuardTests.test_script_change_requires_ai_log_entry)
+REQ-GOV-B06: changing a script without a substantive log entry is blocked. ... ok
+test_secret_scan_does_not_echo_secret (test_b_integration_guards.BIntegrationGuardTests.test_secret_scan_does_not_echo_secret)
+REQ-SEC-004: synthetic tokens are blocked without leaking the value. ... ok
+test_approval_after_implementation_rejected (test_gates.GateTests.test_approval_after_implementation_rejected)
+REQ-GOV-B01: approval cannot be added retroactively. ... ok
+test_approval_requires_human (test_gates.GateTests.test_approval_requires_human)
+REQ-GOV-B01: bot cannot count as independent human review. ... ok
+test_calculator_network_import_rejected (test_gates.GateTests.test_calculator_network_import_rejected)
+REQ-GOV-B02: calculator cannot introduce provider or network dependencies. Additional registry obligations: REQ-SEC-006. ... ok
+test_changes_requested_supersedes (test_gates.GateTests.test_changes_requested_supersedes)
+REQ-GOV-B01: changes requested supersedes prior APPROVED. ... ok
+test_dismissed_approval_rejected (test_gates.GateTests.test_dismissed_approval_rejected)
+REQ-GOV-B01: later dismissal supersedes earlier approval. ... ok
+test_duplicate_requirement_ids_rejected (test_gates.GateTests.test_duplicate_requirement_ids_rejected)
+REQ-GOV-B03: schema-valid duplicate IDs remain a semantic failure. ... ok
+test_empty_and_skipped_suites_rejected (test_gates.GateTests.test_empty_and_skipped_suites_rejected)
+REQ-GOV-B05: successful unittest status alone cannot hide skips/no tests. ... ok
+test_equal_time_is_not_before (test_gates.GateTests.test_equal_time_is_not_before)
+REQ-GOV-B01: simultaneous timestamp is insufficient ordering evidence. ... ok
+test_forbidden_feedback_import (test_gates.GateTests.test_forbidden_feedback_import)
+REQ-GOV-B02: advisory component cannot import grade store or write helper. Additional registry obligations: REQ-INV-007, REQ-QUAL-001. ... ok
+test_history_test_change_rejected (test_gates.GateTests.test_history_test_change_rejected)
+REQ-GOV-B05: editing/deleting an existing test cannot hide a regression. ... ok
+test_log_actual_new_entry_passes (test_gates.GateTests.test_log_actual_new_entry_passes)
+REQ-GOV-B06: explicit honest pending review entry satisfies logging only. ... ok
+test_log_cannot_rewrite_history (test_gates.GateTests.test_log_cannot_rewrite_history)
+REQ-GOV-B06: editing a previous entry cannot substitute for an append. ... ok
+test_log_must_cover_changed_paths (test_gates.GateTests.test_log_must_cover_changed_paths)
+REQ-GOV-B06: unrelated log entry does not cover current code change. ... ok
+test_log_whitespace_change_rejected (test_gates.GateTests.test_log_whitespace_change_rejected)
+REQ-GOV-B06: rewriting log whitespace or old records is not new evidence. ... ok
+test_missing_registry_fails (test_gates.GateTests.test_missing_registry_fails)
+REQ-GOV-B03: missing handoff must not be treated as a passing schema gate. ... ok
+test_missing_upstream_fails (test_gates.GateTests.test_missing_upstream_fails)
+REQ-GOV-B03: missing source/architecture fails release readiness. ... ok
+test_nonzero_invariant_threshold_rejected (test_gates.GateTests.test_nonzero_invariant_threshold_rejected)
+REQ-GOV-B03: invariant threshold cannot tolerate escapes. ... ok
+test_official_registry_needs_seven_types (test_gates.GateTests.test_official_registry_needs_seven_types)
+REQ-GOV-B03: B-only proposal is not a complete official registry. ... ok
+test_proposal_trace_targets_exist (test_gates.GateTests.test_proposal_trace_targets_exist)
+REQ-GOV-B03: every proposed requirement has an actual named test with ID. ... ok
+test_protection_requires_six_gates (test_gates.GateTests.test_protection_requires_six_gates)
+REQ-GOV-B02: main requires all six checks, reviews and admin enforcement. ... ok
+test_reviewed_scope_requires_related_trace (test_gates.GateTests.test_reviewed_scope_requires_related_trace)
+REQ-GOV-B01: requirement tests must be part of the actual approved PR. ... ok
+test_self_approval_rejected (test_gates.GateTests.test_self_approval_rejected)
+REQ-GOV-B01: author cannot approve own tests even if allowlisted. ... ok
+test_stale_approval_rejected (test_gates.GateTests.test_stale_approval_rejected)
+REQ-GOV-B01: approval of earlier SHA is stale. ... ok
+test_test_pr_containing_code_rejected (test_gates.GateTests.test_test_pr_containing_code_rejected)
+REQ-GOV-B01: mixed tests and implementation PR is not tests-before-code. ... ok
+test_unlisted_reviewer_rejected (test_gates.GateTests.test_unlisted_reviewer_rejected)
+REQ-GOV-B01: contributor cannot self-expand trusted reviewer allowlist. ... ok
+test_unmerged_test_pr_rejected (test_gates.GateTests.test_unmerged_test_pr_rejected)
+REQ-GOV-B01: a file claiming approval is not a merged approved baseline. ... ok
+test_unrelated_prior_tests_cannot_approve_new_code (test_gates.GateTests.test_unrelated_prior_tests_cannot_approve_new_code)
+REQ-GOV-B01: an old unrelated approved test cannot authorize new source. ... ok
+test_valid_prior_review (test_gates.GateTests.test_valid_prior_review)
+REQ-GOV-B01: independent approval and merge both precede implementation. ... ok
+test_adversarial_non_escalation_fails (test_semantic_eval.SemanticTests.test_adversarial_non_escalation_fails)
+REQ-GOV-B04 / REQ-INV-007: model obeying injection must fail evaluation. ... ok
+test_empty_dataset_fails (test_semantic_eval.SemanticTests.test_empty_dataset_fails)
+REQ-GOV-B04: zero evaluated cases must not give a green gate. ... ok
+test_missing_criterion_fails (test_semantic_eval.SemanticTests.test_missing_criterion_fails)
+REQ-GOV-B04: feedback cannot invent or omit rubric criteria. ... ok
+test_missing_safety_threshold_rejected (test_semantic_eval.SemanticTests.test_missing_safety_threshold_rejected)
+REQ-GOV-B04: threshold omission must not disable safety evaluation. ... ok
+test_permissive_normalizer_cannot_hide_invalid_score (test_semantic_eval.SemanticTests.test_permissive_normalizer_cannot_hide_invalid_score)
+REQ-GOV-B04: live evaluator independently rejects out-of-range suggestions. ... ok
+test_unsupported_quote_fails (test_semantic_eval.SemanticTests.test_unsupported_quote_fails)
+REQ-GOV-B04: fabricated evidence cannot meet supported-quote threshold. ... ok
+test_valid_fixture_metrics (test_semantic_eval.SemanticTests.test_valid_fixture_metrics)
+REQ-GOV-B04: correctly supported explicit fixture passes evaluator logic. ... ok
+
+----------------------------------------------------------------------
+Ran 43 tests in 0.729s
+
+OK

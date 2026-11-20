@@ -1,0 +1,26 @@
+[
+  {
+    "mutant": "bot-review",
+    "killed": true
+  },
+  {
+    "mutant": "self-review",
+    "killed": true
+  },
+  {
+    "mutant": "late-test-approval",
+    "killed": true
+  },
+  {
+    "mutant": "advisory-import",
+    "killed": true
+  },
+  {
+    "mutant": "unlogged-path",
+    "killed": true
+  },
+  {
+    "mutant": "injection-escape",
+    "killed": true
+  }
+]

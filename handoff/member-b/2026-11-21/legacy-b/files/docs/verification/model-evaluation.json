@@ -1,0 +1,19 @@
+{
+  "status": "proposed-awaiting-human-review",
+  "model": "deepseek-flash",
+  "prompt_path": "prompts/prompt_v1.0.yaml",
+  "evaluation_path": "test/fixtures/semantic-cases-adr.json",
+  "evaluation_approved": false,
+  "live": true,
+  "required_environment": [
+    "GRADEAIDE_ENDPOINT",
+    "GRADEAIDE_MODEL",
+    "GRADEAIDE_API_KEY",
+    "GRADEAIDE_INPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_OUTPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_MAX_COST",
+    "GRADEAIDE_PRICE_SOURCE"
+  ],
+  "provenance": "A historical model alias; actual model and runtime configuration must be checked before new inference",
+  "scope": "B verification replay metadata only; not application runtime configuration"
+}

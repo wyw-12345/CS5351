@@ -1,0 +1,277 @@
+# PROPOSED; 47 locators complete does not mean 47 behaviors passed.
+REQ-FUNC-001:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_invalid_rubric_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+  - test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-002:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
+  - test/offline/test_confidence_contract.py::ConfidenceTests.test_missing_confidence_escalates
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-003:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria
+  - test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score
+  - test/offline/test_confidence_contract.py::ConfidenceTests.test_confidence_079_escalates
+  - test/offline/test_confidence_contract.py::ConfidenceTests.test_confidence_exactly_080_passes_confidence_check
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-004:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_weighted_result_and_bounds
+  - test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division
+  - test/offline/test_calculator.py::CalculatorTests.test_different_maxima_rounding_and_external_context
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-005:
+  tests:
+  - test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-006:
+  tests:
+  - test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected
+  - test/offline/test_store.py::StoreTests.test_failed_audit_insert_rolls_back_status_and_grade
+  - test/offline/test_store.py::StoreTests.test_escalation_requires_every_score_and_reason
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-007:
+  tests:
+  - test/offline/test_store.py::StoreTests.test_unknown_id_is_refused
+  - test/offline/test_cli.py::CliTests.test_missing_database_show_does_not_create_file
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-008:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  - test/offline/test_feedback.py::FeedbackTests.test_context_boundary_counts_utf8_bytes
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-009:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent
+  - test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-FUNC-010:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection
+  - test/offline/test_cli.py::CliTests.test_invalid_fixture_envelope_escalates_without_traceback
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-001:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_model_total_cannot_override
+  - test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-002:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-003:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected
+  - test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected
+  - test/offline/test_signed_approval_contract.py::SignedApprovalTests.test_unauthorized_signer_is_rejected
+  - test/offline/test_signed_approval_contract.py::SignedApprovalTests.test_score_substitution_between_confirmation_and_recording_is_rejected
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-004:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_numeric_inputs_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_invalid_scores_rejected
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-005:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_exact_weighted_score
+  - test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-006:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-007:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-INV-008:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent
+  - test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history
+  - test/offline/test_signed_approval_contract.py::SignedApprovalTests.test_submission_retry_and_conflict
+  negative: true
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-QUAL-001:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-QUAL-002:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-QUAL-003:
+  tests:
+  - test/offline/test_offline_environment.py::OfflineEnvironmentTests.test_a_suite_needs_no_live_credentials_or_external_connects
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-QUAL-004:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-QUAL-005:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-PERF-001:
+  tests:
+  - test/offline/test_b_evidence.py::BEvidenceTests.test_historical_calculator_benchmark
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-PERF-002:
+  tests:
+  - test/offline/test_http.py::HttpTests.test_delayed_header_times_out
+  - test/offline/test_http.py::HttpTests.test_slow_trickle_is_stopped_by_connected_deadline
+  - test/offline/test_feedback.py::FeedbackTests.test_transport_failure_escalates_without_retry_or_secrets
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-PERF-003:
+  tests:
+  - test/offline/test_b_evidence.py::BEvidenceTests.test_historical_live_evidence_remains_pending
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-COST-001:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-COST-002:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_context_boundary_counts_utf8_bytes
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-COST-003:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  - test/offline/test_feedback.py::FeedbackTests.test_configuration_rejects_unsafe_endpoints_prices_and_limits
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-COST-004:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_missing_or_invalid_usage_never_becomes_zero
+  - test/offline/test_feedback.py::FeedbackTests.test_provider_over_output_cap_escalates_but_usage_survives
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-COST-005:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B01:
+  tests:
+  - test/governance/test_gates.py::GateTests.test_approval_requires_human
+  - test/governance/test_gates.py::GateTests.test_self_approval_rejected
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B02:
+  tests:
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B03:
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_registered_test_ids_reject_unknown_ids
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B04:
+  tests:
+  - test/governance/test_semantic_eval.py::SemanticTests.test_adversarial_non_escalation_fails
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B05:
+  tests:
+  - test/governance/test_gates.py::GateTests.test_history_test_change_rejected
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-B06:
+  tests:
+  - test/governance/test_gates.py::GateTests.test_log_must_cover_changed_paths
+  - test/governance/test_gates.py::GateTests.test_log_cannot_rewrite_history
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-E01:
+  tests:
+  - test/offline/test_runtime_governance_contract.py::RuntimeGovernanceTests.test_runtime_permission_enforcement_is_verified
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-E02:
+  tests:
+  - test/offline/test_runtime_governance_contract.py::RuntimeGovernanceTests.test_frozen_path_review_policy_is_active
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-E03:
+  tests:
+  - test/offline/test_runtime_governance_contract.py::RuntimeGovernanceTests.test_architecture_api_snapshot_is_reviewed
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-E04:
+  tests:
+  - test/offline/test_runtime_governance_contract.py::RuntimeGovernanceTests.test_tool_manifest_enforcement_is_verified
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-C01:
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_requirement_change_requires_coevolution
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-GOV-C02:
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_registered_test_ids_reject_unknown_ids
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-SEC-002:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-SEC-004:
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_secret_scan_does_not_echo_secret
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-SEC-006:
+  tests:
+  - test/governance/test_gates.py::GateTests.test_calculator_network_import_rejected
+  - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required
+REQ-SEC-007:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+  negative: false
+  acceptance: not asserted; human review and actual behavior remain required

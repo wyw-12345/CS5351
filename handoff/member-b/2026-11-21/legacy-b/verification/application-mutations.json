@@ -1,0 +1,52 @@
+[
+  {
+    "mutant": "INV-001-recompute",
+    "status": "KILLED",
+    "test": "test.offline.test_store.StoreTests.test_payload_and_grade_corruption_are_detected",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-002-uncertainty",
+    "status": "KILLED",
+    "test": "test.offline.test_feedback.FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-004-range",
+    "status": "KILLED",
+    "test": "test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-005-half-up",
+    "status": "KILLED",
+    "test": "test.offline.test_calculator.CalculatorTests.test_exact_half_cent_after_recurring_division",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-006-atomicity",
+    "status": "KILLED",
+    "test": "test.offline.test_store.StoreTests.test_failed_audit_insert_rolls_back_status_and_grade",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-signing",
+    "status": "NOT RUN",
+    "reason": "A signing behavior not implemented"
+  },
+  {
+    "mutant": "INV-008-idempotency",
+    "status": "NOT RUN",
+    "reason": "A submission identity not implemented"
+  },
+  {
+    "mutant": "INV-007-advisory-authority",
+    "status": "NOT RUN",
+    "reason": "E runtime isolation evidence pending; gate import mutant is separate"
+  }
+]

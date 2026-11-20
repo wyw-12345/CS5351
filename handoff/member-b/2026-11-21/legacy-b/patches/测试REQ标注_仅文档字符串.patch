@@ -1,0 +1,394 @@
+diff --git a/test/live/test_live_api.py b/test/live/test_live_api.py
+index f9316ca..ec31a16 100644
+--- a/test/live/test_live_api.py
++++ b/test/live/test_live_api.py
+@@ -12,6 +12,7 @@ from src.feedback_engine import Settings, evaluate
+ @unittest.skipUnless(os.environ.get("GRADEAIDE_LIVE") == "1", "Live API not enabled; set key/config and GRADEAIDE_LIVE=1")
+ class LiveTests(unittest.TestCase):
+     def test_real_provider_smoke(self):
++        """REQ-FUNC-002, REQ-PERF-003: independently verifies the behavior asserted below."""
+         advice = evaluate(read_text(ROOT / "examples/essay.txt"),
+                           parse_json(read_text(ROOT / "examples/rubric.json")),
+                           parse_json(read_text(ROOT / "prompts/prompt_v1.0.yaml")), Settings.from_env())
+@@ -20,6 +21,7 @@ class LiveTests(unittest.TestCase):
+         self.assertNotIn("final_score", advice)
+ 
+     def test_fixed_synthetic_cases(self):
++        """REQ-FUNC-003, REQ-GOV-B04, REQ-PERF-003: independently verifies the behavior asserted below."""
+         results = run_cases()
+         target = ROOT / "evidence/live-test-results.json"
+         target.parent.mkdir(exist_ok=True)
+diff --git a/test/offline/test_calculator.py b/test/offline/test_calculator.py
+index b2e6337..edc7dbf 100644
+--- a/test/offline/test_calculator.py
++++ b/test/offline/test_calculator.py
+@@ -13,11 +13,13 @@ from test.support import RUBRIC, SCORES
+ 
+ class CalculatorTests(unittest.TestCase):
+     def test_weighted_result_and_bounds(self):
++        """REQ-FUNC-004: independently verifies the behavior asserted below."""
+         self.assertEqual(calculate_score(RUBRIC, SCORES), "72.00")
+         self.assertEqual(calculate_score(RUBRIC, {"content": "0", "structure": "0"}), "0.00")
+         self.assertEqual(calculate_score(RUBRIC, {"content": "10", "structure": "10"}), "100.00")
+ 
+     def test_different_maxima_rounding_and_external_context(self):
++        """REQ-FUNC-004: independently verifies the behavior asserted below."""
+         rubric = {"id": "rounding", "version": "1", "criteria": [
+             {"id": "x", "description": "x", "max_score": "8", "weight": "1"}]}
+         with localcontext():
+@@ -28,6 +30,7 @@ class CalculatorTests(unittest.TestCase):
+         self.assertEqual(calculate_score(rubric, {"content": "8", "structure": "12"}), "72.00")
+ 
+     def test_invalid_scores_rejected(self):
++        """REQ-INV-004: independently verifies the behavior asserted below."""
+         for value in [True, 8, 8.0, None, "NaN", "Infinity", "-1", "11", "1e1", "01", "1.0000001"]:
+             with self.subTest(value=value), self.assertRaises(ValidationError):
+                 calculate_score(RUBRIC, {"content": value, "structure": "6"})
+@@ -37,12 +40,14 @@ class CalculatorTests(unittest.TestCase):
+ 
+     def test_exact_half_cent_after_recurring_division(self):
+         # Independent review regression: exact 50.005 must be rounded once to 50.01.
++        """REQ-FUNC-004, REQ-INV-005: independently verifies the behavior asserted below."""
+         rubric = {"id": "tie", "version": "1", "criteria": [
+             {"id": str(i), "description": "x", "max_score": maximum, "weight": weight}
+             for i, (weight, maximum) in enumerate(zip(["0.4", "0.1", "0.1", "0.4"], ["6", "6", "6", "1"]))]}
+         self.assertEqual(calculate_score(rubric, {"0": "5", "1": "5", "2": "5", "3": "0.000125"}), "50.01")
+ 
+     def test_invalid_rubric_rejected(self):
++        """REQ-FUNC-001: independently verifies the behavior asserted below."""
+         for field, value in [("weight", "0"), ("weight", "-1"), ("weight", "0.5"),
+                              ("max_score", "0"), ("max_score", "NaN"), ("description", "")]:
+             rubric = copy.deepcopy(RUBRIC)
+@@ -58,11 +63,13 @@ class CalculatorTests(unittest.TestCase):
+                 validate_rubric(rubric)
+ 
+     def test_json_duplicates_and_nonfinite_rejected(self):
++        """REQ-FUNC-001, REQ-SEC-007: independently verifies the behavior asserted below."""
+         for text in ['{"x":1,"x":2}', '{"x":NaN}', '{"x":Infinity}', '{bad}', '[' * 2000]:
+             with self.subTest(text=text[:30]), self.assertRaises(ValidationError):
+                 parse_json(text)
+ 
+     def test_file_bounds_encoding_and_essay(self):
++        """REQ-COST-005, REQ-FUNC-001, REQ-SEC-007: independently verifies the behavior asserted below."""
+         with tempfile.TemporaryDirectory() as folder:
+             path = Path(folder) / "text"
+             path.write_bytes(b"12345")
+diff --git a/test/offline/test_cli.py b/test/offline/test_cli.py
+index 2e1221e..95b7660 100644
+--- a/test/offline/test_cli.py
++++ b/test/offline/test_cli.py
+@@ -18,6 +18,7 @@ def invoke(*args):
+ 
+ class CliTests(unittest.TestCase):
+     def test_separate_process_restart_approval_and_duplicate_rejection(self):
++        """REQ-FUNC-010, REQ-QUAL-004: independently verifies the behavior asserted below."""
+         with tempfile.TemporaryDirectory() as folder:
+             db = Path(folder) / "synthetic.sqlite3"
+             created = invoke("propose", "--essay", "examples/essay.txt", "--rubric", "examples/rubric.json",
+@@ -41,6 +42,7 @@ class CliTests(unittest.TestCase):
+             self.assertEqual(duplicate.returncode, 2)
+ 
+     def test_missing_database_show_does_not_create_file(self):
++        """REQ-FUNC-007: independently verifies the behavior asserted below."""
+         with tempfile.TemporaryDirectory() as folder:
+             db = Path(folder) / "missing.db"
+             result = invoke("show", "--id", "missing", "--db", db)
+@@ -48,6 +50,7 @@ class CliTests(unittest.TestCase):
+             self.assertFalse(db.exists())
+ 
+     def test_invalid_fixture_envelope_escalates_without_traceback(self):
++        """REQ-FUNC-010: independently verifies the behavior asserted below."""
+         with tempfile.TemporaryDirectory() as folder:
+             fixture = Path(folder) / "invalid.json"
+             fixture.write_text("[]", encoding="utf-8")
+@@ -58,6 +61,7 @@ class CliTests(unittest.TestCase):
+             self.assertNotIn("Traceback", result.stderr)
+ 
+     def test_authority_modules_keep_io_boundaries(self):
++        """REQ-QUAL-001, REQ-SEC-006: independently verifies the behavior asserted below."""
+         feedback_tree = ast.parse((ROOT / "src/feedback_engine.py").read_text(encoding="utf-8"))
+         imports = [node.module or "" for node in ast.walk(feedback_tree) if isinstance(node, ast.ImportFrom)]
+         imports += [alias.name for node in ast.walk(feedback_tree) if isinstance(node, ast.Import)
+diff --git a/test/offline/test_env_launcher.py b/test/offline/test_env_launcher.py
+index bd74d11..6d4cdb9 100644
+--- a/test/offline/test_env_launcher.py
++++ b/test/offline/test_env_launcher.py
+@@ -15,6 +15,7 @@ from test.support import ESSAY, PROMPT, RUBRIC, SETTINGS, envelope
+ 
+ class EnvTests(unittest.TestCase):
+     def test_aliases_are_data_not_shell_commands(self):
++        """REQ-INV-007, REQ-SEC-004: independently verifies the behavior asserted below."""
+         with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {}, clear=True):
+             path = Path(directory) / ".env"
+             path.write_text('LLM_BASE_URL=https://example.test/v1\nDEEPSEEK_API_KEY="$(do-not-execute)"\n'
+@@ -27,6 +28,7 @@ class EnvTests(unittest.TestCase):
+                 load_environment(path)
+ 
+     def test_thinking_is_explicit_and_validated(self):
++        """REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below."""
+         requests = []
+         def transport(body, settings):
+             requests.append(body)
+diff --git a/test/offline/test_feedback.py b/test/offline/test_feedback.py
+index 76bb7c7..9da73b0 100644
+--- a/test/offline/test_feedback.py
++++ b/test/offline/test_feedback.py
+@@ -15,6 +15,7 @@ class FeedbackTests(unittest.TestCase):
+         return evaluate(essay, RUBRIC, PROMPT, settings, transport(response), mode="test_fixture")
+ 
+     def test_valid_feedback_and_request_contract(self):
++        """REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below."""
+         requests = []
+ 
+         def capture(body, settings):
+@@ -33,6 +34,7 @@ class FeedbackTests(unittest.TestCase):
+         self.assertEqual(len(result["metadata"]["prompt_hash"]), 64)
+ 
+     def test_reject_final_score_extra_unknown_duplicate_and_missing_criteria(self):
++        """REQ-FUNC-003, REQ-SEC-002: independently verifies the behavior asserted below."""
+         invalid = []
+         value = feedback()
+         value["final_score"] = "100"
+@@ -52,6 +54,7 @@ class FeedbackTests(unittest.TestCase):
+                 self.assertEqual(self.run_advice(envelope(value))["status"], "escalated")
+ 
+     def test_uncertain_null_is_an_escalation_not_a_zero_score(self):
++        """REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below."""
+         value = feedback()
+         value["criteria"][0].update(suggested_score=None, uncertain=True, evidence_quote="")
+         result = self.run_advice(envelope(value))
+@@ -60,6 +63,7 @@ class FeedbackTests(unittest.TestCase):
+         self.assertNotIn("final_score", result)
+ 
+     def test_bad_content_preserves_valid_usage(self):
++        """REQ-COST-004, REQ-INV-002: independently verifies the behavior asserted below."""
+         for reason, content in [("length", "incomplete"), ("stop", "   "), ("stop", "{bad}")]:
+             value = envelope()
+             value["choices"][0]["finish_reason"] = reason
+@@ -70,6 +74,7 @@ class FeedbackTests(unittest.TestCase):
+             self.assertEqual(result["metadata"]["reported_usage_cost"], "0.00026")
+ 
+     def test_refusal_tools_invalid_choices_and_missing_model_escalate(self):
++        """REQ-FUNC-008, REQ-INV-002: independently verifies the behavior asserted below."""
+         variants = []
+         for key in ["refusal", "tool_calls", "function_call"]:
+             value = envelope()
+@@ -83,11 +88,13 @@ class FeedbackTests(unittest.TestCase):
+             self.assertEqual(self.run_advice(value)["status"], "escalated")
+ 
+     def test_wrong_top_level_envelope_escalates(self):
++        """REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below."""
+         for value in [[], "bad", None]:
+             result = evaluate(ESSAY, RUBRIC, PROMPT, SETTINGS, lambda *_: value)
+             self.assertEqual(result["status"], "escalated")
+ 
+     def test_missing_or_invalid_usage_never_becomes_zero(self):
++        """REQ-COST-004: independently verifies the behavior asserted below."""
+         for usage in [None, {}, {"prompt_tokens": True, "completion_tokens": 80, "total_tokens": 81},
+                       {"prompt_tokens": -1, "completion_tokens": 80, "total_tokens": 79},
+                       {"prompt_tokens": 100, "completion_tokens": 80, "total_tokens": 999}]:
+@@ -97,12 +104,14 @@ class FeedbackTests(unittest.TestCase):
+             self.assertIsNone(result["metadata"]["reported_usage_cost"])
+ 
+     def test_provider_over_output_cap_escalates_but_usage_survives(self):
++        """REQ-COST-004: independently verifies the behavior asserted below."""
+         usage = {"prompt_tokens": 100, "completion_tokens": 1025, "total_tokens": 1125}
+         result = self.run_advice({**envelope(), "usage": usage})
+         self.assertEqual(result["status"], "escalated")
+         self.assertEqual(result["metadata"]["usage"], usage)
+ 
+     def test_input_and_monetary_budget_block_before_transport(self):
++        """REQ-COST-002, REQ-COST-003, REQ-COST-005, REQ-FUNC-008: independently verifies the behavior asserted below."""
+         def forbidden(*_):
+             self.fail("over-budget input must make no request")
+ 
+@@ -113,6 +122,7 @@ class FeedbackTests(unittest.TestCase):
+             self.assertEqual(result["metadata"]["calls"], 0)
+ 
+     def test_context_boundary_counts_utf8_bytes(self):
++        """REQ-COST-002, REQ-FUNC-008: independently verifies the behavior asserted below."""
+         result = self.run_advice()
+         exact_bytes = result["metadata"]["input_bytes"]
+         self.assertEqual(self.run_advice(settings=replace(SETTINGS, max_input_bytes=exact_bytes))["status"],
+@@ -123,6 +133,7 @@ class FeedbackTests(unittest.TestCase):
+         self.assertGreater(chinese["metadata"]["input_bytes"], len("雨水再利用。"))
+ 
+     def test_transport_failure_escalates_without_retry_or_secrets(self):
++        """REQ-PERF-002: independently verifies the behavior asserted below."""
+         count = 0
+ 
+         def failed(*_):
+@@ -136,6 +147,7 @@ class FeedbackTests(unittest.TestCase):
+         self.assertNotIn("private-api-key", json.dumps(result))
+ 
+     def test_configuration_rejects_unsafe_endpoints_prices_and_limits(self):
++        """REQ-COST-003: independently verifies the behavior asserted below."""
+         for field, value in [("endpoint", "http://outside.example/chat"),
+                              ("endpoint", "https://user:secret@example.test/chat"),
+                              ("endpoint", "https://example.test/chat?key=secret"),
+@@ -148,6 +160,7 @@ class FeedbackTests(unittest.TestCase):
+                 replace(SETTINGS, **{field: value}).validate()
+ 
+     def test_settings_repr_does_not_disclose_key(self):
++        """REQ-SEC-004: independently verifies the behavior asserted below."""
+         self.assertNotIn(SETTINGS.api_key, repr(SETTINGS))
+ 
+ 
+diff --git a/test/offline/test_http.py b/test/offline/test_http.py
+index d44bf89..39db970 100644
+--- a/test/offline/test_http.py
++++ b/test/offline/test_http.py
+@@ -56,6 +56,7 @@ def provider_server(*, status=200, raw=None, delay=0, slow_body=False):
+ 
+ class HttpTests(unittest.TestCase):
+     def test_real_request_response_serialization(self):
++        """REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below."""
+         with provider_server() as (url, requests):
+             result = evaluate(ESSAY, RUBRIC, PROMPT, replace(SETTINGS, endpoint=url))
+         self.assertEqual(result["status"], "pending_review")
+@@ -66,6 +67,7 @@ class HttpTests(unittest.TestCase):
+         self.assertNotIn("tools", requests[0]["body"])
+ 
+     def test_redirect_and_server_error_never_retry_or_follow(self):
++        """REQ-FUNC-008, REQ-PERF-002: independently verifies the behavior asserted below."""
+         for status in [302, 429, 500]:
+             with self.subTest(status=status), provider_server(status=status) as (url, requests):
+                 result = evaluate(ESSAY, RUBRIC, PROMPT, replace(SETTINGS, endpoint=url))
+@@ -73,6 +75,7 @@ class HttpTests(unittest.TestCase):
+                 self.assertEqual(len(requests), 1)
+ 
+     def test_delayed_header_times_out(self):
++        """REQ-PERF-002: independently verifies the behavior asserted below."""
+         with provider_server(delay=0.3) as (url, requests):
+             started = time.monotonic()
+             result = evaluate(ESSAY, RUBRIC, PROMPT, replace(SETTINGS, endpoint=url, timeout=0.05))
+@@ -82,6 +85,7 @@ class HttpTests(unittest.TestCase):
+             self.assertEqual(len(requests), 1)
+ 
+     def test_slow_trickle_is_stopped_by_connected_deadline(self):
++        """REQ-PERF-002: independently verifies the behavior asserted below."""
+         with provider_server(slow_body=True) as (url, _):
+             started = time.monotonic()
+             result = evaluate(ESSAY, RUBRIC, PROMPT, replace(SETTINGS, endpoint=url, timeout=0.08))
+@@ -89,6 +93,7 @@ class HttpTests(unittest.TestCase):
+             self.assertLess(time.monotonic() - started, 1)
+ 
+     def test_invalid_json_encoding_envelope_and_response_limit(self):
++        """REQ-FUNC-008, REQ-SEC-007: independently verifies the behavior asserted below."""
+         for raw in [b"{bad}", b"\xff", b"[]", b"x" * 1001]:
+             with self.subTest(raw=raw[:20]), provider_server(raw=raw) as (url, _):
+                 result = evaluate(ESSAY, RUBRIC, PROMPT, replace(SETTINGS, endpoint=url, max_response_bytes=1000))
+diff --git a/test/offline/test_live_runner.py b/test/offline/test_live_runner.py
+index 7bae6a4..814f4a2 100644
+--- a/test/offline/test_live_runner.py
++++ b/test/offline/test_live_runner.py
+@@ -11,6 +11,7 @@ from test.support import SETTINGS
+ 
+ class LiveRunnerTests(unittest.TestCase):
+     def test_direct_helper_requires_explicit_opt_in(self):
++        """REQ-COST-001, REQ-GOV-B04: independently verifies the behavior asserted below."""
+         with patch.dict(os.environ, {"GRADEAIDE_LIVE": "0"}), \
+              patch("scripts.evaluate_live.evaluate") as provider:
+             with self.assertRaises(ValidationError):
+@@ -19,6 +20,7 @@ class LiveRunnerTests(unittest.TestCase):
+ 
+     @patch.dict(os.environ, {"GRADEAIDE_LIVE": "1"})
+     def test_transport_failure_is_not_a_correct_uncertainty_response(self):
++        """REQ-FUNC-008, REQ-GOV-B04: independently verifies the behavior asserted below."""
+         for usage in [None, {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120}]:
+             failed = {"status": "escalated", "reason": "invalid_or_unavailable_provider_response",
+                       "metadata": {"calls": 1, "latency_ms": 1, "usage": usage}}
+diff --git a/test/offline/test_store.py b/test/offline/test_store.py
+index 3cec076..98874dc 100644
+--- a/test/offline/test_store.py
++++ b/test/offline/test_store.py
+@@ -30,6 +30,7 @@ class StoreTests(unittest.TestCase):
+                                   kwargs.get("reason", ""))
+ 
+     def test_proposal_has_no_grade_and_human_change_is_audited(self):
++        """REQ-FUNC-005, REQ-INV-001: independently verifies the behavior asserted below."""
+         self.assertIsNone(self.proposal["final_score"])
+         result = self.approve()
+         self.assertEqual(result["final_score"], "72.00")
+@@ -38,6 +39,7 @@ class StoreTests(unittest.TestCase):
+         self.assertEqual(result["audit"]["proposal_hash"], self.proposal["hash"])
+ 
+     def test_missing_approval_details_and_stale_hash_are_rejected(self):
++        """REQ-FUNC-006, REQ-INV-003: independently verifies the behavior asserted below."""
+         for values in [{"reviewer": ""}, {"hash": "0" * 64}, {"scores": {"content": "8"}},
+                        {"scores": {**SCORES, "final_score": "100"}}]:
+             with self.subTest(values=values), self.assertRaises(ValidationError):
+@@ -45,12 +47,14 @@ class StoreTests(unittest.TestCase):
+             self.assertIsNone(self.store.get(self.proposal["id"])["final_score"])
+ 
+     def test_duplicate_approval_cannot_overwrite_history(self):
++        """REQ-FUNC-009, REQ-INV-008: independently verifies the behavior asserted below."""
+         first = self.approve()
+         with self.assertRaises(ValidationError):
+             self.approve(scores={"content": "10", "structure": "10"})
+         self.assertEqual(self.store.get(self.proposal["id"]), first)
+ 
+     def test_escalation_requires_every_score_and_reason(self):
++        """REQ-FUNC-006: independently verifies the behavior asserted below."""
+         advice = copy.deepcopy(self.advice)
+         advice.update(status="escalated", reason="uncertain_criterion")
+         advice["feedback"]["criteria"][0].update(uncertain=True, suggested_score=None)
+@@ -61,6 +65,7 @@ class StoreTests(unittest.TestCase):
+         self.assertEqual(result["final_score"], "72.00")
+ 
+     def test_initial_advice_is_validated_at_storage_boundary(self):
++        """REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below."""
+         for change in [{"status": "approved"}, {"feedback": None}, {"metadata": None}, {"reason": "oops"}]:
+             with self.subTest(change=change), self.assertRaises(ValidationError):
+                 self.store.create(ESSAY, RUBRIC, {**self.advice, **change})
+@@ -70,6 +75,7 @@ class StoreTests(unittest.TestCase):
+             self.store.create(ESSAY, RUBRIC, advice)
+ 
+     def test_failed_audit_insert_rolls_back_status_and_grade(self):
++        """REQ-FUNC-006: independently verifies the behavior asserted below."""
+         self.store.connection.execute("""CREATE TRIGGER fail_grade BEFORE INSERT ON grades
+                                       BEGIN SELECT RAISE(ABORT, 'synthetic failure'); END""")
+         with self.assertRaises(sqlite3.Error):
+@@ -80,6 +86,7 @@ class StoreTests(unittest.TestCase):
+         self.assertEqual(self.store.connection.execute("SELECT count(*) FROM grades").fetchone()[0], 0)
+ 
+     def test_payload_and_grade_corruption_are_detected(self):
++        """REQ-INV-001, REQ-INV-006: independently verifies the behavior asserted below."""
+         approved = self.approve()
+         self.store.connection.execute("UPDATE grades SET score='100.00' WHERE proposal_id=?", (approved["id"],))
+         with self.assertRaises(ValidationError):
+@@ -89,6 +96,7 @@ class StoreTests(unittest.TestCase):
+             self.store.get(approved["id"])
+ 
+     def test_state_corruption_cannot_bypass_escalation_review(self):
++        """REQ-INV-002, REQ-INV-003: independently verifies the behavior asserted below."""
+         advice = {**self.advice, "status": "escalated", "reason": "requires_review"}
+         proposal = self.store.create(ESSAY, RUBRIC, advice)
+         self.store.connection.execute("UPDATE proposals SET status='pending_review' WHERE id=?", (proposal["id"],))
+@@ -96,6 +104,7 @@ class StoreTests(unittest.TestCase):
+             self.store.approve(proposal["id"], proposal["hash"], SCORES, "test")
+ 
+     def test_inconsistent_previous_state_is_detected_even_with_recomputed_audit_digest(self):
++        """REQ-INV-006, REQ-QUAL-002: independently verifies the behavior asserted below."""
+         approved = self.approve()
+         audit = approved["audit"]
+         audit["previous_status"] = "escalated"
+@@ -105,15 +114,18 @@ class StoreTests(unittest.TestCase):
+             self.store.get(approved["id"])
+ 
+     def test_reopen_preserves_exact_record(self):
++        """REQ-INV-006, REQ-QUAL-002, REQ-QUAL-004: independently verifies the behavior asserted below."""
+         expected = self.approve()
+         with GradeStore(self.path) as another:
+             self.assertEqual(another.get(self.proposal["id"]), expected)
+ 
+     def test_unknown_id_is_refused(self):
++        """REQ-FUNC-007: independently verifies the behavior asserted below."""
+         with self.assertRaises(ValidationError):
+             self.store.get("missing")
+ 
+     def test_unsupported_schema_preserves_existing_data(self):
++        """REQ-INV-006, REQ-QUAL-004: independently verifies the behavior asserted below."""
+         path = Path(self.folder.name) / "foreign.sqlite3"
+         with sqlite3.connect(path) as connection:
+             connection.execute("CREATE TABLE original(value TEXT)")

@@ -1,0 +1,95 @@
+test_different_maxima_rounding_and_external_context (test.offline.test_calculator.CalculatorTests.test_different_maxima_rounding_and_external_context)
+REQ-FUNC-004: independently verifies the behavior asserted below. ... ok
+test_exact_half_cent_after_recurring_division (test.offline.test_calculator.CalculatorTests.test_exact_half_cent_after_recurring_division)
+REQ-FUNC-004, REQ-INV-005: independently verifies the behavior asserted below. ... ok
+test_file_bounds_encoding_and_essay (test.offline.test_calculator.CalculatorTests.test_file_bounds_encoding_and_essay)
+REQ-COST-005, REQ-FUNC-001, REQ-SEC-007: independently verifies the behavior asserted below. ... ok
+test_invalid_rubric_rejected (test.offline.test_calculator.CalculatorTests.test_invalid_rubric_rejected)
+REQ-FUNC-001: independently verifies the behavior asserted below. ... ok
+test_invalid_scores_rejected (test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected)
+REQ-INV-004: independently verifies the behavior asserted below. ... ok
+test_json_duplicates_and_nonfinite_rejected (test.offline.test_calculator.CalculatorTests.test_json_duplicates_and_nonfinite_rejected)
+REQ-FUNC-001, REQ-SEC-007: independently verifies the behavior asserted below. ... ok
+test_weighted_result_and_bounds (test.offline.test_calculator.CalculatorTests.test_weighted_result_and_bounds)
+REQ-FUNC-004: independently verifies the behavior asserted below. ... ok
+test_authority_modules_keep_io_boundaries (test.offline.test_cli.CliTests.test_authority_modules_keep_io_boundaries)
+REQ-QUAL-001, REQ-SEC-006: independently verifies the behavior asserted below. ... ok
+test_invalid_fixture_envelope_escalates_without_traceback (test.offline.test_cli.CliTests.test_invalid_fixture_envelope_escalates_without_traceback)
+REQ-FUNC-010: independently verifies the behavior asserted below. ... ok
+test_missing_database_show_does_not_create_file (test.offline.test_cli.CliTests.test_missing_database_show_does_not_create_file)
+REQ-FUNC-007: independently verifies the behavior asserted below. ... ok
+test_separate_process_restart_approval_and_duplicate_rejection (test.offline.test_cli.CliTests.test_separate_process_restart_approval_and_duplicate_rejection)
+REQ-FUNC-010, REQ-QUAL-004: independently verifies the behavior asserted below. ... ok
+test_aliases_are_data_not_shell_commands (test.offline.test_env_launcher.EnvTests.test_aliases_are_data_not_shell_commands)
+REQ-INV-007, REQ-SEC-004: independently verifies the behavior asserted below. ... ok
+test_thinking_is_explicit_and_validated (test.offline.test_env_launcher.EnvTests.test_thinking_is_explicit_and_validated)
+REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below. ... ok
+test_bad_content_preserves_valid_usage (test.offline.test_feedback.FeedbackTests.test_bad_content_preserves_valid_usage)
+REQ-COST-004, REQ-INV-002: independently verifies the behavior asserted below. ... ok
+test_configuration_rejects_unsafe_endpoints_prices_and_limits (test.offline.test_feedback.FeedbackTests.test_configuration_rejects_unsafe_endpoints_prices_and_limits)
+REQ-COST-003: independently verifies the behavior asserted below. ... ok
+test_context_boundary_counts_utf8_bytes (test.offline.test_feedback.FeedbackTests.test_context_boundary_counts_utf8_bytes)
+REQ-COST-002, REQ-FUNC-008: independently verifies the behavior asserted below. ... ok
+test_input_and_monetary_budget_block_before_transport (test.offline.test_feedback.FeedbackTests.test_input_and_monetary_budget_block_before_transport)
+REQ-COST-002, REQ-COST-003, REQ-COST-005, REQ-FUNC-008: independently verifies the behavior asserted below. ... ok
+test_missing_or_invalid_usage_never_becomes_zero (test.offline.test_feedback.FeedbackTests.test_missing_or_invalid_usage_never_becomes_zero)
+REQ-COST-004: independently verifies the behavior asserted below. ... ok
+test_provider_over_output_cap_escalates_but_usage_survives (test.offline.test_feedback.FeedbackTests.test_provider_over_output_cap_escalates_but_usage_survives)
+REQ-COST-004: independently verifies the behavior asserted below. ... ok
+test_refusal_tools_invalid_choices_and_missing_model_escalate (test.offline.test_feedback.FeedbackTests.test_refusal_tools_invalid_choices_and_missing_model_escalate)
+REQ-FUNC-008, REQ-INV-002: independently verifies the behavior asserted below. ... ok
+test_reject_final_score_extra_unknown_duplicate_and_missing_criteria (test.offline.test_feedback.FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria)
+REQ-FUNC-003, REQ-SEC-002: independently verifies the behavior asserted below. ... ok
+test_settings_repr_does_not_disclose_key (test.offline.test_feedback.FeedbackTests.test_settings_repr_does_not_disclose_key)
+REQ-SEC-004: independently verifies the behavior asserted below. ... ok
+test_transport_failure_escalates_without_retry_or_secrets (test.offline.test_feedback.FeedbackTests.test_transport_failure_escalates_without_retry_or_secrets)
+REQ-PERF-002: independently verifies the behavior asserted below. ... ok
+test_uncertain_null_is_an_escalation_not_a_zero_score (test.offline.test_feedback.FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score)
+REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below. ... ok
+test_valid_feedback_and_request_contract (test.offline.test_feedback.FeedbackTests.test_valid_feedback_and_request_contract)
+REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below. ... ok
+test_wrong_top_level_envelope_escalates (test.offline.test_feedback.FeedbackTests.test_wrong_top_level_envelope_escalates)
+REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below. ... ok
+test_delayed_header_times_out (test.offline.test_http.HttpTests.test_delayed_header_times_out)
+REQ-PERF-002: independently verifies the behavior asserted below. ... ok
+test_invalid_json_encoding_envelope_and_response_limit (test.offline.test_http.HttpTests.test_invalid_json_encoding_envelope_and_response_limit)
+REQ-FUNC-008, REQ-SEC-007: independently verifies the behavior asserted below. ... ok
+test_real_request_response_serialization (test.offline.test_http.HttpTests.test_real_request_response_serialization)
+REQ-COST-001, REQ-FUNC-002: independently verifies the behavior asserted below. ... ok
+test_redirect_and_server_error_never_retry_or_follow (test.offline.test_http.HttpTests.test_redirect_and_server_error_never_retry_or_follow)
+REQ-FUNC-008, REQ-PERF-002: independently verifies the behavior asserted below. ... ok
+test_slow_trickle_is_stopped_by_connected_deadline (test.offline.test_http.HttpTests.test_slow_trickle_is_stopped_by_connected_deadline)
+REQ-PERF-002: independently verifies the behavior asserted below. ... ok
+test_direct_helper_requires_explicit_opt_in (test.offline.test_live_runner.LiveRunnerTests.test_direct_helper_requires_explicit_opt_in)
+REQ-COST-001, REQ-GOV-B04: independently verifies the behavior asserted below. ... ok
+test_transport_failure_is_not_a_correct_uncertainty_response (test.offline.test_live_runner.LiveRunnerTests.test_transport_failure_is_not_a_correct_uncertainty_response)
+REQ-FUNC-008, REQ-GOV-B04: independently verifies the behavior asserted below. ... ok
+test_duplicate_approval_cannot_overwrite_history (test.offline.test_store.StoreTests.test_duplicate_approval_cannot_overwrite_history)
+REQ-FUNC-009, REQ-INV-008: independently verifies the behavior asserted below. ... ok
+test_escalation_requires_every_score_and_reason (test.offline.test_store.StoreTests.test_escalation_requires_every_score_and_reason)
+REQ-FUNC-006: independently verifies the behavior asserted below. ... ok
+test_failed_audit_insert_rolls_back_status_and_grade (test.offline.test_store.StoreTests.test_failed_audit_insert_rolls_back_status_and_grade)
+REQ-FUNC-006: independently verifies the behavior asserted below. ... ok
+test_inconsistent_previous_state_is_detected_even_with_recomputed_audit_digest (test.offline.test_store.StoreTests.test_inconsistent_previous_state_is_detected_even_with_recomputed_audit_digest)
+REQ-INV-006, REQ-QUAL-002: independently verifies the behavior asserted below. ... ok
+test_initial_advice_is_validated_at_storage_boundary (test.offline.test_store.StoreTests.test_initial_advice_is_validated_at_storage_boundary)
+REQ-FUNC-003, REQ-INV-002: independently verifies the behavior asserted below. ... ok
+test_missing_approval_details_and_stale_hash_are_rejected (test.offline.test_store.StoreTests.test_missing_approval_details_and_stale_hash_are_rejected)
+REQ-FUNC-006, REQ-INV-003: independently verifies the behavior asserted below. ... ok
+test_payload_and_grade_corruption_are_detected (test.offline.test_store.StoreTests.test_payload_and_grade_corruption_are_detected)
+REQ-INV-001, REQ-INV-006: independently verifies the behavior asserted below. ... ok
+test_proposal_has_no_grade_and_human_change_is_audited (test.offline.test_store.StoreTests.test_proposal_has_no_grade_and_human_change_is_audited)
+REQ-FUNC-005, REQ-INV-001: independently verifies the behavior asserted below. ... ok
+test_reopen_preserves_exact_record (test.offline.test_store.StoreTests.test_reopen_preserves_exact_record)
+REQ-INV-006, REQ-QUAL-002, REQ-QUAL-004: independently verifies the behavior asserted below. ... ok
+test_state_corruption_cannot_bypass_escalation_review (test.offline.test_store.StoreTests.test_state_corruption_cannot_bypass_escalation_review)
+REQ-INV-002, REQ-INV-003: independently verifies the behavior asserted below. ... ok
+test_unknown_id_is_refused (test.offline.test_store.StoreTests.test_unknown_id_is_refused)
+REQ-FUNC-007: independently verifies the behavior asserted below. ... ok
+test_unsupported_schema_preserves_existing_data (test.offline.test_store.StoreTests.test_unsupported_schema_preserves_existing_data)
+REQ-INV-006, REQ-QUAL-004: independently verifies the behavior asserted below. ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 2.024s
+
+OK
