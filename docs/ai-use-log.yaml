@@ -374,6 +374,25 @@
   - test/offline/test_migration.py
   - test/offline/test_revision.py
 
+- id: AI-B-CI-READINESS-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: 'Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached'
+  purpose: Verify current API and policy fingerprints, and adapt the draft evaluator to the current A configuration and fixed-set contract.
+  source: 'A 10f5b8de9b9f51fd60cd227ee7d8b71c78970c10 and B acceptance draft PR #5'
+  human_review: Independent review and live evaluation authorization pending.
+  evidence: handoff/member-b/2026-11-21-ci-readiness/README.md
+  limitations: Candidate overlay only. Offline checks made no provider requests. Policy and workflows were not activated.
+  files:
+  - docs/ai-use-log.yaml
+  - handoff/member-b/2026-11-21-ci-readiness/ADR-B0005-current-draft.md
+  - handoff/member-b/2026-11-21-ci-readiness/README.md
+  - handoff/member-b/2026-11-21-ci-readiness/api-surface.json
+  - handoff/member-b/2026-11-21-ci-readiness/candidate/test/governance/test_b_current_semantic.py
+  - handoff/member-b/2026-11-21-ci-readiness/candidate/tools/semantic_eval.py
+  - handoff/member-b/2026-11-21-ci-readiness/model-evaluation.json
+  - handoff/member-b/2026-11-21-ci-readiness/permissions-snapshot.json
+
 - id: AI-B-GATES-20261121-001
   date: '2026-11-21'
   agent: Codex (GPT-6.2, current thread)
