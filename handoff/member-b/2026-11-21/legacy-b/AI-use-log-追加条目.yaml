@@ -1,0 +1,49 @@
+- id: AI-B-ONLY-20261117-001
+  date: '2026-11-17'
+  agent: Codex + OpenCode 1.19.5 (actual B test authoring session preserved)
+  purpose: Only member B verification/test/CI supplement against the provided latest
+    ABCDE baseline
+  files:
+  - .github/workflows/ci.yml
+  - docs/bug-diary.md
+  - docs/code-governance/verification-constraints.md
+  - docs/debt-register.md
+  - docs/member-b/supplement-2026-11-17/ADR-B0005-DRAFT.md
+  - docs/member-b/supplement-2026-11-17/OPENCODE-TEST-REVIEW.md
+  - docs/member-b/supplement-2026-11-17/PROVENANCE.md
+  - docs/member-b/supplement-2026-11-17/验收接口与外部依赖.md
+  - docs/review-memo.md
+  - docs/verification/api-surface.json
+  - docs/verification/model-evaluation.json
+  - docs/verification/permissions-snapshot.json
+  - docs/verification/test-map.yaml
+  - requirements-b-supplement.txt
+  - test/fixtures/semantic-cases-adr.json
+  - test/governance/test_b_integration_guards.py
+  - test/governance/test_gates.py
+  - test/governance/test_semantic_eval.py
+  - test/live/test_live_api.py
+  - test/offline/test_authority_boundary.py
+  - test/offline/test_b_evidence.py
+  - test/offline/test_calculator.py
+  - test/offline/test_cli.py
+  - test/offline/test_confidence_contract.py
+  - test/offline/test_env_launcher.py
+  - test/offline/test_feedback.py
+  - test/offline/test_http.py
+  - test/offline/test_live_runner.py
+  - test/offline/test_offline_environment.py
+  - test/offline/test_runtime_governance_contract.py
+  - test/offline/test_signed_approval_contract.py
+  - test/offline/test_store.py
+  - tools/application_mutation_check.py
+  - tools/gates.py
+  - tools/integration_checks.py
+  - tools/mutation_check.py
+  - tools/run_ci_gate.py
+  - tools/semantic_eval.py
+  evidence: B-only package verification/ and files/transcripts/member-b-2026-11-17/
+  human_review: Pending independent review; user authorized only B work; no team member
+    approval is fabricated
+  scope: B deliverables plus metadata-only REQ docstring patch on existing tests;
+    no other member feature implementation

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-17",
+  "scope": "B supplement based on latest supplied ABCDE 2026-11-12",
+  "formal_requirements_mapped": 47,
+  "a_tests_annotated": 47,
+  "new_test_methods": 31,
+  "governance_tests": {
+    "run": 43,
+    "passed": 43
+  },
+  "legacy_a_offline": {
+    "run": 45,
+    "passed": 45
+  },
+  "application_offline": {
+    "run": 76,
+    "passed_methods": 57,
+    "failing_methods": 19,
+    "subtest_failure_entries": 25,
+    "errors": 0,
+    "skips": 0
+  },
+  "gate_mutants": {
+    "killed": 6,
+    "executed": 6
+  },
+  "application_mutants": {
+    "killed": 5,
+    "executed": 5,
+    "not_run": 3
+  },
+  "workspace_benchmark": {
+    "requirement": "REQ-PERF-001",
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "warmup_calls": 50,
+    "measured_calls": 1000,
+    "criteria": 10,
+    "p50_ms": 0.1602,
+    "p95_ms": 0.1799,
+    "max_ms": 0.3421,
+    "target_p95_ms": 10,
+    "target_met": true,
+    "scope": "local deterministic calculation only; no inference/network"
+  },
+  "application_live_calls": 0,
+  "opencode_sessions": [
+    "ses_e17d5f52fffeDMa5iKV7Xkbcuh",
+    "ses_e17cab169ffeQcwaUGNtspw06M"
+  ],
+  "independent_human_approval": "pending",
+  "release_status": "BLOCKED; pending A/E behavior and real governance approval"
+}

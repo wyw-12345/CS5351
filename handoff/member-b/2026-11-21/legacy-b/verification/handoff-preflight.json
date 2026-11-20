@@ -1,0 +1,48 @@
+{
+  "scope": "B handoff only; no application implementation or live API call",
+  "python": "3.12.14",
+  "checks": [
+    {
+      "case": "provided_baseline",
+      "exit": 0,
+      "counts": {
+        "ready_for_review_merge": 21,
+        "new_file": 21
+      }
+    },
+    {
+      "case": "line_endings_only",
+      "exit": 0
+    },
+    {
+      "case": "upstream_changed",
+      "exit": 2,
+      "no_project_mutation": true
+    },
+    {
+      "case": "already_applied",
+      "exit": 0,
+      "counts": {
+        "already_applied": 42
+      }
+    },
+    {
+      "case": "b_file_conflict",
+      "exit": 2
+    },
+    {
+      "case": "damaged_package",
+      "exit": 1
+    },
+    {
+      "case": "wrong_project_root",
+      "exit": 1
+    }
+  ],
+  "provided_input_files_unchanged": 214,
+  "entry_document_links_verified": [
+    "01_给接手组员的AI接力提示词.md",
+    "02_接力核对清单.md"
+  ],
+  "limits": "Baseline compatibility does not prove application acceptance, runtime isolation or human approval."
+}

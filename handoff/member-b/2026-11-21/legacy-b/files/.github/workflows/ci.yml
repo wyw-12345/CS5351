@@ -1,0 +1,73 @@
+name: GradeAide blocking gates
+
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      base_sha:
+        description: 'Real base commit SHA (required for manual runs)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: gradeaide-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    name: ${{ matrix.gate }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        gate: [test-approval, static-analysis, schema, semantic-evaluation, regression, ai-use-log]
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
+      PR_NUMBER: ${{ github.event.pull_request.number || '0' }}
+      GITHUB_TOKEN: ${{ github.token }}
+      # A must use this environment variable or explicitly align the contract.
+      GRADEAIDE_API_KEY: ${{ matrix.gate == 'semantic-evaluation' && secrets.GRADEAIDE_API_KEY || '' }}
+      GRADEAIDE_LIVE: ${{ matrix.gate == 'semantic-evaluation' && '1' || '0' }}
+      GRADEAIDE_ENDPOINT: ${{ vars.GRADEAIDE_ENDPOINT }}
+      GRADEAIDE_MODEL: ${{ vars.GRADEAIDE_MODEL }}
+      GRADEAIDE_INPUT_PRICE_PER_MILLION: ${{ vars.GRADEAIDE_INPUT_PRICE_PER_MILLION }}
+      GRADEAIDE_OUTPUT_PRICE_PER_MILLION: ${{ vars.GRADEAIDE_OUTPUT_PRICE_PER_MILLION }}
+      GRADEAIDE_MAX_COST: ${{ vars.GRADEAIDE_MAX_COST }}
+      GRADEAIDE_PRICE_SOURCE: ${{ vars.GRADEAIDE_PRICE_SOURCE }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            requirements-ci.txt
+            requirements-b-supplement.txt
+      - name: Install pinned verification dependencies
+        run: python -m pip install -r requirements-ci.txt -r requirements-b-supplement.txt
+      - name: Install application dependencies when supplied
+        run: |
+          if [ -f requirements-app.txt ]; then
+            python -m pip install -r requirements-app.txt
+          fi
+      - name: Run blocking gate
+        run: python tools/run_ci_gate.py '${{ matrix.gate }}'
+      - name: Preserve real semantic evidence
+        if: always() && matrix.gate == 'semantic-evaluation'
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/semantic-results.json
+          if-no-files-found: ignore
+          retention-days: 14
+

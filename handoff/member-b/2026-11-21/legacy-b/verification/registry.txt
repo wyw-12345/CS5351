@@ -1,0 +1,28 @@
+{
+  "command": "scripts/validate_requirements.py",
+  "date": "2026-11-12",
+  "registry": "docs/req/requirements.yaml",
+  "schema": "docs/req/req-schema.json",
+  "schema_and_registry_status": "PASS",
+  "errors": [],
+  "counts": {
+    "requirements": 47,
+    "types": [
+      "cost",
+      "functional",
+      "governance",
+      "invariant",
+      "performance",
+      "quality",
+      "security"
+    ]
+  },
+  "traceability": {
+    "registry_ids": 47,
+    "mapped_ids": 47,
+    "unmapped_ids": [],
+    "mapped_but_missing_function_docstring": [],
+    "tests_without_registered_req_docstring": [],
+    "complete": true
+  }
+}

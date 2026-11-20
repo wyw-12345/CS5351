@@ -1,0 +1,7 @@
+{
+  "status": "example-only-not-an-approval",
+  "implementation_paths": ["src/score_calculator.py"],
+  "requirement_ids": ["REQ-INV-001", "REQ-INV-004", "REQ-INV-005"],
+  "test_paths": ["test/offline/test_authority_boundary.py"],
+  "rationale": "Replace with the actual test plan and review it in a tests-only PR before implementation. No reviewer identity or approval is fabricated."
+}

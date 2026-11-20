@@ -1,0 +1,30 @@
+{
+  "scope": "Member B only",
+  "input_source_unchanged": true,
+  "checks": [
+    {
+      "check": "governance",
+      "exit": 0
+    },
+    {
+      "check": "schema",
+      "exit": 0
+    },
+    {
+      "check": "mypy",
+      "exit": 0
+    },
+    {
+      "check": "ruff",
+      "exit": 0
+    },
+    {
+      "check": "application",
+      "exit": 1
+    }
+  ],
+  "yaml": "PASS",
+  "application_api_calls": 0,
+  "other_member_implementation_files_shipped": false,
+  "approval_status": "pending real independent review"
+}

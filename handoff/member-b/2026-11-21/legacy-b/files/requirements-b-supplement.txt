@@ -1,0 +1,4 @@
+# Proposed test-only dependency; application dependencies stay unchanged.
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.12

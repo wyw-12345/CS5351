@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-17T14:50:29.740630+08:00",
+  "scope": "temporary review overlay; proposals not applied to original governed files",
+  "checks": [
+    {
+      "check": "governance",
+      "command": [
+        "python",
+        "tools/check_suite.py",
+        "test/governance"
+      ],
+      "exit": 0,
+      "final_candidate_recheck": true
+    },
+    {
+      "check": "a-regression",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "test.offline.test_calculator",
+        "test.offline.test_cli",
+        "test.offline.test_env_launcher",
+        "test.offline.test_feedback",
+        "test.offline.test_http",
+        "test.offline.test_live_runner",
+        "test.offline.test_store",
+        "-v"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "application",
+      "command": [
+        "python",
+        "tools/check_suite.py",
+        "test/offline"
+      ],
+      "exit": 1
+    },
+    {
+      "check": "schema",
+      "command": [
+        "python",
+        "tools/gates.py",
+        "schema"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "proposal",
+      "command": [
+        "python",
+        "tools/gates.py",
+        "proposal"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "registry",
+      "command": [
+        "python",
+        "scripts/validate_requirements.py",
+        "--strict",
+        "--json"
+      ],
+      "exit": 0
+    },
+    {
+      "check": "ruff",
+      "command": [
+        "python",
+        "-m",
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit": 0,
+      "final_candidate_recheck": true
+    },
+    {
+      "check": "mypy",
+      "command": [
+        "python",
+        "-m",
+        "mypy",
+        "src",
+        "tools"
+      ],
+      "exit": 0,
+      "rechecked_after_type_fix": true,
+      "final_candidate_recheck": true
+    },
+    {
+      "check": "secrets",
+      "command": [
+        "python",
+        "tools/gates.py",
+        "secrets"
+      ],
+      "exit": 0,
+      "final_candidate_recheck": true
+    },
+    {
+      "check": "readiness",
+      "command": [
+        "python",
+        "tools/gates.py",
+        "readiness"
+      ],
+      "exit": 1
+    },
+    {
+      "check": "semantic",
+      "command": [
+        "python",
+        "tools/semantic_eval.py"
+      ],
+      "exit": 1
+    },
+    {
+      "check": "gate-mutations",
+      "command": [
+        "python",
+        "tools/mutation_check.py"
+      ],
+      "exit": 0,
+      "final_candidate_recheck": true
+    },
+    {
+      "check": "application-mutations",
+      "command": [
+        "python",
+        "tools/application_mutation_check.py"
+      ],
+      "exit": 1
+    },
+    {
+      "check": "benchmark",
+      "command": [
+        "python",
+        "-m",
+        "scripts.benchmark"
+      ],
+      "exit": 0
+    }
+  ],
+  "frozen_inputs_checked": 50,
+  "unexpected_frozen_changes": [],
+  "real_application_model_calls": 0,
+  "human_approval": "not claimed",
+  "release_status": "BLOCKED; inspect actual application failures and pending governance",
+  "runtime_managed_files_restored": [
+    ".opencode/package.json",
+    ".opencode/package-lock.json"
+  ],
+  "restoration_note": "OpenCode bootstrap updated two managed plugin manifests; restored byte-for-byte after all sessions/exports; permissions/rules were not changed."
+}

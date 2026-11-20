@@ -1,0 +1,50 @@
+{
+  "mode": "synthetic; automated test signing, not human review; no API",
+  "steps": [
+    {
+      "command": "keygen",
+      "pid": 12612,
+      "returncode": 0
+    },
+    {
+      "command": "propose",
+      "pid": 32340,
+      "returncode": 0
+    },
+    {
+      "command": "show",
+      "pid": 32784,
+      "returncode": 0
+    },
+    {
+      "command": "sign",
+      "pid": 19248,
+      "returncode": 0
+    },
+    {
+      "command": "approve",
+      "pid": 28536,
+      "returncode": 0
+    },
+    {
+      "command": "show",
+      "pid": 25048,
+      "returncode": 0
+    },
+    {
+      "command": "approve",
+      "pid": 8500,
+      "returncode": 0
+    },
+    {
+      "command": "approve",
+      "pid": 29120,
+      "returncode": 2
+    }
+  ],
+  "final_score": "72.00",
+  "persisted_across_processes": true,
+  "idempotent_retry": true,
+  "forged_signature_rejected": true,
+  "temporary_keys_and_database_removed_after_demo": true
+}

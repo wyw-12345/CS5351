@@ -1,0 +1,4 @@
+# Pending human baseline: replace comments with REAL independent teammate GitHub usernames.
+# Protect: /src/score_calculator.py /src/grade_store.py /src/feedback_engine.py
+# Also: /.github/ /tools/ /.opencode/ /.agent/ /docs/verification/ /AGENTS.md
+# This commented file does not activate code-owner review; do not claim it does.

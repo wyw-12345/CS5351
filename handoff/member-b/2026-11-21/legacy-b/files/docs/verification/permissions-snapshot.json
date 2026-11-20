@@ -1,0 +1,13 @@
+{
+  "status": "draft-policy-only-not-runtime-proof",
+  "permissions_sha256": "1bb2bf134d695505b8e8e48fd36089dfa4ad180c910cba22fc069e7150722e87",
+  "feedback_grade_store_write": false,
+  "runtime_enforcement_verified": false,
+  "tool_manifest_enforcement_verified": false,
+  "human_approved": false,
+  "evidence_missing": [
+    "E must verify installed OpenCode syntax and actual configuration loading",
+    "Human-only rules are pending completion",
+    "Process/filesystem isolation and key provisioning need real evidence"
+  ]
+}
