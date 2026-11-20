@@ -454,3 +454,22 @@
   - test/governance/test_b_protection_readback.py
   - tools/application_mutation_check.py
   - tools/github_setup.py
+
+- id: AI-B-REVIEWED-SCOPE-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached
+  purpose: Verify exact reviewed trace locators and test ancestry without rejecting reviewed tests that predate implementation.
+  source: 'B CI candidate PR #8; verified offline with the tests-only correction from PR #9'
+  human_review: Independent exact-head review and bootstrap authorization pending.
+  evidence: handoff/records/2026-11-21-b-ci-candidate.md
+  limitations: Local Git and approval fixtures only; no human approval, protected branch activation, or live evaluation was
+    claimed.
+  files:
+  - docs/ai-use-log.yaml
+  - docs/member-b/03-test-approval-process.md
+  - docs/member-b/test-plan.example.json
+  - docs/verification/test-map.yaml
+  - handoff/records/2026-11-21-b-ci-candidate.md
+  - test/governance/test_gates.py
+  - tools/gates.py

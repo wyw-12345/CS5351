@@ -196,6 +196,7 @@ REQ-GOV-B01:
   - test/governance/test_gates.py::GateTests.test_valid_prior_review
   - test/governance/test_gates.py::GateTests.test_unrelated_prior_tests_cannot_approve_new_code
   - test/governance/test_gates.py::GateTests.test_reviewed_scope_requires_related_trace
+  - test/governance/test_gates.py::GateTests.test_reviewed_scope_can_keep_historical_locators
   - test/governance/test_gates.py::GateTests.test_approval_after_implementation_rejected
   - test/governance/test_gates.py::GateTests.test_equal_time_is_not_before
   - test/governance/test_gates.py::GateTests.test_unmerged_test_pr_rejected

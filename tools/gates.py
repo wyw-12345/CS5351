@@ -129,10 +129,9 @@ def traceability(registry: list[dict[str, Any]], root: Path = ROOT) -> None:
                 check_registered_test_ids(doc, ids)
 
 
-def check_history(paths: list[str], base: str, root: Path = ROOT) -> None:
-    for path in paths:
-        if path.startswith("test/") and git("ls-tree", base, "--", path, root=root):
-            raise GateError(f"Historical test changed: {path}; obtain a separate tests-only approval")
+def check_history(implementation_parent: str, head: str = "HEAD", root: Path = ROOT) -> None:
+    paths = git("diff", "--no-renames", "--name-only", implementation_parent, head, "--", "test/", root=root)
+    require(not paths, f"Tests changed during or after implementation: {paths}")
 
 
 def check_ai_log(before: Any, after: Any, paths: list[str]) -> None:
@@ -236,19 +235,31 @@ def trusted_policy(base: str) -> dict[str, Any]:
 
 
 def approved_scope(plan: dict[str, Any], entry: dict[str, Any], files: list[str],
-                   mapping: dict[str, Any]) -> None:
+                   reviewed_mapping: dict[str, Any], current_mapping: dict[str, Any]) -> None:
     require(plan.get("implementation_paths") and plan.get("requirement_ids") and plan.get("test_paths"),
             "Reviewed test plan must declare implementation, requirements and tests")
     require(set(entry["implementation_paths"]) <= set(plan["implementation_paths"]),
             "Implementation scope exceeds the reviewed tests plan")
     require(set(entry["requirement_ids"]) <= set(plan["requirement_ids"]),
             "Requirement scope exceeds the reviewed tests plan")
-    require(set(plan["test_paths"]) <= set(files), "Reviewed test plan points outside its tests PR")
+    test_paths = set(plan["test_paths"])
+    require(test_paths <= set(files) and all(p.startswith("test/") and p.endswith(".py") for p in test_paths),
+            "Reviewed test plan points outside its executable tests in the reviewed PR")
+    locators = plan.get("test_locators", {})
     for req_id in entry["requirement_ids"]:
-        tests = mapping.get(req_id, {}).get("tests", [])
-        require(tests, f"Approved requirement lacks traceability: {req_id}")
-        require(all(t.split("::")[0] in plan["test_paths"] for t in tests),
-                f"{req_id} is not verified by this approved test plan")
+        approved_tests = set(locators.get(req_id, []))
+        require(approved_tests and all("::" in test and test.split("::", 1)[0] in test_paths
+                                       for test in approved_tests),
+                f"{req_id} has no executable locator in the reviewed scope")
+        for mapping in (reviewed_mapping, current_mapping):
+            require(approved_tests <= set(mapping.get(req_id, {}).get("tests", [])),
+                    f"{req_id} lacks the exact reviewed test locators in the requirements map")
+
+
+def implementation_commits(base: str, paths: list[str]) -> list[str]:
+    commits = git("rev-list", "--reverse", "--topo-order", f"{base}..HEAD", "--", *paths).splitlines()
+    require(commits, "Cannot establish implementation commit order")
+    return commits
 
 
 def approval_gate(base: str, paths: list[str], api: GitHub) -> None:
@@ -256,13 +267,16 @@ def approval_gate(base: str, paths: list[str], api: GitHub) -> None:
     if not implementations:
         return
     policy = trusted_policy(base)
-    check_history(paths, base)
-    commits = git("rev-list", "--reverse", f"{base}..HEAD", "--", *implementations).splitlines()
-    require(commits, "Cannot establish implementation commit order")
+    commits = implementation_commits(base, implementations)
+    parent = git("rev-parse", f"{commits[0]}^")
+    check_history(parent)
     times = [git("show", "-s", "--format=%cI", c) for c in commits]
     first_time = min(times, key=lambda s: datetime.fromisoformat(s))
     entries = read("docs/verification/implementation-approvals.json")["approvals"]
     covered: set[str] = set()
+    reviewed_tests: set[str] = set()
+    map_path = "docs/verification/test-map.yaml"
+    current_mapping = read(map_path)
     for entry in entries:
         number = int(entry["test_pr"])
         pr = api.get(f"pulls/{number}")
@@ -273,17 +287,21 @@ def approval_gate(base: str, paths: list[str], api: GitHub) -> None:
         plan_path = entry.get("plan_path", "")
         require(plan_path.startswith("docs/verification/test-plans/") and plan_path.endswith(".json")
                 and plan_path in files, "Tests PR must contain the reviewed scope plan")
-        approved_scope(base_read(plan_path, merge_sha), entry, files, read("docs/verification/test-map.yaml"))
-        parent = git("rev-parse", f"{commits[0]}^")
+        require(map_path in files, "Tests PR must contain its reviewed test map")
+        approved_scope(base_read(plan_path, merge_sha), entry, files,
+                       base_read(map_path, merge_sha), current_mapping)
         require(git("merge-base", parent, merge_sha) == merge_sha,
                 "Approved test merge was not an ancestor before the first implementation commit")
         for path in files:
             if path.startswith("test/"):
                 require(git("rev-parse", f"HEAD:{path}") == git("rev-parse", f"{merge_sha}:{path}"),
                         f"Approved test changed since review: {path}")
+                reviewed_tests.add(path)
         require(entry.get("requirement_ids"), "Approval must name requirement IDs")
         covered.update(entry["implementation_paths"])
     require(set(implementations) <= covered, f"Implementation paths lack prior test approval: {sorted(set(implementations) - covered)}")
+    unreviewed = {p for p in paths if p.startswith("test/")} - reviewed_tests
+    require(not unreviewed, f"Changed tests lack a previously reviewed baseline: {sorted(unreviewed)}")
 
 
 def safety_gate(base: str, paths: list[str], api: GitHub | None, pr_number: int) -> None:
@@ -357,8 +375,10 @@ def main() -> int:
                 check_requirement_coevolution(paths)
                 check_ai_log(base_read("docs/ai-use-log.yaml", args.base), read("docs/ai-use-log.yaml"), paths)
             elif args.gate == "history":
-                if any(is_implementation(p) and p != "requirements-b-supplement.txt" for p in paths):
-                    check_history(paths, args.base)
+                implementations = [p for p in paths if is_implementation(p) and p != "requirements-b-supplement.txt"]
+                if implementations:
+                    first = implementation_commits(args.base, implementations)[0]
+                    check_history(git("rev-parse", f"{first}^"))
             elif args.gate == "semantic-needed":
                 need = any(p.startswith(("prompts/", "config/", "src/feedback_engine", "scripts/evaluate_live.py", "scripts/live_from_env.py", "test/live/fixed-cases.json", "docs/verification/model-evaluation.json", "test/fixtures/semantic-cases-adr.json")) for p in paths)
                 print("true" if need else "false")

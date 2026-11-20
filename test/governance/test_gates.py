@@ -83,20 +83,36 @@ class GateTests(unittest.TestCase):
     def test_unrelated_prior_tests_cannot_approve_new_code(self) -> None:
         """REQ-GOV-B01: an old unrelated approved test cannot authorize new source."""
         plan = {"implementation_paths": ["src/old.py"], "requirement_ids": ["REQ-X-001"],
-                "test_paths": ["test/offline/test_old.py"]}
+                "test_paths": ["test/offline/test_old.py"],
+                "test_locators": {"REQ-X-001": ["test/offline/test_old.py::Tests.test_x"]}}
         entry = {"implementation_paths": ["src/new.py"], "requirement_ids": ["REQ-X-001"]}
+        mapped = {"REQ-X-001": {"tests": ["test/offline/test_old.py::Tests.test_x"]}}
         with self.assertRaises(GateError):
-            approved_scope(plan, entry, ["test/offline/test_old.py"],
-                           {"REQ-X-001": {"tests": ["test/offline/test_old.py::Tests.test_x"]}})
+            approved_scope(plan, entry, ["test/offline/test_old.py"], mapped, mapped)
 
     def test_reviewed_scope_requires_related_trace(self) -> None:
         """REQ-GOV-B01: requirement tests must be part of the actual approved PR."""
         plan = {"implementation_paths": ["src/x.py"], "requirement_ids": ["REQ-X-001"],
-                "test_paths": ["test/offline/test_x.py"]}
+                "test_paths": ["test/offline/test_x.py"],
+                "test_locators": {"REQ-X-001": ["test/offline/test_x.py::Tests.test_x"]}}
         entry = {"implementation_paths": ["src/x.py"], "requirement_ids": ["REQ-X-001"]}
+        reviewed = {"REQ-X-001": {"tests": ["test/offline/test_x.py::Tests.test_x"]}}
         with self.assertRaises(GateError):
-            approved_scope(plan, entry, ["test/offline/test_x.py"],
-                           {"REQ-X-001": {"tests": ["test/offline/test_other.py::Tests.test_x"]}})
+            approved_scope(plan, entry, ["test/offline/test_x.py"], reviewed,
+                           {"REQ-X-001": {"tests": ["test/offline/test_x.py::Tests.test_different"]}})
+
+    def test_reviewed_scope_can_keep_historical_locators(self) -> None:
+        """REQ-GOV-B01: the mapped historical tests need not all be changed in a new tests PR."""
+        path = "test/offline/test_x.py"
+        rid = "REQ-X-001"
+        locator = f"{path}::Tests.test_x"
+        plan = {"implementation_paths": ["src/x.py"], "requirement_ids": [rid],
+                "test_paths": [path], "test_locators": {rid: [locator]}}
+        entry = {"implementation_paths": ["src/x.py"], "requirement_ids": [rid]}
+        mapped = {rid: {"tests": [locator, "test/offline/test_old.py::Tests.test_old"]}}
+        approved_scope(plan, entry, [path], mapped, mapped)
+        with self.assertRaises(GateError):
+            approved_scope(plan, entry, [path], {rid: {"tests": []}}, mapped)
 
     def test_approval_after_implementation_rejected(self) -> None:
         """REQ-GOV-B01: approval cannot be added retroactively."""
@@ -167,7 +183,7 @@ class GateTests(unittest.TestCase):
         traceability(read("docs/member-b/requirements-proposal.yaml"))
 
     def test_history_test_change_rejected(self) -> None:
-        """REQ-GOV-B05: editing/deleting an existing test cannot hide a regression."""
+        """REQ-GOV-B05: tests reviewed before implementation may enter main and stay immutable."""
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             exe = os.environ.get("GIT_BIN", "git")
@@ -177,12 +193,23 @@ class GateTests(unittest.TestCase):
             run("config", "user.name", "Local Test Fixture")
             run("config", "user.email", "fixture@example.invalid")
             (root / "test").mkdir()
-            (root / "test/test_old.py").write_text("# prior suite", encoding="utf-8")
+            old = root / "test/test_old.py"
+            old.write_text("# prior suite", encoding="utf-8")
             run("add", ".")
             run("commit", "-qm", "fixture baseline")
+            old.write_text("# separately reviewed test update", encoding="utf-8")
+            run("add", ".")
+            run("commit", "-qm", "reviewed tests baseline")
+            parent = run("rev-parse", "HEAD")
+            (root / "implementation.py").write_text("# implementation", encoding="utf-8")
+            run("add", ".")
+            run("commit", "-qm", "implementation")
+            check_history(parent, root=root)
+            old.unlink()
+            run("add", "-A")
+            run("commit", "-qm", "remove reviewed test")
             with self.assertRaises(GateError):
-                check_history(["test/test_old.py"], "HEAD", root)
-            check_history(["test/test_new.py"], "HEAD", root)
+                check_history(parent, root=root)
 
     def test_log_whitespace_change_rejected(self) -> None:
         """REQ-GOV-B06: rewriting log whitespace or old records is not new evidence."""
