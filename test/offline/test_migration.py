@@ -32,7 +32,7 @@ class MigrationTests(unittest.TestCase):
                        ("old", "72.00", canonical(self.audit), digest(self.audit)))
 
     def test_legacy_migration_retains_unsigned_history(self):
-        """REQ-INV-003/006: old records remain explicit unverified history, with original payload bytes."""
+        """REQ-INV-003, REQ-INV-006: old records remain explicit unverified history, with original payload bytes."""
         with GradeStore(self.path, migrate_legacy=True) as store:
             result = store.get("old")
             self.assertEqual(result["final_score"], "72.00")

@@ -353,3 +353,23 @@
   - "test/offline/test_revision.py"
   - "test/offline/test_store.py"
   - "test/support.py"
+
+- id: AI-B-ACCEPT-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: 'Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached'
+  purpose: Adapt B acceptance to the current signed A API, preserve existing A assertions, record exact requirement locators and their gaps.
+  source: 'A 10f5b8de9b9f51fd60cd227ee7d8b71c78970c10; legacy B preparation in PR #4'
+  human_review: Independent exact-head review pending.
+  evidence: handoff/records/2026-11-21-b-current-acceptance.md
+  limitations: Local checks only. Strict coverage is 37/47. No live calls, release approval, or retroactive approval.
+  files:
+  - docs/ai-use-log.yaml
+  - docs/verification/test-map.yaml
+  - docs/verification/test-plans/member-b-a-contracts.json
+  - handoff/records/2026-11-21-b-current-acceptance.md
+  - test/governance/test_b_local_evidence.py
+  - test/live/test_live_api.py
+  - test/offline/test_authority_boundary.py
+  - test/offline/test_migration.py
+  - test/offline/test_revision.py

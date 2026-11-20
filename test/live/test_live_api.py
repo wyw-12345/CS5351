@@ -13,7 +13,7 @@ from src.feedback_engine import evaluate
 @unittest.skipUnless(os.environ.get("GRADEAIDE_LIVE") == "1", "Live API not enabled; set key/config and GRADEAIDE_LIVE=1")
 class LiveTests(unittest.TestCase):
     def test_real_provider_smoke(self):
-        """REQ-FUNC-002/003: new prompt must emit validated confidence in a real call."""
+        """REQ-FUNC-002, REQ-FUNC-003: new prompt must emit validated confidence in a real call."""
         advice = evaluate(read_text(ROOT / "examples/essay.txt"),
                           parse_json(read_text(ROOT / "examples/rubric.json")),
                           parse_json(read_text(ROOT / "prompts/prompt_v1.2.yaml")), settings_from_env())

@@ -1,0 +1,261 @@
+# Member B draft against A 10f5b8d. A locator is not a passing result.
+# Empty tests intentionally keep the strict gate incomplete until evidence exists.
+# negative marks linked negative cases; it does not claim a completed mutation campaign.
+REQ-FUNC-001:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_invalid_rubric_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+REQ-FUNC-002:
+  tests:
+  - test/live/test_live_api.py::LiveTests.test_real_provider_smoke
+  - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
+REQ-FUNC-003:
+  tests:
+  - test/live/test_live_api.py::LiveTests.test_real_provider_smoke
+  - test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria
+  - test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score
+  - test/offline/test_revision.py::ConfidenceTests.test_boundaries
+  - test/offline/test_revision.py::ConfidenceTests.test_nonfinite_confidence_directly_rejected
+REQ-FUNC-004:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_exact_weighted_score
+  - test/offline/test_calculator.py::CalculatorTests.test_weighted_result_and_bounds
+  - test/offline/test_calculator.py::CalculatorTests.test_different_maxima_rounding_and_external_context
+  - test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division
+REQ-FUNC-005:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected
+  - test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited
+REQ-FUNC-006:
+  tests:
+  - test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected
+  - test/offline/test_store.py::StoreTests.test_escalation_requires_every_score_and_reason
+  - test/offline/test_store.py::StoreTests.test_failed_audit_insert_rolls_back_status_and_grade
+REQ-FUNC-007:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_missing_database_show_does_not_create_file
+  - test/offline/test_migration.py::MigrationTests.test_default_open_cannot_implicitly_migrate
+  - test/offline/test_store.py::StoreTests.test_unknown_id_is_refused
+REQ-FUNC-008:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  - test/offline/test_revision.py::ConfidenceTests.test_boundaries
+  - test/offline/test_revision.py::SignedStoreTests.test_manual_resolution
+REQ-FUNC-009:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent
+  - test/offline/test_revision.py::SignedStoreTests.test_idempotency_and_conflicts
+  - test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history
+REQ-FUNC-010:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection
+  - test/offline/test_cli.py::CliTests.test_invalid_fixture_envelope_escalates_without_traceback
+REQ-INV-001:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_model_total_cannot_override
+  - test/offline/test_revision.py::ConfidenceTests.test_total_is_ignored_without_input_mutation
+  - test/offline/test_revision.py::SignedStoreTests.test_approved_score_and_private_audit
+  - test/offline/test_revision.py::SignedStoreTests.test_read_detects_resigned_digest_tampering
+  - test/offline/test_store.py::StoreTests.test_proposal_has_no_grade_and_human_change_is_audited
+  negative: true
+REQ-INV-002:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score
+  - test/offline/test_feedback.py::FeedbackTests.test_bad_content_preserves_valid_usage
+  - test/offline/test_feedback.py::FeedbackTests.test_refusal_tools_invalid_choices_and_missing_model_escalate
+  - test/offline/test_feedback.py::FeedbackTests.test_wrong_top_level_envelope_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_context_boundary_counts_utf8_bytes
+  - test/offline/test_revision.py::ConfidenceTests.test_confidence_does_not_waive_other_rules
+  - test/offline/test_revision.py::SignedStoreTests.test_store_revalidates_confidence
+  negative: true
+REQ-INV-003:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected
+  - test/offline/test_migration.py::MigrationTests.test_legacy_migration_retains_unsigned_history
+  - test/offline/test_revision.py::SignedStoreTests.test_approved_score_and_private_audit
+  - test/offline/test_revision.py::SignedStoreTests.test_unknown_forged_and_missing_signature
+  - test/offline/test_revision.py::SignedStoreTests.test_score_substitution_and_replay
+  - test/offline/test_revision.py::SignedStoreTests.test_rubric_version_and_reason_bound
+  - test/offline/test_revision.py::SignedStoreTests.test_read_detects_resigned_digest_tampering
+  - test/offline/test_revision.py::SignedStoreTests.test_reopen_and_default_deny
+  - test/offline/test_store.py::StoreTests.test_missing_approval_details_and_stale_hash_are_rejected
+  negative: true
+REQ-INV-004:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_numeric_inputs_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_invalid_scores_rejected
+  negative: true
+REQ-INV-005:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_exact_weighted_score
+  - test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division
+  negative: true
+REQ-INV-006:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  - test/offline/test_migration.py::MigrationTests.test_legacy_migration_retains_unsigned_history
+  - test/offline/test_migration.py::MigrationTests.test_corrupt_legacy_migration_rolls_back_schema
+  - test/offline/test_migration.py::MigrationTests.test_unknown_schema_preserves_file
+  - test/offline/test_migration.py::MigrationTests.test_default_open_cannot_implicitly_migrate
+  - test/offline/test_revision.py::SignedStoreTests.test_approved_score_and_private_audit
+  - test/offline/test_revision.py::SignedStoreTests.test_rubric_version_and_reason_bound
+  - test/offline/test_revision.py::SignedStoreTests.test_atomic_rollback
+  - test/offline/test_revision.py::SignedStoreTests.test_reopen_and_default_deny
+  - test/offline/test_store.py::StoreTests.test_initial_advice_is_validated_at_storage_boundary
+  - test/offline/test_store.py::StoreTests.test_payload_and_grade_corruption_are_detected
+  - test/offline/test_store.py::StoreTests.test_state_corruption_cannot_bypass_escalation_review
+  - test/offline/test_store.py::StoreTests.test_inconsistent_previous_state_is_detected_even_with_recomputed_audit_digest
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+  - test/offline/test_store.py::StoreTests.test_unsupported_schema_preserves_existing_data
+  negative: true
+REQ-INV-007:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory
+  - test/offline/test_boundaries.py::BoundaryTests.test_engine_has_no_environment_or_authority_import
+  negative: true
+  pending_evidence: Application runtime filesystem and outbound network isolation, plus the applicable mutation check, remain
+    with E/B.
+REQ-INV-008:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent
+  - test/offline/test_revision.py::SignedStoreTests.test_idempotency_and_conflicts
+  - test/offline/test_store.py::StoreTests.test_duplicate_approval_cannot_overwrite_history
+  negative: true
+REQ-QUAL-001:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+REQ-QUAL-002:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+REQ-QUAL-003:
+  tests:
+  - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_offline_regression_runs_without_provider_credentials
+REQ-QUAL-004:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_separate_process_restart_approval_and_duplicate_rejection
+  - test/offline/test_store.py::StoreTests.test_reopen_preserves_exact_record
+REQ-QUAL-005:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
+  - test/offline/test_revision.py::SignedStoreTests.test_approved_score_and_private_audit
+REQ-PERF-001:
+  tests:
+  - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_benchmark_meets_local_p95_target
+REQ-PERF-002:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_transport_failure_escalates_without_retry_or_secrets
+  - test/offline/test_http.py::HttpTests.test_real_request_response_serialization
+  - test/offline/test_http.py::HttpTests.test_redirect_and_server_error_never_retry_or_follow
+  - test/offline/test_http.py::HttpTests.test_delayed_header_times_out
+  - test/offline/test_http.py::HttpTests.test_slow_trickle_is_stopped_by_connected_deadline
+  - test/offline/test_http.py::HttpTests.test_invalid_json_encoding_envelope_and_response_limit
+REQ-PERF-003:
+  tests: []
+  evidence:
+  - evidence/live-results.json
+  - scripts/evaluate_live.py
+  pending_evidence: Run the approved selected deployment on at least 20 attempts and retain latency and failure counts. Historical
+    live results are linked for context.
+REQ-COST-001:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
+REQ-COST-002:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+REQ-COST-003:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+  - test/offline/test_feedback.py::FeedbackTests.test_configuration_rejects_unsafe_endpoints_prices_and_limits
+REQ-COST-004:
+  tests:
+  - test/offline/test_feedback.py::FeedbackTests.test_missing_or_invalid_usage_never_becomes_zero
+  - test/offline/test_feedback.py::FeedbackTests.test_provider_over_output_cap_escalates_but_usage_survives
+  - test/offline/test_live_runner.py::LiveRunnerTests.test_direct_helper_requires_explicit_opt_in
+  - test/offline/test_live_runner.py::LiveRunnerTests.test_transport_failure_is_not_a_correct_uncertainty_response
+REQ-COST-005:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+  - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
+REQ-GOV-B01:
+  tests: []
+  pending_evidence: Install the approval gate and obtain a real independent review and ancestry evidence. This retrospective
+    test proposal cannot authorize previous implementation.
+REQ-GOV-B02:
+  tests: []
+  pending_evidence: Integrate static analysis and obtain ADR, API, permission and exact-head human reviews for the affected
+    PR.
+REQ-GOV-B03:
+  tests:
+  - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_registry_schema_and_each_mapped_locator
+  pending_evidence: Exact links are validated locally; missing executable locators keep C strict completeness open.
+REQ-GOV-B04:
+  tests:
+  - test/live/test_live_api.py::LiveTests.test_fixed_synthetic_cases
+  pending_evidence: The existing live test covers a replay path. CI enforcement, current live outcomes and human semantic
+    evaluation need separate evidence.
+REQ-GOV-B05:
+  tests: []
+  pending_evidence: Enable CI to run deterministic suites on each change and verify rejection of an unapproved baseline change.
+REQ-GOV-B06:
+  tests: []
+  pending_evidence: Enable CI to reject missing path coverage and past log rewrites; retain real run evidence.
+REQ-GOV-E01:
+  tests: []
+  evidence:
+  - .opencode/permissions.jsonc
+  pending_evidence: E must show that the installed OpenCode loads the configuration and enforces deny and ask cases.
+REQ-GOV-E02:
+  tests: []
+  evidence:
+  - .opencode/permissions.jsonc
+  - docs/code-governance/structural-constraints.md
+  pending_evidence: Administrator must configure real CODEOWNERS/protection and demonstrate an exact-head frozen-calculator
+    review gate.
+REQ-GOV-E03:
+  tests: []
+  evidence:
+  - architecture-blueprint.md
+  - docs/code-governance/structural-constraints.md
+  pending_evidence: Verify the approved API and architecture-to-module boundaries against the current implementation.
+REQ-GOV-E04:
+  tests: []
+  evidence:
+  - docs/code-governance/mcp-tool-manifest.md
+  - .opencode/permissions.jsonc
+  pending_evidence: E must verify the runtime tool manifest and refusal of unlisted or role-inappropriate tools.
+REQ-GOV-C01:
+  tests: []
+  evidence:
+  - docs/req/requirement-id-map.yaml
+  - docs/architecture/trace-matrix.md
+  pending_evidence: Integrate the requirement co-evolution gate and test that a change missing a dependent artifact is blocked.
+REQ-GOV-C02:
+  tests:
+  - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_registry_schema_and_each_mapped_locator
+  pending_evidence: Current test locators and docstrings are checked locally. Extend registered-ID validation to the remaining
+    active architecture, CI and review artifacts.
+REQ-SEC-002:
+  tests:
+  - test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates
+  - test/offline/test_feedback.py::FeedbackTests.test_reject_final_score_extra_unknown_duplicate_and_missing_criteria
+  - test/offline/test_revision.py::ConfidenceTests.test_confidence_does_not_waive_other_rules
+REQ-SEC-004:
+  tests:
+  - test/offline/test_boundaries.py::BoundaryTests.test_missing_env_fails_without_secret_output
+  - test/offline/test_env_launcher.py::EnvTests.test_aliases_are_data_not_shell_commands
+  - test/offline/test_env_launcher.py::EnvTests.test_thinking_is_explicit_and_validated
+  - test/offline/test_feedback.py::FeedbackTests.test_settings_repr_does_not_disclose_key
+  pending_evidence: Connect repository secret checks and verify the deployed credential boundary; local tests cover config
+    and redaction behavior.
+REQ-SEC-006:
+  tests:
+  - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+REQ-SEC-007:
+  tests:
+  - test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected
+  - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
+  - test/offline/test_revision.py::ConfidenceTests.test_nonfinite_confidence_directly_rejected
