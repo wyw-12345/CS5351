@@ -127,12 +127,18 @@ class AuthorityTests(unittest.TestCase):
     def test_retry_is_idempotent(self):
         """REQ-INV-008, REQ-FUNC-009: signed retries return the first row across store instances."""
         row = self.propose()
+        advice = row["proposal"]["advice"]
         signed = self.signed(row)
         first = self.approve(row, signed)
         with GradeStore(self.path, trusted_keys=self.trust) as reopened:
             self.assertEqual(reopened.approve(row["id"], row["hash"], SCORES, "B fixture", approval=signed), first)
-        self.assertEqual(self.propose(), first)
+            # A retry resubmits the original request, including the advice metadata.
+            self.assertEqual(reopened.create(ESSAY, RUBRIC, advice, submission_id=row["submission_id"]), first)
         with self.assertRaises(ValueError):
-            self.store.create(ESSAY + " Changed.", RUBRIC, row["proposal"]["advice"], submission_id=row["submission_id"])
+            self.store.create(ESSAY + " Changed.", RUBRIC, advice, submission_id=row["submission_id"])
+        different_advice = copy.deepcopy(advice)
+        different_advice["feedback"]["criteria"][0]["feedback"] = "A different supported explanation."
+        with self.assertRaises(ValueError):
+            self.store.create(ESSAY, RUBRIC, different_advice, submission_id=row["submission_id"])
         self.assertEqual(self.store.get(row["id"]), first)
         self.assertEqual(self.grade_count(), 1)
