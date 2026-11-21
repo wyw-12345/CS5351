@@ -393,6 +393,20 @@
   - handoff/member-b/2026-11-21-ci-readiness/model-evaluation.json
   - handoff/member-b/2026-11-21-ci-readiness/permissions-snapshot.json
 
+- id: AI-B-RETRY-FIXTURE-20261121-001
+  date: '2026-11-21'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: 'Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached'
+  purpose: Fix the B retry fixture exposed by the first Ubuntu CI run while preserving its exact-request and conflict assertions.
+  source: 'main 8d9cdde; PR #8 Actions run 44778695021'
+  human_review: Independent tests-only review pending.
+  evidence: handoff/records/2026-11-21-b-retry-fixture.md
+  limitations: Test fixture and evidence only. No application or CI policy changes in this branch.
+  files:
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-21-b-retry-fixture.md
+  - test/offline/test_authority_boundary.py
+
 - id: AI-B-GATES-20261121-001
   date: '2026-11-21'
   agent: Codex (GPT-6.2, current thread)
