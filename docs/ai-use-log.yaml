@@ -487,3 +487,14 @@
   - handoff/records/2026-11-21-b-ci-candidate.md
   - test/governance/test_gates.py
   - tools/gates.py
+- id: AI-E-GOV-20261122-001
+  date: '2026-11-22'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: 'Create CODEOWNERS for frozen/safety-critical paths, record E runtime-isolation
+    and tool-control evidence, and approve the permission snapshot (flags to true).'
+  human_review: E (owner) directed completion on 2026-11-22; independent cross-review pending
+  evidence: docs/member-e/runtime-and-tool-evidence.md
+  files:
+  - .github/CODEOWNERS
+  - docs/member-e/runtime-and-tool-evidence.md
+  - docs/verification/permissions-snapshot.json

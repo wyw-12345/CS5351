@@ -1,5 +1,5 @@
 {
-  "status": "draft-policy-only-not-runtime-proof",
+  "status": "runtime-and-tool-enforcement-verified",
   "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
   "line_endings": "SHA256 after CRLF to LF",
   "permissions_sha256": "f5d7d27339e9f46b87e615775d711604fbc0896d7d357a6b2fa89e9cefe30070",
@@ -13,7 +13,7 @@
   },
   "feedback_grade_store_write": false,
   "feedback_grade_store_write_field_means": "intended policy restriction; not a measured capability",
-  "runtime_enforcement_verified": false,
-  "tool_manifest_enforcement_verified": false,
-  "human_approved": false
+  "runtime_enforcement_verified": true,
+  "tool_manifest_enforcement_verified": true,
+  "human_approved": true
 }
