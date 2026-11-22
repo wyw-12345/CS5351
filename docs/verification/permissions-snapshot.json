@@ -2,10 +2,10 @@
   "status": "runtime-and-tool-enforcement-verified",
   "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
   "line_endings": "SHA256 after CRLF to LF",
-  "permissions_sha256": "f5d7d27339e9f46b87e615775d711604fbc0896d7d357a6b2fa89e9cefe30070",
+  "permissions_sha256": "f9439451db1d4f118007148be1e9b0386c0d17ba7d0f35714e5f8894bd6a2609",
   "policy_files_sha256": {
     "AGENTS.md": "994b45f10394312503ba3ca578cfaa963a1cc2c4659f2a93cfe7c457a336d2a2",
-    ".opencode/permissions.jsonc": "f5d7d27339e9f46b87e615775d711604fbc0896d7d357a6b2fa89e9cefe30070",
+    ".opencode/permissions.jsonc": "f9439451db1d4f118007148be1e9b0386c0d17ba7d0f35714e5f8894bd6a2609",
     ".opencode/rules.md": "83b825b7469eee967cbf349f6c75dadd9847f1fdffb95378b9e9ec0215f1a931",
     ".agent/rules.md": "40ec52b4b9aa02278439cfd057bbacc3899982a4a683b8ee61a829086afd0537",
     "docs/code-governance/structural-constraints.md": "2ccbe88621aa5c045889233c88245c0c2d666f7130ee02024dfb0b84d20a4982",

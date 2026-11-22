@@ -518,3 +518,14 @@
   - test/governance/test_e_control_readback.py
   - tools/application_mutation_check.py
   - tools/mutation_check.py
+- id: AI-E-GOV-20261122-002
+  date: '2026-11-22'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: 'Fix E01/E04 permission rule ordering: broad allows first and denies last so denies
+    are not shadowed; make the verify role deny unlisted shell commands; refresh the permission
+    snapshot hash.'
+  human_review: E (owner) directed correction on 2026-11-22; B independent test re-run pending
+  evidence: docs/review-memo.md; test/governance/test_e_control_readback.py
+  files:
+  - .opencode/permissions.jsonc
+  - docs/verification/permissions-snapshot.json
