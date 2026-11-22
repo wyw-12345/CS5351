@@ -40,3 +40,6 @@ This command makes up to 20 billed requests. It was **not run in this rebuild**.
 ## Handoff boundary
 
 Five core modules remain under `src/`; tests are divided into `test/offline` and `test/live`. A's recorded checks are in `docs/member-a/verification-results.md`. B owns the six formal gates, independent test approval and official snapshots. E owns deployment isolation and production keys. This branch is `awaiting_review`; it does not claim release approval or a deployed sandbox.
+
+
+test_ci
