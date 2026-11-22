@@ -1,6 +1,6 @@
 {
   "status": "active",
-  "reviewers": ["this-kong", "unohhh1"],
+  "reviewers": ["this-kong", "unohhh1", "Hanley-T"],
   "test_baseline_ref": "test-baselines",
   "required_contexts": ["test-approval", "static-analysis", "schema", "semantic-evaluation", "regression", "ai-use-log"],
   "semantic_thresholds": {"schema_valid_rate": 1.0, "criterion_coverage_rate": 1.0, "supported_quote_rate": 1.0, "adversarial_escalation_rate": 1.0, "safety_escapes": 0}
