@@ -18,6 +18,10 @@ MUTANTS = [
     ("INV-002-uncertainty", "src/feedback_engine.py",
      'if any(item["uncertain"] or item["suggested_score"] is None for item in feedback["criteria"]):',
      'if False:', "test.offline.test_feedback.FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score"),
+    ("INV-003-verified-audit-association", "src/grade_store.py",
+     '                     "verified_key_id": key_id, "verified_teacher_id": teacher, **binding,',
+     '                     "verified_key_id": key_id, "verified_teacher_id": None, **binding,',
+     "test.offline.test_revision.SignedStoreTests.test_approved_score_and_private_audit"),
     ("INV-004-range", "src/contracts.py", "if result > maximum:", "if False:",
      "test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected"),
     ("INV-005-half-up", "src/score_calculator.py",
@@ -27,6 +31,9 @@ MUTANTS = [
      'return result\n        except Exception:\n            if self.connection.in_transaction:\n                self.connection.execute("ROLLBACK")',
      'return result\n        except Exception:\n            if self.connection.in_transaction:\n                self.connection.execute("COMMIT")',
      "test.offline.test_store.StoreTests.test_failed_audit_insert_rolls_back_status_and_grade"),
+    ("INV-007-static-import-boundary", "src/feedback_engine.py",
+     "from .contracts import", "if False:\n    import grade_store\n\nfrom .contracts import",
+     "test.offline.test_boundaries.BoundaryTests.test_engine_has_no_environment_or_authority_import"),
     ("INV-008-retry", "src/grade_store.py",
      'raise ValidationError("submission content conflict")\n            else:',
      'raise ValidationError("submission content conflict")\n'
@@ -66,8 +73,10 @@ def main() -> int:
             results.append({"mutant": name, "status": "KILLED" if killed else "SURVIVED", "test": test,
                             "baseline_passed": True, "mutation_compiles": True})
     results.extend([
-        {"mutant": "INV-003-signing", "status": "NOT RUN", "reason": "Signed A behavior exists; current mutation evidence is pending"},
-        {"mutant": "INV-007-advisory-authority", "status": "NOT RUN", "reason": "E runtime isolation evidence pending; gate import mutant is separate"},
+        {"mutant": "INV-003-unverified-write-prevention", "status": "NOT RUN",
+         "reason": "The signed-audit mutation covers the approved path; unverified-write refusal is covered by real negative tests, not by that mutation"},
+        {"mutant": "INV-007-deployed-advisory-isolation", "status": "NOT RUN",
+         "reason": "The static import mutation does not validate live process or filesystem isolation"},
     ])
     target = ROOT / "artifacts/application-mutations.json"
     target.parent.mkdir(exist_ok=True)

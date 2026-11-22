@@ -498,3 +498,23 @@
   - .github/CODEOWNERS
   - docs/member-e/runtime-and-tool-evidence.md
   - docs/verification/permissions-snapshot.json
+
+- id: AI-B-E-HANDOFF-20261122-001
+  date: '2026-11-22'
+  agent: Codex (GPT-6.2, current thread)
+  raw_session_path: Codex thread 01a1b041-b54f-7022-99a0-c89578972c2a; raw export not attached
+  purpose: Preserve active policy, complete test locators, verify ordered permission declarations, record bootstrap deviation
+    and run scope-bounded mutations.
+  source: E handoff 3eac4cd; main cdd6ce7; E-to-B handoff dated 2026-11-22
+  human_review: No retroactive approval; independent exact-head review and bootstrap decision still pending.
+  evidence: docs/review-memo.md
+  limitations: Local offline verification only. E01/E04 ordered-rule checks fail. Model replay and deployed isolation remain
+    pending.
+  files:
+  - docs/ai-use-log.yaml
+  - docs/architecture/adr/ADR-B0005-verification-rollout.md
+  - docs/review-memo.md
+  - docs/verification/test-map.yaml
+  - test/governance/test_e_control_readback.py
+  - tools/application_mutation_check.py
+  - tools/mutation_check.py
