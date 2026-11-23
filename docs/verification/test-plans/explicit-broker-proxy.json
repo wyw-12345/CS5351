@@ -1,0 +1,34 @@
+{
+  "status": "proposed-awaiting-independent-review",
+  "implementation_paths": [
+    "src/contracts.py",
+    "src/feedback_engine.py",
+    "src/cli.py",
+    "scripts/advisory_worker.py"
+  ],
+  "requirement_ids": [
+    "REQ-SEC-004",
+    "REQ-COST-001",
+    "REQ-INV-007"
+  ],
+  "test_paths": [
+    "test/offline/test_broker_proxy.py"
+  ],
+  "test_locators": {
+    "REQ-SEC-004": [
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_explicit_loopback_proxy_tunnels_only_to_model_endpoint",
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_unconfigured_transport_ignores_ambient_proxy",
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_configuration_rejects_credentials_and_external_targets",
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_tls_failure_is_not_bypassed_or_retried",
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_cli_loads_only_explicit_proxy_configuration",
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator"
+    ],
+    "REQ-COST-001": [
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_never_retries_or_follows_redirects"
+    ],
+    "REQ-INV-007": [
+      "test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator"
+    ]
+  },
+  "rationale": "WSL direct TLS times out, while authenticated-free CONNECT with default target TLS verification reaches the provider. Add an explicit loopback-only operator proxy; keep endpoint identity, one attempt, TLS verification, deadlines and sandbox isolation. No new Python dependency or implicit environment proxy. Worker must not provision the proxy to its networkless evaluator. Actual model replay requires separate authorized execution and output review. This plan is not approval evidence."
+}
