@@ -607,3 +607,15 @@
   - docs/verification/test-plans/b-approval-api-and-strict-o2.json
   - handoff/records/2026-11-23-b-gate-evidence-tests.md
   - docs/ai-use-log.yaml
+- id: AI-A-REVIEWED-HEAD-TESTS-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Specify fail-closed reviewed HEAD replay reuse only when target BASE has no semantic baseline, before implementation.
+  human_review: Tests-only proposal awaiting D exact-head approval and B protected-baseline incorporation; no implementation or exception approved here.
+  evidence: handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md; docs/verification/test-plans/reviewed-head-baseline.json
+  files:
+  - test/governance/test_a_reviewed_head_baseline.py
+  - docs/verification/test-map.yaml
+  - docs/verification/test-plans/reviewed-head-baseline.json
+  - handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md
+  - docs/ai-use-log.yaml
