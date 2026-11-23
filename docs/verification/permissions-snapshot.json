@@ -1,6 +1,6 @@
 {
   "status": "runtime-and-tool-enforcement-verified",
-  "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
+  "source_commit": "2e135bf1f931330723edb8bd1ee8c1c2f25bfab0",
   "line_endings": "SHA256 after CRLF to LF",
   "permissions_sha256": "f9439451db1d4f118007148be1e9b0386c0d17ba7d0f35714e5f8894bd6a2609",
   "policy_files_sha256": {
@@ -25,5 +25,13 @@
     "observed": "read-only grade probe, network namespace separation, adjacent secret denied, sandbox removal detected",
     "evidence": "https://github.com/wyw-12345/CS5351/actions/runs/45135552832/job/137560854546",
     "scope": "advisory evaluator in a single-teacher CLI; the transport broker remains trusted"
+  },
+  "proxy_followup_evidence": {
+    "test_baseline_sha": "8347ebcee949572adc6ff824a79c2c8ba6ea6d43",
+    "scope": "optional proxy in trusted broker only; evaluator still has no network/proxy/key",
+    "local_evidence": "artifacts/proxy-implementation-20261123/offline.log",
+    "hosted_evidence_for_this_revision": "pending final CI",
+    "implementation_review": "pending D exact-head approval",
+    "permission_policy_changed": false
   }
 }

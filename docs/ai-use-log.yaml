@@ -430,6 +430,7 @@
   - docs/verification/api-surface.json
   - docs/verification/application-mutations.yaml
   - docs/verification/implementation-approvals.json
+  - docs/verification/permissions-snapshot.json
   - docs/verification/model-evaluation.json
   - docs/verification/permissions-snapshot.json
   - docs/verification/policy.json
@@ -611,3 +612,15 @@
   - docs/member-b/02-interface-contract.md
   - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
   - docs/ai-use-log.yaml
+- id: AI-A-EXPLICIT-PROXY-REPLAY-20261123-002
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Execute five authorized deployed-worker calls on immutable 2e135bf and supply C/D v2 acceptance evidence with strict O2 and language views.
+  human_review: C/D scope is recorded in PR 12 v2; actual output wording and final acceptance remain pending C/D. No signatures or model approval flags filled by A.
+  evidence: docs/verification/semantic-baseline.json; handoff/records/2026-11-23-A-approved-proxy-to-CD.md; artifacts/proxy-implementation-20261123/
+  files:
+  - docs/verification/semantic-baseline.json
+  - docs/review-memo.md
+  - handoff/records/2026-11-23-A-approved-proxy-to-CD.md
+  - docs/ai-use-log.yaml
+  limitations: Strict O2 applied by operator replay checker; permanent tools/semantic_eval.py remains outside the approved four-path implementation scope and needs separate reviewed integration.
