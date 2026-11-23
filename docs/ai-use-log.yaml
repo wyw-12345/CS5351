@@ -539,3 +539,20 @@
   files:
   - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
   - test/offline/test_deployed_isolation.py
+- id: AI-A-ISOLATION-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Correct inert E acceptance and implement ADR-0006 Linux advisory sandbox, trusted endpoint broker, CLI IPC and actual INV-007 mutation.
+  human_review: Actual chat user approved test correction and implementation; independent tests-only GitHub approval and D exact-head review not established.
+  evidence: handoff/records/2026-11-23-A-isolation-preimplementation-review.md; artifacts/isolation-20261123/; ADR-0006 amendment
+  files:
+  - src/cli.py
+  - src/contracts.py
+  - src/feedback_engine.py
+  - scripts/advisory_worker.py
+  - test/offline/test_deployed_isolation.py
+  - tools/application_mutation_check.py
+  - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  - docs/member-b/02-interface-contract.md
+  - docs/verification/api-surface.json
+  - handoff/records/2026-11-23-A-isolation-preimplementation-review.md

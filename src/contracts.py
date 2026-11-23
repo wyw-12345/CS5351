@@ -1,5 +1,8 @@
 """ADR-0003: shared validation; REQ-FUNC-001, REQ-SEC-007, REQ-INV-004."""
 
+from dataclasses import dataclass, field
+from urllib.parse import urlsplit
+
 import hashlib
 import json
 import re
@@ -124,3 +127,47 @@ def validate_scores(rubric: dict[str, Any], scores: Any) -> dict[str, str]:
 def validate_essay(essay: Any) -> str:
     """REQ-FUNC-001: validate one bounded nonempty essay."""
     return text_value(essay, "essay", 100_000)
+
+
+@dataclass(frozen=True)
+class Settings:
+    endpoint: str
+    model: str
+    api_key: str = field(repr=False)
+    input_price: str
+    output_price: str
+    max_cost: str
+    timeout: float = 30.0
+    max_output_tokens: int = 1024
+    max_input_bytes: int = 12000
+    max_response_bytes: int = 100000
+    price_source: str = "user configuration; verify provider price before use"
+    thinking: str | None = None
+
+    def validate(self) -> None:
+        """REQ-SEC-004 / REQ-PERF-002: finite, bounded controls."""
+        text_value(self.model, "model", 200)
+        text_value(self.api_key, "API key", 4000)
+        text_value(self.price_source, "price source", 1000)
+        if self.thinking not in {None, "enabled", "disabled"}:
+            raise ValidationError("invalid thinking mode")
+        for value, name in [(self.input_price, "input price"), (self.output_price, "output price"),
+                            (self.max_cost, "max cost")]:
+            decimal_value(value, name)
+        if not 0 < self.timeout <= 120:
+            raise ValidationError("timeout must be within (0, 120] seconds")
+        for resource_value, maximum in [(self.max_output_tokens, 4096), (self.max_input_bytes, 100000),
+                               (self.max_response_bytes, 1000000)]:
+            if type(resource_value) is not int or not 1 <= resource_value <= maximum:
+                raise ValidationError("invalid resource limit")
+        try:
+            endpoint = urlsplit(self.endpoint)
+            endpoint.port
+        except (ValueError, TypeError) as exc:
+            raise ValidationError("invalid endpoint") from exc
+        if endpoint.username or endpoint.password or endpoint.fragment or endpoint.query:
+            raise ValidationError("endpoint cannot contain credentials, query or fragment")
+        if not endpoint.hostname or endpoint.scheme not in {"https", "http"}:
+            raise ValidationError("invalid endpoint")
+        if endpoint.scheme == "http" and endpoint.hostname not in {"127.0.0.1", "localhost", "::1"}:
+            raise ValidationError("HTTP is allowed only on loopback")

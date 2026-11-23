@@ -1,0 +1,13 @@
+test_advisory_process_cannot_write_grade_data (test.offline.test_deployed_isolation.DeployedIsolationTests.test_advisory_process_cannot_write_grade_data)
+REQ-INV-007: real writes and network attempts are denied in the evaluator. ... ok
+test_normal_path_returns_advice_without_touching_store (test.offline.test_deployed_isolation.DeployedIsolationTests.test_normal_path_returns_advice_without_touching_store)
+REQ-INV-007: real isolated fixture evaluation returns schema-valid advice. ... ok
+test_removing_the_process_boundary_fails (test.offline.test_deployed_isolation.DeployedIsolationTests.test_removing_the_process_boundary_fails)
+REQ-INV-007: removing real enforcement breaks the same denial assertion. ... ok
+test_worker_rejects_invalid_ipc_and_unsupported_platform (test.offline.test_deployed_isolation.DeployedIsolationTests.test_worker_rejects_invalid_ipc_and_unsupported_platform)
+REQ-INV-007: malformed/oversized IPC and unsupported platforms fail closed. ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 4.023s
+
+OK

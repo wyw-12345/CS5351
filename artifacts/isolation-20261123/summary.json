@@ -1,0 +1,14 @@
+{
+  "base": "77641eea585336b588d7f531db6d46de51079ed9",
+  "platform": "WSL2 Linux Python 3.14.4 bubblewrap 0.11.1",
+  "offline_tests": 77,
+  "governance_tests": 57,
+  "isolation_acceptance_tests": 4,
+  "application_mutants_killed": 9,
+  "remaining_not_run": [
+    "INV-003-unverified-write-prevention"
+  ],
+  "live_calls": 0,
+  "independent_review": "pending",
+  "all_six_green": false
+}

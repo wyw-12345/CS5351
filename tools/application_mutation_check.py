@@ -12,6 +12,10 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MUTANTS = [
+    ("INV-007-deployed-advisory-isolation", "scripts/advisory_worker.py",
+     "command = sandbox_command(probe_directory)",
+     'command = [sys.executable, str(Path(__file__).resolve()), "--child"]',
+     "test.offline.test_deployed_isolation.DeployedIsolationTests.test_advisory_process_cannot_write_grade_data"),
     ("INV-001-recompute", "src/grade_store.py",
      'if grade["score"] != calculated or audit["final_score"] != calculated:', 'if False:',
      "test.offline.test_store.StoreTests.test_payload_and_grade_corruption_are_detected"),
@@ -49,7 +53,7 @@ def main() -> int:
     for name, filename, before, after, test in MUTANTS:
         with tempfile.TemporaryDirectory(prefix="gradeaide-app-mutant-") as directory:
             root = Path(directory)
-            for folder in ("src", "test", "tools", "docs", "prompts", "evidence", "config"):
+            for folder in ("src", "scripts", "test", "tools", "docs", "prompts", "evidence", "config", "examples"):
                 if (ROOT / folder).is_dir():
                     shutil.copytree(ROOT / folder, root / folder,
                                     ignore=shutil.ignore_patterns("__pycache__", "proposals"))
@@ -70,13 +74,13 @@ def main() -> int:
             result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,
                                     check=False, timeout=60)
             killed = result.returncode != 0
+            if name == "INV-007-deployed-advisory-isolation":
+                killed = killed and "AssertionError" in result.stderr and "written" in result.stderr
             results.append({"mutant": name, "status": "KILLED" if killed else "SURVIVED", "test": test,
                             "baseline_passed": True, "mutation_compiles": True})
     results.extend([
         {"mutant": "INV-003-unverified-write-prevention", "status": "NOT RUN",
          "reason": "The signed-audit mutation covers the approved path; unverified-write refusal is covered by real negative tests, not by that mutation"},
-        {"mutant": "INV-007-deployed-advisory-isolation", "status": "NOT RUN",
-         "reason": "The static import mutation does not validate live process or filesystem isolation"},
     ])
     target = ROOT / "artifacts/application-mutations.json"
     target.parent.mkdir(exist_ok=True)

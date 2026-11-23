@@ -36,5 +36,21 @@ A's handoff (2026-11-23) flags INV-007 "deployed advisory isolation" as the miss
 
 ## Reopening
 
+### A implementation amendment — 2026-11-23 (pending D review)
+
+The actual user approved correcting the acceptance tests and proceeding with Linux/WSL2 implementation. This does not claim independent tests-only GitHub approval or final D review. The original third test was a no-op; executable tests now use the current rubric/advice schema and synthetic provider data.
+
+Deployment uses bubblewrap 0.11.1 (tested in WSL2), Linux user/PID/mount/network namespaces, UID/GID 65534, dropped capabilities and a minimal read-only Python runtime/source view. No host home, .env, signing/trust files or grade directories are mounted during ordinary evaluation. Unsupported systems or missing bubblewrap refuse execution; there is no unprotected fallback. OS dependency: `sudo apt-get update && sudo apt-get install -y bubblewrap` on Debian/Ubuntu; availability and namespace support must be verified by the deployment operator/CI owner. No Python dependency was added.
+
+Network amendment: the sandbox evaluator has **no network**, rather than direct endpoint egress. The outer worker is a small trusted transport broker: it validates settings, prepares at most one fixed model request using the existing budget checks, and calls the existing non-redirecting transport against only the operator-specified endpoint. Provider output is evaluated in the networkless sandbox. The model cannot supply an endpoint, tool or follow-up request. This broker is trusted orchestration, not arbitrary code execution containment for the broker itself. Host firewall confinement of a compromised broker is not claimed.
+
+The API key exists only in the broker input, is replaced with a dummy value before sandbox IPC and is absent from inherited child environment. Both process stages use bounded JSON messages and deadlines; the CLI validates the returned advice shape and the store retains its existing authoritative validation/signature checks. Settings moved to shared contracts; feedback_engine.Settings remains a compatible import, while CLI no longer imports feedback_engine or invokes evaluate.
+
+Operator-only `--probe-directory` mounts a disposable grade directory read-only and performs actual write/socket/adjacent-secret-read attempts as UID 65534. It is never sent by CLI, never disables protection and never touches production grade data in tests. The mutation replaces the actual sandbox launch with direct child execution only in a disposable copy; the same write-denial assertion then fails with written versus denied. This is measured process-enforcement evidence, not merely import matching.
+
+Runtime command (Linux, repository root): `python3 -m src.cli propose --essay examples/essay.txt --rubric examples/rubric.json --fixture examples/provider-fixture.json --submission-id isolation-demo --db /tmp/gradeaide-demo.sqlite3`. Live mode omits `--fixture` and requires operator environment; no live call was performed for this implementation. Signing/approval commands remain in the trusted CLI process.
+
+Evidence: `python3 -m unittest test.offline.test_deployed_isolation -v`; `python3 tools/check_suite.py test/offline`; `python3 tools/application_mutation_check.py`. Logs are under artifacts/isolation-20261123. D must independently review this amendment, and B must provision bubblewrap/user namespaces in CI before claiming gate readiness.
+
 - If the team chooses a different isolation mechanism (container, separate service), record an amendment ADR.
 - If the single-teacher CLI scope changes to multi-user, revisit identity, network and secret provisioning.
