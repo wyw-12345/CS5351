@@ -97,3 +97,9 @@ A then attempted authorised live replay via the actual isolated worker. First ca
 The previously missing 25-call historical files are now supplied with hashes, explicitly pre-isolation and user-NOT-ACCEPTED. Full audit, execution evidence and report-ready paragraph: handoff/records/2026-11-23-A-post-B-review.md and artifacts/member-a-followup-20261123/. C/D must still freeze semantic scope; final exact-head approval remains pending.
 
 2026-11-22 · B integration. The active policy on main at `cdd6ce7d25a2f937d2880140386ff22c96d387de` was retained without edits. GitHub reports main protected. The detailed protection and `test-baselines` endpoints returned HTTP 404 to the current credential, so use E/admin readback for the individual rules. Code-owner configuration and the frozen calculator path can be checked in this PR.
+
+## Accepted replay for the release candidate
+
+[PR #20](https://github.com/wyw-12345/CS5351/pull/20) contains the C/D-accepted replay from PR #17 at f1ea172. D approved a3063c3. The candidate preserves the same evidence blob, 9b36d685fe0fd7f62b60184aeede88076106d091. PR #20 still targets protected main and was awaiting all six required statuses when this integration was prepared. The release gate can read the reviewed replay only when the artifact is present at its trusted base.
+
+This integration also preserves C's entire added AI-use entry. Its multiline source field uses YAML block syntax so GitHub PR number signs are retained as text.
