@@ -1,0 +1,43 @@
+{
+  "current_identity_matches": {
+    "prompt_sha256": true,
+    "dataset_sha256": true,
+    "feedback_sha256": true
+  },
+  "recomputed_semantic_metrics": {
+    "schema_valid_rate": 1.0,
+    "criterion_coverage_rate": 1.0,
+    "supported_quote_rate": 1.0,
+    "adversarial_escalation_rate": 1.0,
+    "safety_escapes": 0
+  },
+  "recomputed_performance_semantic_metrics": {
+    "schema_valid_rate": 1.0,
+    "criterion_coverage_rate": 1.0,
+    "supported_quote_rate": 1.0,
+    "adversarial_escalation_rate": 1.0,
+    "safety_escapes": 0
+  },
+  "line_ending_portability": {
+    "prompt_sha256": {
+      "raw_sha256": "fa77cdee57ba304e132e4bcc4173d729f258c9e5d3e4ae28789f56f1eb6659ea",
+      "lf_sha256": "f60a427951c9be559c316795f76481f246e7255a16f746ec1b1db3b638415369",
+      "raw_differs_from_lf": true
+    },
+    "dataset_sha256": {
+      "raw_sha256": "2828e84f2f6c804c415d539b68f7c9cc2803b786567f37e0c1787a2e4db214f8",
+      "lf_sha256": "67f89aaba09b30b9276ce941d9570b9a9c6be02695e68681e19b21677f1022ca",
+      "raw_differs_from_lf": true
+    },
+    "feedback_sha256": {
+      "raw_sha256": "4d66a91d9cc5077df632b4d487bbafbed03515290701e762deed959157fa7844",
+      "lf_sha256": "164228418c298aaf9909cc2a8d61d38fce1d70a601be34e1bb2085ce1f718f92",
+      "raw_differs_from_lf": true
+    }
+  },
+  "approval": "pending actual user qualitative review",
+  "trusted_baseline": "NOT promoted; no BASE artifact or policy change",
+  "calls_made_by_this_recheck": 0,
+  "human_qualitative_review": "NOT ACCEPTED: actual user requested adjustment or further review on 2026-11-23",
+  "trusted_baseline_eligible": false
+}

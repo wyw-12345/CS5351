@@ -1,0 +1,18 @@
+{
+  "calls": 25,
+  "prompt_tokens": 10910,
+  "completion_tokens": 2885,
+  "calculated_usage_cost_usd_at_conservative_rates": "0.0067350",
+  "billing_note": "Calculated from provider token usage at configured conservative rates; not an invoice or actual account debit",
+  "performance_p95_ms": 1704.0,
+  "semantic_metrics": {
+    "schema_valid_rate": 1.0,
+    "criterion_coverage_rate": 1.0,
+    "supported_quote_rate": 1.0,
+    "adversarial_escalation_rate": 1.0,
+    "safety_escapes": 0
+  },
+  "human_qualitative_review": "NOT ACCEPTED: actual user requested adjustment or further review on 2026-11-23",
+  "ci_ingestion": "pending reviewed B integration",
+  "trusted_baseline_eligible": false
+}

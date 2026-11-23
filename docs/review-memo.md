@@ -1,5 +1,13 @@
 # PR #8 verification and bootstrap review memo
 
+## A follow-up to hosted B verification — 2026-11-23
+
+At #14 revision 40e86b2, A audited #13's revised tests. Actual chat-user permission exists, but no independent pre-implementation tests-only GitHub approval was located. Tests and implementation were committed together in 328c381, after the cdd6ce7 bootstrap cutoff. D's later COMMENTED architecture/API acceptance is retained as scope review, not rewritten as prior approval. The chronology deviation is ready for inclusion in the process report; no approvals were backfilled.
+
+A then attempted authorised live replay via the actual isolated worker. First case english-supported escalated with unavailable-provider reason after about 30 seconds, no provider usage/feedback; four cases were not run and no retry occurred. No-key diagnostics found WSL direct Python HTTPS TLS timeout while proxy-aware curl received a response. Runtime proxy support or a directly reachable reviewed runner needs a separate decision; no sandbox bypass was used. This failed candidate execution is not semantic quality acceptance or a trusted baseline.
+
+The previously missing 25-call historical files are now supplied with hashes, explicitly pre-isolation and user-NOT-ACCEPTED. Full audit, execution evidence and report-ready paragraph: handoff/records/2026-11-23-A-post-B-review.md and artifacts/member-a-followup-20261123/. C/D must still freeze semantic scope; final exact-head approval remains pending.
+
 2026-11-22 · B integration. The active policy on main at `cdd6ce7d25a2f937d2880140386ff22c96d387de` was retained without edits. GitHub reports main protected. The detailed protection and `test-baselines` endpoints returned HTTP 404 to the current credential, so use E/admin readback for the individual rules. Code-owner configuration and the frozen calculator path can be checked in this PR.
 
 ## Bootstrap baseline

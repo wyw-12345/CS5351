@@ -1,0 +1,11 @@
+{
+  "status": "HISTORICAL ONLY; user did not accept; predates deployed worker; not trusted baseline",
+  "original_candidate": "6323cbc1a4e85b41af433836c5e5ea0751ca2da2",
+  "sha256": {
+    "semantic-results.json": "d0e511245c35a982c779c33bc0e48a7dc21c2da81bc999699612e86d6f5b7e24",
+    "live-performance.json": "cdcd78ae8d1772b8104a80b89136b1df82b78403132dcda8b9008fc90ddd3d96",
+    "execution-summary.json": "13714d64833a9b06a364674e4d3b2f549b80e5b34b30d4f1bbc144b3f0c2c669",
+    "acceptance-summary.json": "e97cd3162591df9ddcdab5dd11cd7d36563a1870eb51023e13bd521e150f8ec0",
+    "evidence-revalidation.json": "16e28cd1562a8959e634a6c9d932a7b0708557d899ad85036241940e1a0e57b7"
+  }
+}
