@@ -239,6 +239,19 @@ REQ-GOV-B03:
   pending_evidence: Schema validates locators. Runtime enforcement and real GitHub approval evidence are checked separately.
 REQ-GOV-B04:
   tests:
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_existing_base_has_priority_without_github_or_head
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_only_missing_base_accepts_exact_independently_reviewed_head
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_existing_invalid_base_never_falls_back
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_git_lookup_failure_is_not_treated_as_missing_file
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_head_blob_must_match_approved_immutable_file
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_review_must_be_current_independent_human_and_allowlisted
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_missing_or_withdrawn_approval_blocks
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_api_failure_or_nonfile_proof_blocks
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_external_repository_or_non_main_proposal_is_rejected
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_fallback_preserves_fixed_case_and_threshold_revalidation
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_stale_runtime_or_incomplete_acceptance_is_rejected
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_saved_success_metrics_cannot_hide_strict_o2_failure
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_missing_duplicate_or_unavailable_provider_case_is_rejected
   - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_accepts_both_authorized_reasons_with_both_fields
   - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_escalation_with_a_score_is_unsafe
   - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_null_score_without_uncertainty_is_unsafe
