@@ -686,3 +686,21 @@
   - docs/verification/test-plans/reviewed-head-baseline.json
   - handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md
   - docs/ai-use-log.yaml
+
+- id: AI-A-REVIEWED-HEAD-IMPLEMENTATION-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Implement PR21-approved BASE-absence fallback with exact independent PR20 approval and immutable Git blob proof, retaining all replay checks.
+  human_review: unohhh1 APPROVED PR21 at 2c3bc8f before protected merge fbe7081 and implementation start 0a6417d; implementation exact-head review remains pending.
+  evidence: handoff/records/2026-11-23-A-reviewed-head-baseline-implementation.md
+  files:
+  - tools/semantic_eval.py
+  - docs/verification/implementation-approvals.json
+  - docs/verification/api-surface.json
+  - docs/verification/permissions-snapshot.json
+  - docs/architecture/adr/ADR-B0007-reviewed-head-semantic-baseline.md
+  - docs/member-b/02-interface-contract.md
+  - docs/review-memo.md
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-23-A-reviewed-head-baseline-implementation.md
+  limitations: The 13 approved tests pass; full governance exposes one existing strict-O2 fixture incompatibility. Reviewed tests are unchanged. No new provider replay, historical exception, implementation approval or merge is claimed. Raw session is the current Codex conversation; no exported transcript path is available.

@@ -23,7 +23,20 @@
         "tools/semantic_eval.py",
         "docs/verification/model-evaluation.json"
       ],
-      "requirement_ids": ["REQ-GOV-B01", "REQ-GOV-B04"]
+      "requirement_ids": [
+        "REQ-GOV-B01",
+        "REQ-GOV-B04"
+      ]
+    },
+    {
+      "test_pr": 21,
+      "plan_path": "docs/verification/test-plans/reviewed-head-baseline.json",
+      "implementation_paths": [
+        "tools/semantic_eval.py"
+      ],
+      "requirement_ids": [
+        "REQ-GOV-B04"
+      ]
     }
   ]
 }
