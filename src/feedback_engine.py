@@ -36,7 +36,14 @@ def request_json(body: dict[str, Any], settings: Settings) -> dict[str, Any]:
     settings.validate()
     endpoint = urlsplit(settings.endpoint)
     connection_type = http.client.HTTPSConnection if endpoint.scheme == "https" else http.client.HTTPConnection
-    connection = connection_type(endpoint.hostname or "", endpoint.port, timeout=settings.timeout)
+    if settings.proxy_url is None:
+        connection = connection_type(endpoint.hostname or "", endpoint.port, timeout=settings.timeout)
+    else:
+        proxy = urlsplit(settings.proxy_url)
+        connection = http.client.HTTPSConnection(proxy.hostname or "", proxy.port, timeout=settings.timeout)
+        # CONNECT has no provider credentials. HTTPSConnection verifies the target's
+        # certificate and hostname after establishing the tunnel using its default context.
+        connection.set_tunnel(endpoint.hostname or "", endpoint.port or 443)
     started = time.monotonic()
     timer: threading.Timer | None = None
     try:

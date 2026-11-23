@@ -1,1 +1,19 @@
-{"approvals": []}
+{
+  "approvals": [
+    {
+      "test_pr": 16,
+      "plan_path": "docs/verification/test-plans/explicit-broker-proxy.json",
+      "implementation_paths": [
+        "src/contracts.py",
+        "src/feedback_engine.py",
+        "src/cli.py",
+        "scripts/advisory_worker.py"
+      ],
+      "requirement_ids": [
+        "REQ-SEC-004",
+        "REQ-COST-001",
+        "REQ-INV-007"
+      ]
+    }
+  ]
+}

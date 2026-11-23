@@ -595,3 +595,19 @@
   - docs/verification/test-plans/explicit-broker-proxy.json
   - handoff/records/2026-11-23-A-broker-proxy-tests.md
   - docs/ai-use-log.yaml
+- id: AI-A-EXPLICIT-PROXY-IMPLEMENTATION-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Implement only the four broker proxy paths approved in PR 16, starting from reviewed merge 8347ebc with test bytes unchanged.
+  human_review: unohhh1 APPROVED 833140d at 2026-11-23T08:47:54Z; PR 16 merged into test-baselines 8347ebc at 2026-11-23T09:00:47Z; current implementation exact-head review pending.
+  evidence: https://github.com/wyw-12345/CS5351/pull/16; docs/verification/implementation-approvals.json; artifacts/proxy-implementation-20261123/
+  files:
+  - src/contracts.py
+  - src/feedback_engine.py
+  - src/cli.py
+  - scripts/advisory_worker.py
+  - docs/verification/api-surface.json
+  - docs/verification/implementation-approvals.json
+  - docs/member-b/02-interface-contract.md
+  - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  - docs/ai-use-log.yaml

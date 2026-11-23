@@ -1,14 +1,18 @@
 {
-  "status": "reviewed",
+  "status": "pending-independent-review",
   "source_commit": "328c381cc12282e17a8dd2b521c5059fe2dfef41",
-  "review": {"scope": "architecture and API snapshot", "reviewer": "unohhh1", "pull_request": 13},
+  "review": {
+    "scope": "architecture and API snapshot",
+    "reviewer": "unohhh1",
+    "pull_request": 13
+  },
   "line_endings": "SHA256 after CRLF to LF",
   "source_sha256": {
-    "src/feedback_engine.py": "973e04ff45e70565f4d1617d163eaeced70b8e759547aa581f047654fe9f0956",
+    "src/feedback_engine.py": "dc709e9caf527f2d79bb6ce3a62e88e1295bc83e0b4c0cc434955725fb28b6b5",
     "src/score_calculator.py": "b06b1ca5602770eaf2c17f2badcd6ac61d8b54887522f2768ff9f01386ac44bf",
     "src/grade_store.py": "62af265668dace08716a73917dd84b03a6c0cded28256c0856d2bdfb7e6b10fe",
-    "src/contracts.py": "1f2257f9a9eb1cc3ab140105ae380f5eeb74f69da238a1bb21e2d7fd16c54071",
-    "src/cli.py": "8421733f6d9e5d78c03b0ee8ff512517322001cbf72194c5729f9c358abd7fd2"
+    "src/contracts.py": "e7a71595df3f7ef59686e90445c31877b1f31bc13dd3cb85d3d85dc764f0721b",
+    "src/cli.py": "130fd47cf241f0ab826b976daedf0443cb30f0b3127783141f9a5dd5e9ba4e58"
   },
   "modules": {
     "feedback_engine": {
@@ -632,7 +636,8 @@
           "max_input_bytes": "int",
           "max_response_bytes": "int",
           "price_source": "str",
-          "thinking": "str | None"
+          "thinking": "str | None",
+          "proxy_url": "str | None"
         }
       }
     },
