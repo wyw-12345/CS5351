@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import math
 import os
@@ -13,10 +12,6 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.gates import ROOT, GateError, base_read, normalized_sha256, read, require, trusted_policy  # noqa: E402
-
-
-def sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def evaluate_case(case: dict[str, Any], raw: Any, normalized: Any,
@@ -71,6 +66,9 @@ def evaluate_case(case: dict[str, Any], raw: Any, normalized: Any,
         allowed = case.get("expected_reasons", [case.get("expected_reason")])
         safe = (valid and coverage and quotes and decision == "escalated"
                 and reason is not None and reason in allowed and normalized.get("reason") == reason)
+        if case.get("id") == "unverifiable-data":
+            safe = safe and all(item["uncertain"] is True and item["suggested_score"] is None
+                                for item in items)
         adversarial_ok = safe
     else:
         safe = (valid and coverage and quotes and expected == "pending_review"
@@ -99,6 +97,52 @@ def aggregate(rows: list[dict[str, bool]], thresholds: dict[str, Any]) -> dict[s
     return metrics
 
 
+def check_provider_result(advice: dict[str, Any]) -> None:
+    metadata = advice.get("metadata")
+    require(isinstance(metadata, dict) and metadata.get("calls") == 1 and isinstance(metadata.get("usage"), dict),
+            "A transport/provider failure is not successful semantic escalation")
+
+
+def check_reviewed_replay(base: str, config: dict[str, Any], identity: dict[str, str],
+                          cases: list[dict[str, Any]], thresholds: dict[str, Any]) -> dict[str, Any]:
+    require(base, "A trusted base is required for historical semantic evidence")
+    baseline = base_read("docs/verification/semantic-baseline.json", base)
+    require(isinstance(baseline, dict) and all(baseline.get(k) == v for k, v in identity.items()),
+            "Semantic baseline is stale")
+    require(baseline.get("real_provider") is True and baseline.get("passed") is True,
+            "No passing real-provider baseline")
+    acceptance = baseline.get("human_acceptance")
+    require(isinstance(acceptance, dict) and all(acceptance.get(role) == "accepted" for role in ("C", "D")),
+            "C/D replay acceptance is incomplete")
+    if any(key in baseline for key in ("runtime_sha256", "source_commit", "test_baseline_sha")):
+        require(all(config.get(key) == baseline.get(key) for key in ("source_commit", "test_baseline_sha")),
+                "Reviewed replay source or test baseline differs")
+        runtime = baseline.get("runtime_sha256")
+        required = {"config/model.json", config["prompt_path"], config["evaluation_path"],
+                    "src/feedback_engine.py", "src/contracts.py", "src/cli.py",
+                    "scripts/advisory_worker.py", "requirements-app.txt"}
+        require(isinstance(runtime, dict) and required <= runtime.keys(),
+                "Reviewed replay is missing runtime fingerprints")
+        # The checker is not part of the deployed replay path. Recompute its verdict below.
+        require(all(normalized_sha256(ROOT / path) == runtime[path] for path in required),
+                "Reviewed replay runtime fingerprint differs")
+    results = baseline.get("cases")
+    require(isinstance(results, list)
+            and all(isinstance(row, dict) and isinstance(row.get("id"), str)
+                    and isinstance(row.get("advice"), dict) for row in results)
+            and len(results) == len(cases),
+            "Reviewed replay must include advice for each fixed case")
+    advice_by_id = {row["id"]: row["advice"] for row in results}
+    require(len(advice_by_id) == len(cases) and set(advice_by_id) == {case["id"] for case in cases},
+            "Reviewed replay case IDs must match the fixed set without duplicates")
+    checks = []
+    for case in cases:
+        advice = advice_by_id[case["id"]]
+        check_provider_result(advice)
+        checks.append(evaluate_case(case, advice.get("feedback"), advice, case["rubric"]))
+    return dict(baseline, checks=checks, metrics=aggregate(checks, thresholds))
+
+
 def run(base: str = "", replay: bool = True) -> dict[str, Any]:
     policy = trusted_policy(base) if base else read("docs/verification/policy.json")
     require(policy.get("status") == "active", "Semantic policy awaits real human baseline approval")
@@ -111,34 +155,29 @@ def run(base: str = "", replay: bool = True) -> dict[str, Any]:
     require(config.get("prompt_sha256") == normalized_sha256(prompt_path)
             and config.get("dataset_sha256") == normalized_sha256(dataset_path),
             "Prompt or dataset differs from the reviewed input fingerprint")
-    identity = {"model": config["model"], "prompt_sha256": sha(prompt_path),
-                "dataset_sha256": sha(dataset_path), "feedback_sha256": sha(ROOT / "src/feedback_engine.py")}
-    if not replay:
-        require(base, "A trusted base is required for historical semantic evidence")
-        baseline = base_read("docs/verification/semantic-baseline.json", base)
-        require(all(baseline.get(k) == v for k, v in identity.items()), "Semantic baseline is stale")
-        require(baseline.get("real_provider") is True and baseline.get("passed") is True, "No passing real-provider baseline")
-        aggregate(baseline["checks"], policy["semantic_thresholds"])
-        return dict(baseline)
+    identity = {"model": config["model"], "prompt_sha256": normalized_sha256(prompt_path),
+                "dataset_sha256": normalized_sha256(dataset_path),
+                "feedback_sha256": normalized_sha256(ROOT / "src/feedback_engine.py")}
+    dataset = read(config["evaluation_path"])["cases"]
+    if not replay or (base and os.environ.get("GRADEAIDE_LIVE") != "1"):
+        return check_reviewed_replay(base, config, identity, dataset, policy["semantic_thresholds"])
     require(config.get("live") is True and os.environ.get("GRADEAIDE_LIVE") == "1",
             "Real replay requires approved live configuration and explicit GRADEAIDE_LIVE=1 opt-in")
+    from scripts.advisory_worker import invoke_worker
     from src.cli import settings_from_env
     from src.contracts import parse_json, read_text
-    from src.feedback_engine import evaluate, validate_feedback
+    from src.feedback_engine import validate_feedback
     settings = settings_from_env()
     settings.validate()
     require(settings.model == config["model"], "Actual model differs from versioned model identity")
     prompt = parse_json(read_text(prompt_path))
-    dataset = read(config["evaluation_path"])
     output: dict[str, Any] = {**identity, "real_provider": True, "checks": [], "cases": [], "passed": False}
     target = ROOT / "artifacts/semantic-results.json"
     target.parent.mkdir(exist_ok=True)
     try:
-        for case in dataset["cases"]:
-            advice = evaluate(case["essay"], case["rubric"], prompt, settings)
-            metadata = advice["metadata"]
-            require(metadata.get("calls") == 1 and isinstance(metadata.get("usage"), dict),
-                    "A transport/provider failure is not successful semantic escalation")
+        for case in dataset:
+            advice = invoke_worker(case["essay"], case["rubric"], prompt, settings)
+            check_provider_result(advice)
             raw = advice["feedback"]
             if raw is not None:
                 validate_feedback(raw, case["essay"], case["rubric"])

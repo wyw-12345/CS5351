@@ -145,7 +145,7 @@ def broker(payload: dict[str, Any], probe_directory: str | None) -> dict[str, An
         except (ValueError, OSError, TimeoutError):
             fixture = {}
     request = dict(payload, fixture=fixture, mode=mode)
-    request["settings"] = dict(payload["settings"], api_key="not-provisioned-in-sandbox")
+    request["settings"] = dict(payload["settings"], api_key="not-provisioned-in-sandbox", proxy_url=None)
     if probe_directory is not None:
         request["probe_directory"] = str(Path(probe_directory).resolve(strict=True))
     result = run_process(command, request, settings.timeout + 5)

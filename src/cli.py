@@ -38,6 +38,7 @@ def settings_from_env() -> Settings:
             max_input_bytes=int(os.environ.get("GRADEAIDE_MAX_INPUT_BYTES", "12000")),
             price_source=required("PRICE_SOURCE"),
             thinking=os.environ.get("GRADEAIDE_THINKING") or None,
+            proxy_url=os.environ.get("GRADEAIDE_PROXY_URL") or None,
         )
     except (ValueError, OverflowError) as exc:
         raise ValidationError("invalid or missing GradeAide configuration") from exc

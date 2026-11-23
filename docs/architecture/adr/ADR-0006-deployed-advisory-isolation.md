@@ -36,6 +36,14 @@ A's handoff (2026-11-23) flags INV-007 "deployed advisory isolation" as the miss
 
 ## Reopening
 
+### Explicit trusted broker proxy follow-up — 2026-11-23
+
+The seven proxy acceptance tests were independently approved by unohhh1 on #16 at 833140d and merged into test-baselines at 8347ebc before this implementation. Only the four reviewed implementation paths change. Evaluator namespaces, UID, mounts and network prohibition remain unchanged.
+
+Optional GRADEAIDE_PROXY_URL selects a local HTTP CONNECT proxy, for example http://127.0.0.1:10808. The operator must configure it explicitly; the application ignores ambient HTTP_PROXY/HTTPS_PROXY. Only loopback HTTP addresses with a valid port are accepted, without userinfo, path, query or fragment. Tunnel mode requires a HTTPS model endpoint. HTTPSConnection retains its default target certificate and hostname validation; provider Authorization is sent inside the TLS tunnel, not in CONNECT. No extra package is required.
+
+Proxy routing and the real API key stay in the trusted outer broker and are removed/replaced before the evaluator receives its settings. No direct-network fallback or retry is added. Independent review of the implementation and actual replay acceptance are separate from the already completed tests-only approval.
+
 ### A implementation amendment — 2026-11-23 (pending D review)
 
 The actual user approved correcting the acceptance tests and proceeding with Linux/WSL2 implementation. This does not claim independent tests-only GitHub approval or final D review. The original third test was a no-op; executable tests now use the current rubric/advice schema and synthetic provider data.
