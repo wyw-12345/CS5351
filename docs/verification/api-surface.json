@@ -10,6 +10,7 @@
     "submitted_at": "2026-11-23T09:42:50Z",
     "source": "https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019371242"
   },
+  "verification_scope": "The B approval and replay checkers leave the reviewed A runtime API and fingerprints unchanged. Final exact-head review is separate.",
   "line_endings": "SHA256 after CRLF to LF",
   "source_sha256": {
     "src/feedback_engine.py": "dc709e9caf527f2d79bb6ce3a62e88e1295bc83e0b4c0cc434955725fb28b6b5",

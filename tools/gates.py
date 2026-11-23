@@ -6,6 +6,7 @@ import ast
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import urllib.error
@@ -182,10 +183,10 @@ class GitHub:
         self.repository = repository
         self.token = token
 
-    def get(self, endpoint: str) -> Any:
+    def get(self, endpoint: str, *, api_version: str = "2026-03-10") -> Any:
         url = f"https://api.github.com/repos/{self.repository}/{endpoint}"
         req = urllib.request.Request(url, headers={"Authorization": f"Bearer {self.token}",
-            "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2026-03-10"})
+            "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": api_version})
         with urllib.request.urlopen(req, timeout=30) as response:
             return json.load(response)
 
@@ -262,6 +263,23 @@ def implementation_commits(base: str, paths: list[str]) -> list[str]:
     return commits
 
 
+def reviewed_merge_sha(api: GitHub, number: int, pr: dict[str, Any]) -> str:
+    merge_sha = pr.get("merge_commit_sha")
+    if merge_sha is None:
+        legacy = api.get(f"pulls/{number}", api_version="2022-11-28")
+        require(isinstance(legacy, dict)
+                and legacy.get("number") == pr.get("number") == number
+                and legacy.get("merged") is True
+                and legacy.get("merged_at") == pr["merged_at"]
+                and legacy["head"]["sha"] == pr["head"]["sha"]
+                and legacy["base"]["ref"] == pr["base"]["ref"],
+                "Compatibility response does not match the reviewed tests PR")
+        merge_sha = legacy.get("merge_commit_sha")
+    require(isinstance(merge_sha, str) and re.fullmatch(r"[0-9a-f]{40}", merge_sha),
+            "Verified tests baseline merge SHA is unavailable")
+    return str(merge_sha)
+
+
 def approval_gate(base: str, paths: list[str], api: GitHub) -> None:
     implementations = [p for p in paths if is_implementation(p) and p != "requirements-b-supplement.txt"]
     if not implementations:
@@ -283,7 +301,7 @@ def approval_gate(base: str, paths: list[str], api: GitHub) -> None:
         require(pr["base"]["ref"] == policy["test_baseline_ref"], "Unapproved tests baseline branch")
         files = [row["filename"] for row in api.pages(f"pulls/{number}/files")]
         approval_evidence(pr, api.pages(f"pulls/{number}/reviews"), files, policy, first_time)
-        merge_sha = pr["merge_commit_sha"]
+        merge_sha = reviewed_merge_sha(api, number, pr)
         plan_path = entry.get("plan_path", "")
         require(plan_path.startswith("docs/verification/test-plans/") and plan_path.endswith(".json")
                 and plan_path in files, "Tests PR must contain the reviewed scope plan")

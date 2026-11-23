@@ -14,6 +14,16 @@
         "REQ-COST-001",
         "REQ-INV-007"
       ]
+    },
+    {
+      "test_pr": 18,
+      "plan_path": "docs/verification/test-plans/b-approval-api-and-strict-o2.json",
+      "implementation_paths": [
+        "tools/gates.py",
+        "tools/semantic_eval.py",
+        "docs/verification/model-evaluation.json"
+      ],
+      "requirement_ids": ["REQ-GOV-B01", "REQ-GOV-B04"]
     }
   ]
 }
