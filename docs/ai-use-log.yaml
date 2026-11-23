@@ -529,3 +529,13 @@
   files:
   - .opencode/permissions.jsonc
   - docs/verification/permissions-snapshot.json
+- id: AI-E-GOV-20261123-001
+  date: '2026-11-23'
+  agent: AI coding assistant (this session), not OpenCode/Codex
+  purpose: 'Draft ADR-0006 deployed advisory isolation and its acceptance tests for REQ-INV-007,
+    establishing the process boundary that A implements.'
+  human_review: E (owner) drafted on 2026-11-23; A implementation and D review pending
+  evidence: docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  files:
+  - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  - test/offline/test_deployed_isolation.py
