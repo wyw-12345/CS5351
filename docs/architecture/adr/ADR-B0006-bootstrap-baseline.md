@@ -23,6 +23,50 @@ covers. The repository history does not support that claim for the work that alr
 Two honest options existed: leave the gates red permanently, or record a dated bootstrap deviation with an explicit
 boundary and strict rules after it. This ADR takes the second option and states its limits.
 
+## Historical sequence (recorded 2026-11-23, auditable on `main`)
+
+The deviation happened **once**, in the integration of the pre-existing GradeAide deliverables. It is visible
+directly in the history, so nothing here depends on memory:
+
+| UTC date | Commit (PR) | Author | What it added |
+| --- | --- | --- | --- |
+| 2026-11-16 | `c59d1aa` (#6) | E | D3 coding-governance baseline (`AGENTS.md`, `.opencode/rules.md`, `permissions.jsonc`) |
+| 2026-11-17 | `10f5b8d` (#6) | A | `feat: integrate existing member A deliverables…` — `src/` **and** `test/` in the same commit; 51 files, +3953/−11 |
+| 2026-11-20 | `5f05f01` (#6) | B's agent | `test: adapt member B acceptance to signed grading baseline` — acceptance tests written **after** the implementation already existed |
+| 2026-11-20 | PR #6 merged | — | 69 files in one change set: 6 `src/`, 18 `test/`, 11 `docs/`, 5 `scripts/` (gate tooling included). No tests-only PR preceded it |
+
+Three facts follow, and they are the only ones this ADR relies on:
+
+1. **Once, not repeatedly.** `src/` reaches `main` in exactly one commit (`10f5b8d`); every later implementation
+   change is still on a branch. The ordering deviation therefore occurred once, for the early GradeAide work, and
+   no second occurrence exists to excuse.
+2. **The plan was test-first; the actual path was not.** The workflow was agreed at the division-of-labour stage —
+   test written and approved before implementation (the constraint the `test-approval` context encodes, see
+   `docs/verification/policy.json` → `required_contexts`). What actually happened is the parallel offline path:
+   members advanced in parallel outside GitHub, A produced `src/` first, B then wrote acceptance tests
+   retrospectively against that existing implementation, and implementation, tests and gate tooling entered `main`
+   together in PR #6 rather than through an independent tests-only PR.
+3. **So the evidence is missing, and cannot be manufactured.** `docs/verification/implementation-approvals.json` is
+   empty (absent on `main`, no approvals on `ci/member-b-gates`). The serial order “test approved → implementation”
+   cannot be proven from history, and it cannot be back-filled: git history is append-only and auditable, and
+   invented approvals would invalidate every later gate result.
+
+**Open item for E (not a blocker for this ADR):** the group's written norm document — *CS5351 GradeAide GitHub 使用规范*
+as cited in E's 2026-11-23 message — is not present on `main` under that or a similar name. Until it is committed or
+its path is given, this ADR cites (a) E's written statement of 2026-11-23 and (b) the machine-readable equivalent
+already in the repository: `docs/verification/policy.json` requiring the `test-approval` context.
+
+### 中文摘要（报告与群内引用可直接用这段）
+
+1. 这个偏差**只发生过一次**，就是早期 GradeAide 交付物入库那一次；`src/` 在 `main` 上只有一条提交（`10f5b8d`，
+   2026-11-17），之后没有任何实现改动进过 `main`。
+2. 分工阶段规划的是「先测后写」；实际执行是成员离线并行推进、最后才合并进 GitHub：A 先产出 `src/` 实现，
+   B 随后对已存在的实现追溯补写验收测试，测试、实现与门禁工具同批由 PR #6 合入，**没有**先经过一个独立的
+   tests-only PR。
+3. 因此 `docs/verification/implementation-approvals.json` 为空，历史序列无法证明「测试先于实现被批准」。
+4. 该顺序无法倒回补写——git 历史只增不改、可审计，补造批准记录等于伪造证据，会让后面所有门禁结果失去意义。
+5. 处理方式不是补写历史，而是记偏差、划边界（`cdd6ce7` 为界）、写完失效条件（见本 ADR 第 3、6 条）。
+
 ## Decision
 
 1. **Bootstrap window.** Everything reachable from `main` up to and including commit `cdd6ce7` (`gov: activate verification baseline (policy active + reviewer allowlist)`, the commit that changed
@@ -84,6 +128,9 @@ boundary and strict rules after it. This ADR takes the second option and states 
 ## Verification of this decision
 
 - `git log --format='%H %ad %s' -1 cdd6ce7` shows the policy activation commit used as the boundary.
+- `git log --format='%h %s' origin/main -- src/` returns exactly one commit (`10f5b8d`), which is how “once” is
+  established without relying on memory; `git log --format='%h %s' origin/main -- test/` shows B's acceptance commit
+  (`5f05f01`) arriving three days after that implementation commit.
 - `docs/verification/policy.json` on `main` shows `status: active` and the named reviewers.
 - `docs/verification/implementation-approvals.json` does not exist on `main`, and the candidate on
   `ci/member-b-gates` lists no approvals; that absence is why nothing is claimed.
