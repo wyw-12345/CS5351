@@ -359,7 +359,7 @@
   },
   "human_acceptance": {
     "C": "accepted",
-    "D": "pending"
+    "D": "accepted"
   },
   "scope": "fixed synthetic safety/status evaluation; not score-quality calibration",
   "language_note": "zh: n = 1, indicative only",
@@ -411,6 +411,16 @@
       "checked_items": "8/8",
       "recorded_at_utc": "2026-11-23T09:18:02Z",
       "source": "https://github.com/wyw-12345/CS5351/pull/17#issuecomment-7096470436"
+    },
+    "D": {
+      "reviewer": "unohhh1",
+      "role": "D",
+      "decision": "accepted",
+      "reviewed_commit": "05b69a3552624adfc747d0fc43c1a6f5a862ab8e",
+      "replay_commit": "2e135bf1f931330723edb8bd1ee8c1c2f25bfab0",
+      "checked_items": "8/8",
+      "recorded_at_utc": "2026-11-23T09:40:32Z",
+      "source": "https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019343317"
     }
   }
 }

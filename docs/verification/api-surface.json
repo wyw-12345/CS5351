@@ -1,10 +1,14 @@
 {
-  "status": "pending-independent-review",
-  "source_commit": "328c381cc12282e17a8dd2b521c5059fe2dfef41",
+  "status": "reviewed",
+  "source_commit": "05b69a3552624adfc747d0fc43c1a6f5a862ab8e",
   "review": {
-    "scope": "architecture and API snapshot",
+    "scope": "proxy implementation and API snapshot within declared scope",
     "reviewer": "unohhh1",
-    "pull_request": 13
+    "pull_request": 17,
+    "state": "APPROVED",
+    "reviewed_commit": "05b69a3552624adfc747d0fc43c1a6f5a862ab8e",
+    "submitted_at": "2026-11-23T09:42:50Z",
+    "source": "https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019371242"
   },
   "line_endings": "SHA256 after CRLF to LF",
   "source_sha256": {

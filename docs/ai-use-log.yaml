@@ -633,3 +633,15 @@
   - docs/ai-use-log.yaml
   - docs/verification/semantic-baseline.json
   limitations: Original replay artifact remains unchanged; evaluation_approved is still false. This records C acceptance, not final D approval or semantic-gate completion.
+- id: AI-A-D-ACCEPTANCE-RECORD-20261123-004
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Record D's actual replay acceptance and APPROVED implementation/API snapshot review at 05b69a3; correct the stale API source label and pending implementation note.
+  human_review: unohhh1 accepted the eight-item replay at 2026-11-23T09:40:32Z and APPROVED 05b69a3 at 2026-11-23T09:42:50Z. This metadata follow-up is not a new-head approval.
+  evidence: https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019343317; https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019371242
+  files:
+  - docs/verification/semantic-baseline.json
+  - docs/verification/api-surface.json
+  - docs/verification/permissions-snapshot.json
+  - docs/ai-use-log.yaml
+  limitations: No runtime, test, replay identity, model-evaluation flags, production O2 checker or CI changes. B owns remaining gate integration and final-head review coordination.
