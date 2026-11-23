@@ -61,6 +61,12 @@ The corresponding advice is escalated / uncertain_criterion, uncertain=true, sug
 
 ## Next handoff
 
+### Additional actual approval-gate check
+
+The unchanged production approval command, against B's 40e86b2 base and actual PR #17 context, returned `BLOCKED approval: 'merge_commit_sha'`. Readback confirms its 2026-03-10 API response omits that field for merged #16, while an explicit 2022-11-28 response returns 8347ebc. This is a newly observed API compatibility issue, not evidence that the new test approval occurred late. Both response summaries are saved in artifacts/proxy-implementation-20261123/approval-api-readback.json.
+
+A separate diagnostic called the unchanged approval algorithm using actual 2022-11-28 endpoint responses and passed all chronology/scope/ancestor/test-byte checks. This is diagnostic only; the production gate remains blocked and no GitHub success status was submitted. B must review a compatibility fix through its own governed tests-first process. A did not silently change tools/gates.py or fabricate/patch an API payload. Logs: approval-gate.log and approval-diagnostic.log.
+
 1. C/D review the baseline against the checklist at #12 revision 6a5a0cf3b55e2893d6f8adc09c584b720a7092d9 and record actual decisions, especially the quoted wording.
 2. D reviews implementation/API at the final candidate head. Approved tests are not final implementation approval.
 3. B/D integrate the stricter O2 permanent gate through a reviewed scope; choose trusted baseline ingestion and set model-evaluation approval/provenance after C/D acceptance. Current CI selects live replay on semantic changes and historical reuse reads BASE, so this HEAD baseline alone does not claim the CI gate is solved.

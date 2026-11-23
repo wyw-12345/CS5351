@@ -2,6 +2,8 @@
 
 ## A approved proxy implementation and real replay — 2026-11-23
 
+Additional final check: production approval reaches the real #16 record but blocks on missing merge_commit_sha in its 2026-03-10 API response. Explicit 2022-11-28 readback includes the actual 8347ebc merge, and the same unchanged approval algorithm passes using those real diagnostic responses. Production gate remains blocked; B needs a separately reviewed API compatibility fix. See artifacts/proxy-implementation-20261123/approval-api-readback.json and approval-diagnostic.log. No new historical exception or API payload was invented.
+
 New proxy work starts at independently approved #16 merge 8347ebc. Its first implementation commit is 2e135bf; approved tests, locators and plan remain byte-identical to the merge. The actual prior review/merge is now linked in implementation-approvals.json. This does not retrospectively excuse #13.
 
 Seven proxy tests, 84 offline tests, 57 governance tests, 12 application mutants and six gate mutants pass. The proxy is explicit loopback HTTP CONNECT with default target TLS verification; evaluator routing/credentials are stripped and sandbox enforcement is unchanged. API snapshot is refreshed but pending independent implementation review.

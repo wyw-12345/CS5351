@@ -1,0 +1,18 @@
+{
+  "2026-03-10": {
+    "merged": true,
+    "merged_at": "2026-11-23T09:00:47Z",
+    "merge_commit_sha_present": false,
+    "merge_commit_sha": null,
+    "head_sha": "833140dbcf7fbe750451dd73717a4612a1c43381",
+    "base_ref": "test-baselines"
+  },
+  "2022-11-28": {
+    "merged": true,
+    "merged_at": "2026-11-23T09:00:47Z",
+    "merge_commit_sha_present": true,
+    "merge_commit_sha": "8347ebcee949572adc6ff824a79c2c8ba6ea6d43",
+    "head_sha": "833140dbcf7fbe750451dd73717a4612a1c43381",
+    "base_ref": "test-baselines"
+  }
+}
