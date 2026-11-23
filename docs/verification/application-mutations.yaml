@@ -1,5 +1,5 @@
-# Proposed plan; NONE of these application mutations have been run without A's source.
-status: pending-upstream-and-human-approval
+# Original plan followed by the executable release checks for INV-003 and INV-007.
+status: locally-verified-awaiting-final-review
 workspace_rule: disposable worktree only; never edit production or the user's working tree
 mutants:
   - {id: M-INV-001, requirement: REQ-INV-001, change: Trust model final_score instead of calculator, killed_by: test_model_total_cannot_override}
@@ -10,3 +10,10 @@ mutants:
   - {id: M-INV-006, requirement: REQ-INV-006, change: Omit hash metadata or trust client reviewer name, killed_by: test_audit_records_both_sources}
   - {id: M-INV-007, requirement: REQ-INV-007, change: Let feedback validator write to grade store, killed_by: test_prompt_injection_stays_advisory}
   - {id: M-INV-008, requirement: REQ-INV-008, change: Append duplicate or overwrite conflict, killed_by: test_retry_is_idempotent}
+verified_checks:
+  runner: tools/application_mutation_check.py
+  checks:
+    INV-003-signature-verification: test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature
+    INV-003-trusted-key-lookup: test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature
+    INV-003-approval-binding: test.offline.test_revision.SignedStoreTests.test_rubric_version_and_reason_bound
+    INV-007-deployed-advisory-isolation: test.offline.test_deployed_isolation.DeployedIsolationTests.test_advisory_process_cannot_write_grade_data

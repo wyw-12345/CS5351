@@ -26,6 +26,16 @@ MUTANTS = [
      '                     "verified_key_id": key_id, "verified_teacher_id": teacher, **binding,',
      '                     "verified_key_id": key_id, "verified_teacher_id": None, **binding,',
      "test.offline.test_revision.SignedStoreTests.test_approved_score_and_private_audit"),
+    ("INV-003-signature-verification", "src/grade_store.py",
+     'public_key.verify(bytes.fromhex(approval["signature"]), bytes.fromhex(digest(binding)))',
+     "pass",
+     "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature"),
+    ("INV-003-trusted-key-lookup", "src/grade_store.py",
+     "trusted = trusted_keys[key_id]", "trusted = trusted_keys.get(key_id) or next(iter(trusted_keys.values()))",
+     "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature"),
+    ("INV-003-approval-binding", "src/grade_store.py",
+     'if approval["binding"] != binding:', "if False:",
+     "test.offline.test_revision.SignedStoreTests.test_rubric_version_and_reason_bound"),
     ("INV-004-range", "src/contracts.py", "if result > maximum:", "if False:",
      "test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected"),
     ("INV-005-half-up", "src/score_calculator.py",
@@ -44,6 +54,12 @@ MUTANTS = [
      '                raise ValidationError("identical retry rejected")\n            else:',
      "test.offline.test_revision.SignedStoreTests.test_idempotency_and_conflicts"),
 ]
+EXPECTED_FAILURES = {
+    "INV-007-deployed-advisory-isolation": "'written' != 'denied'",
+    "INV-003-signature-verification": "not raised",
+    "INV-003-trusted-key-lookup": "not raised",
+    "INV-003-approval-binding": "not raised",
+}
 
 
 def main() -> int:
@@ -74,14 +90,13 @@ def main() -> int:
             result = subprocess.run(command, cwd=root, env=env, capture_output=True, text=True,
                                     check=False, timeout=60)
             killed = result.returncode != 0
-            if name == "INV-007-deployed-advisory-isolation":
-                killed = killed and "AssertionError" in result.stderr and "written" in result.stderr
+            if (expected := EXPECTED_FAILURES.get(name)) is not None:
+                killed = killed and any(
+                    line.startswith("AssertionError:") and expected in line
+                    for line in result.stderr.splitlines()
+                )
             results.append({"mutant": name, "status": "KILLED" if killed else "SURVIVED", "test": test,
                             "baseline_passed": True, "mutation_compiles": True})
-    results.extend([
-        {"mutant": "INV-003-unverified-write-prevention", "status": "NOT RUN",
-         "reason": "The signed-audit mutation covers the approved path; unverified-write refusal is covered by real negative tests, not by that mutation"},
-    ])
     target = ROOT / "artifacts/application-mutations.json"
     target.parent.mkdir(exist_ok=True)
     target.write_text(json.dumps(results, indent=2), encoding="utf-8")

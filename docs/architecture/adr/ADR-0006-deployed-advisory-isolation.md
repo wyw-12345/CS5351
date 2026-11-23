@@ -22,7 +22,7 @@ A's handoff (2026-11-23) flags INV-007 "deployed advisory isolation" as the miss
 4. **Protected inputs.** The advisory account has no access to signing keys (`~/.gradeaide/`) or `.env`.
 5. **Structured IPC contract.** Both ends schema-validate the wire messages. A malformed or oversized response is treated as escalation (`invalid_or_unavailable_provider_response`) and is never executed.
 
-## Acceptance tests (added with implementation, tests-before-code)
+## Initial acceptance cases
 
 - `test_deployed_isolation_normal_path`: a valid essay+rubric through the worker returns advice (`decision` ready or escalate); the grade store is unchanged.
 - `test_deployed_isolation_rejects_write`: the advisory process attempting to write into the grade-store data directory is denied; zero durable rows are created.
@@ -54,3 +54,9 @@ Evidence: `python3 -m unittest test.offline.test_deployed_isolation -v`; `python
 
 - If the team chooses a different isolation mechanism (container, separate service), record an amendment ADR.
 - If the single-teacher CLI scope changes to multi-user, revisit identity, network and secret provisioning.
+
+### D review and B verification handoff, 2026-11-23
+
+D reviewed the networkless evaluator, trusted broker and API snapshot at PR #13 head `328c381`. B reran the four deployed acceptance tests and the isolation-removal mutation in WSL2. The regression job uses Ubuntu 26.04 and installs the packaged bubblewrap. It runs the real tests without a skip or a change to the host's namespace security policy.
+
+E's first tests precede A's draft commit in Git. A revised those tests in the same commit as the implementation. The author-recorded chat approval and D's subsequent architecture review have separate scopes. Independent pre-implementation GitHub approval of the revised tests remains unverified.

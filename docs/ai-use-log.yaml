@@ -556,3 +556,20 @@
   - docs/member-b/02-interface-contract.md
   - docs/verification/api-surface.json
   - handoff/records/2026-11-23-A-isolation-preimplementation-review.md
+- id: AI-B-ISOLATION-CI-20261123-001
+  date: '2026-11-23'
+  agent: Codex
+  purpose: Provision real CI isolation tests, map INV-007, and run three INV-003 verification mutations against existing negative tests.
+  human_review: D reviewed PR 13 architecture/API at 328c381. B changes and final PR 8 approval are pending human review.
+  evidence: handoff/records/2026-11-23-b-isolation-ci.md
+  files:
+  - .github/workflows/ci.yml
+  - docs/ai-use-log.yaml
+  - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  - docs/member-b/02-interface-contract.md
+  - docs/review-memo.md
+  - docs/verification/api-surface.json
+  - docs/verification/application-mutations.yaml
+  - docs/verification/test-map.yaml
+  - handoff/records/2026-11-23-b-isolation-ci.md
+  - tools/application_mutation_check.py

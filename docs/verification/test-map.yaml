@@ -115,12 +115,14 @@ REQ-INV-007:
   tests:
   - test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory
   - test/offline/test_boundaries.py::BoundaryTests.test_engine_has_no_environment_or_authority_import
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_normal_path_returns_advice_without_touching_store
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_advisory_process_cannot_write_grade_data
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_removing_the_process_boundary_fails
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_worker_rejects_invalid_ipc_and_unsupported_platform
   - test/governance/test_b_current_semantic.py::CurrentSemanticTests.test_only_valid_expected_escalation_counts
   - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
   - test/governance/test_semantic_eval.py::SemanticTests.test_adversarial_non_escalation_fails
   negative: true
-  pending_evidence: Application runtime filesystem and outbound network isolation, plus the applicable mutation check, remain
-    with E/B.
 REQ-INV-008:
   tests:
   - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent

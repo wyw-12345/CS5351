@@ -23,3 +23,11 @@ The semantic workflow remains offline. A must obtain authorization and record th
 - Schema and strict requirement traceability passed, with 47/47 executable locators. The application offline suite passed all 73 tests. Ruff and mypy passed.
 - E02's static owner/frozen-path check passed. E01 and E04 failed four synthetic subcases under the documented ordering. No protected file or live command was accessed to check them.
 - Six gate mutations and eight application mutations were detected. The two distinct release-evidence obligations marked NOT RUN keep the application mutation check red.
+
+## 2026-11-23 B integration candidate
+
+**Verdict: CHANGES REQUIRED.** D's comment on PR #13 head `328c381` accepts the architecture and API snapshot for the single-teacher CLI. It records the broker's host privileges as a trust assumption. Scope evidence is at <https://github.com/wyw-12345/CS5351/pull/13>. A separate exact-head review is required for PR #8.
+
+B verified 77 offline tests, 57 governance tests, four deployed-isolation tests, 12 application mutations, six gate mutations, and the restart demo in WSL2 on Ubuntu 26.04 with bubblewrap 0.11.1. The 12 application mutations include the three signature/key/binding mutations and the actual removal of deployed sandbox enforcement. The requirements check maps 47 of 47 IDs.
+
+PR #12 remains a proposed record for the pre-`cdd6ce7` bootstrap scope. PR #13 revised the isolation tests in the same commit as implementation, outside that scope. No `test-baselines` ref or independent pre-implementation GitHub approval of the revised tests is available. Preserve the ordering failure and the empty approvals record. The two pending requirements are an agreed, reviewed history policy for the legacy scope and genuine prior approval for new work. The final semantic evidence is also pending. See `handoff/records/2026-11-23-b-isolation-ci.md` for the replay inputs and next review.

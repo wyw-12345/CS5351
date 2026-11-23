@@ -1,6 +1,7 @@
 {
-  "status": "pending-independent-review",
-  "source_commit": "10f5b8de9b9f51fd60cd227ee7d8b71c78970c10",
+  "status": "reviewed",
+  "source_commit": "328c381cc12282e17a8dd2b521c5059fe2dfef41",
+  "review": {"scope": "architecture and API snapshot", "reviewer": "unohhh1", "pull_request": 13},
   "line_endings": "SHA256 after CRLF to LF",
   "source_sha256": {
     "src/feedback_engine.py": "973e04ff45e70565f4d1617d163eaeced70b8e759547aa581f047654fe9f0956",
