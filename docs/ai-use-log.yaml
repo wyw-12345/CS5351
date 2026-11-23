@@ -583,3 +583,15 @@
   - docs/ai-use-log.yaml
   - docs/verification/permissions-snapshot.json
   - handoff/records/2026-11-23-b-isolation-ci.md
+- id: AI-A-POST-B-REPLAY-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Audit revised-isolation test approvals, supply missing historical replay records and attempt the actual deployed worker against the fixed integration revision.
+  human_review: Actual user replied 按照建议 to a five-call USD 0.25 proposal; independent C/D scope acceptance and final review remain pending.
+  evidence: handoff/records/2026-11-23-A-post-B-review.md; artifacts/member-a-followup-20261123/deployed-live-replay.json
+  files:
+  - docs/ai-use-log.yaml
+  - docs/review-memo.md
+  - handoff/records/2026-11-23-A-post-B-review.md
+  - artifacts/member-a-followup-20261123/deployed-live-replay.json
+  limitations: First case stopped after direct HTTPS timeout with no usage; four cases NOT RUN. No production/test/approval change, no retry or fabricated prior approval.
