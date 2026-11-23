@@ -573,3 +573,13 @@
   - docs/verification/test-map.yaml
   - handoff/records/2026-11-23-b-isolation-ci.md
   - tools/application_mutation_check.py
+- id: AI-B-ISOLATION-CI-20261123-002
+  date: '2026-11-23'
+  agent: Codex
+  purpose: Bind the deployed advisory isolation permission snapshot to observed Ubuntu regression evidence.
+  human_review: The linked run is test evidence. Final exact-head approval is pending.
+  evidence: https://github.com/wyw-12345/CS5351/actions/runs/45135552832/job/137560854546
+  files:
+  - docs/ai-use-log.yaml
+  - docs/verification/permissions-snapshot.json
+  - handoff/records/2026-11-23-b-isolation-ci.md

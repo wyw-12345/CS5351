@@ -15,5 +15,15 @@
   "feedback_grade_store_write_field_means": "intended policy restriction; not a measured capability",
   "runtime_enforcement_verified": true,
   "tool_manifest_enforcement_verified": true,
-  "human_approved": true
+  "human_approved": true,
+  "deployed_advisory_isolation": {
+    "implementation_commit": "328c381cc12282e17a8dd2b521c5059fe2dfef41",
+    "tested_candidate": "cae0c6a677487f037c1a7b5a57337a088643f3fd",
+    "runtime": "Ubuntu 26.04 GitHub Actions regression job with bubblewrap",
+    "acceptance_suite": "test/offline/test_deployed_isolation.py",
+    "mutant": "INV-007-deployed-advisory-isolation",
+    "observed": "read-only grade probe, network namespace separation, adjacent secret denied, sandbox removal detected",
+    "evidence": "https://github.com/wyw-12345/CS5351/actions/runs/45135552832/job/137560854546",
+    "scope": "advisory evaluator in a single-teacher CLI; the transport broker remains trusted"
+  }
 }

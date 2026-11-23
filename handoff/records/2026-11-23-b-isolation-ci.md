@@ -18,6 +18,8 @@ Ubuntu 26.04 via WSL2, Python 3.14.4 and bubblewrap 0.11.1. The suites used synt
 
 The three INV-003 mutations execute only in disposable copies. Each must compile, pass its unmodified baseline and trigger the intended rejection assertion in the negative test. A process error, missing dependency, or import failure does not establish these kills.
 
+GitHub Actions installed bubblewrap, passed all 77 offline and 57 governance tests, and detected all 12 application and six gate mutations on `cae0c6a`. The overall regression status remains blocked by the test-history subcheck. The permission snapshot links this hosted evidence and limits its scope to the enclosed evaluator. [Hosted regression job](https://github.com/wyw-12345/CS5351/actions/runs/45135552832/job/137560854546)
+
 ## Test approval evidence
 
 The team needs a protected `test-baselines` ref. A tests-only PR must carry its test plan and exact map locators, obtain independent GitHub approval, and merge before its implementation begins. Put new approval evidence in `implementation-approvals.json` only when those events happened and the approved test merge is in the implementation's history.
