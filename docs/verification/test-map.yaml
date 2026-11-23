@@ -113,6 +113,7 @@ REQ-INV-006:
   negative: true
 REQ-INV-007:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator
   - test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory
   - test/offline/test_boundaries.py::BoundaryTests.test_engine_has_no_environment_or_authority_import
   - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_normal_path_returns_advice_without_touching_store
@@ -169,6 +170,7 @@ REQ-PERF-003:
     figures are context.
 REQ-COST-001:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_never_retries_or_follows_redirects
   - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
 REQ-COST-002:
   tests:
@@ -315,6 +317,12 @@ REQ-SEC-002:
   - test/offline/test_revision.py::ConfidenceTests.test_confidence_does_not_waive_other_rules
 REQ-SEC-004:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_explicit_loopback_proxy_tunnels_only_to_model_endpoint
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_unconfigured_transport_ignores_ambient_proxy
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_configuration_rejects_credentials_and_external_targets
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_tls_failure_is_not_bypassed_or_retried
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_cli_loads_only_explicit_proxy_configuration
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator
   - test/offline/test_boundaries.py::BoundaryTests.test_missing_env_fails_without_secret_output
   - test/offline/test_env_launcher.py::EnvTests.test_aliases_are_data_not_shell_commands
   - test/offline/test_env_launcher.py::EnvTests.test_thinking_is_explicit_and_validated

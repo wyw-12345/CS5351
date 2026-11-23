@@ -583,3 +583,15 @@
   - docs/ai-use-log.yaml
   - docs/verification/permissions-snapshot.json
   - handoff/records/2026-11-23-b-isolation-ci.md
+- id: AI-A-BROKER-PROXY-TESTS-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Diagnose WSL direct TLS failure and propose explicit trusted broker proxy acceptance before implementation.
+  human_review: Tests-only proposal pending actual independent review; no runtime implementation or approval claimed.
+  evidence: handoff/records/2026-11-23-A-broker-proxy-tests.md
+  files:
+  - test/offline/test_broker_proxy.py
+  - docs/verification/test-map.yaml
+  - docs/verification/test-plans/explicit-broker-proxy.json
+  - handoff/records/2026-11-23-A-broker-proxy-tests.md
+  - docs/ai-use-log.yaml
