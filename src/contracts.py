@@ -143,6 +143,7 @@ class Settings:
     max_response_bytes: int = 100000
     price_source: str = "user configuration; verify provider price before use"
     thinking: str | None = None
+    proxy_url: str | None = None
 
     def validate(self) -> None:
         """REQ-SEC-004 / REQ-PERF-002: finite, bounded controls."""
@@ -171,3 +172,16 @@ class Settings:
             raise ValidationError("invalid endpoint")
         if endpoint.scheme == "http" and endpoint.hostname not in {"127.0.0.1", "localhost", "::1"}:
             raise ValidationError("HTTP is allowed only on loopback")
+        if self.proxy_url is not None:
+            text_value(self.proxy_url, "proxy URL", 1000)
+            try:
+                proxy = urlsplit(self.proxy_url)
+                port = proxy.port
+            except (ValueError, TypeError) as exc:
+                raise ValidationError("invalid proxy URL") from exc
+            if (endpoint.scheme != "https" or proxy.scheme != "http"
+                    or proxy.hostname not in {"127.0.0.1", "localhost", "::1"}
+                    or port is None or port == 0 or proxy.path or proxy.query or proxy.fragment
+                    or proxy.username is not None or proxy.password is not None
+                    or any(ord(c) <= 32 for c in self.proxy_url)):
+                raise ValidationError("proxy must be explicit loopback HTTP for a HTTPS endpoint")

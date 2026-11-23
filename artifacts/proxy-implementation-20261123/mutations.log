@@ -1,0 +1,12 @@
+KILLED INV-007-deployed-advisory-isolation
+KILLED INV-001-recompute
+KILLED INV-002-uncertainty
+KILLED INV-003-verified-audit-association
+KILLED INV-003-signature-verification
+KILLED INV-003-trusted-key-lookup
+KILLED INV-003-approval-binding
+KILLED INV-004-range
+KILLED INV-005-half-up
+KILLED INV-006-atomicity
+KILLED INV-007-static-import-boundary
+KILLED INV-008-retry

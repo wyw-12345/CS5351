@@ -1,5 +1,17 @@
 # PR #8 verification and bootstrap review memo
 
+## A approved proxy implementation and real replay — 2026-11-23
+
+Additional final check: production approval reaches the real #16 record but blocks on missing merge_commit_sha in its 2026-03-10 API response. Explicit 2022-11-28 readback includes the actual 8347ebc merge, and the same unchanged approval algorithm passes using those real diagnostic responses. Production gate remains blocked; B needs a separately reviewed API compatibility fix. See artifacts/proxy-implementation-20261123/approval-api-readback.json and approval-diagnostic.log. No new historical exception or API payload was invented.
+
+New proxy work starts at independently approved #16 merge 8347ebc. Its first implementation commit is 2e135bf; approved tests, locators and plan remain byte-identical to the merge. The actual prior review/merge is now linked in implementation-approvals.json. This does not retrospectively excuse #13.
+
+Seven proxy tests, 84 offline tests, 57 governance tests, 12 application mutants and six gate mutants pass. The proxy is explicit loopback HTTP CONNECT with default target TLS verification; evaluator routing/credentials are stripped and sandbox enforcement is unchanged. API snapshot is refreshed but pending independent implementation review.
+
+Five actual model calls through the deployed worker pass fixed-case metrics and strict v2 O2; language metrics present en=4 / zh=1 without new thresholds. Canonical LF Git-archive runtime hashes match the replay revision 2e135bf. Returned usage is 2182 input / 577 output tokens, calculated conservative cost USD 0.0013470 (not actual invoice). Baseline is at docs/verification/semantic-baseline.json, with actual human acceptance still pending C/D; approval/live config flags remain unchanged.
+
+Strict O2 is enforced in the archived operator replay checker; tools/semantic_eval.py remains outside this approved four-file implementation scope and still needs separately reviewed permanent O2 integration. Current CI live/offline evidence-ingestion design and final review/legacy history remain follow-ups. Full eight-item worksheet and exact feedback excerpt: handoff/records/2026-11-23-A-approved-proxy-to-CD.md.
+
 2026-11-22 · B integration. The active policy on main at `cdd6ce7d25a2f937d2880140386ff22c96d387de` was retained without edits. GitHub reports main protected. The detailed protection and `test-baselines` endpoints returned HTTP 404 to the current credential, so use E/admin readback for the individual rules. Code-owner configuration and the frozen calculator path can be checked in this PR.
 
 ## Bootstrap baseline
