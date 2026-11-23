@@ -1,0 +1,32 @@
+{
+  "status": "proposed-awaiting-independent-review",
+  "implementation_paths": [
+    "tools/gates.py",
+    "tools/semantic_eval.py",
+    "docs/verification/model-evaluation.json"
+  ],
+  "requirement_ids": [
+    "REQ-GOV-B01",
+    "REQ-GOV-B04"
+  ],
+  "test_paths": [
+    "test/governance/test_b_gate_evidence.py"
+  ],
+  "test_locators": {
+    "REQ-GOV-B01": [
+      "test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_merge_sha_from_current_api_works_without_fallback",
+      "test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_omitted_sha_uses_matching_legacy_evidence",
+      "test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_no_merge_sha_in_either_response_blocks",
+      "test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_legacy_sha_for_different_reviewed_head_blocks",
+      "test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_recovered_sha_must_remain_a_git_ancestor"
+    ],
+    "REQ-GOV-B04": [
+      "test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_accepts_both_authorized_reasons_with_both_fields",
+      "test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_escalation_with_a_score_is_unsafe",
+      "test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_null_score_without_uncertainty_is_unsafe",
+      "test/governance/test_b_gate_evidence.py::StrictO2Tests.test_other_escalation_retains_its_existing_contract",
+      "test/governance/test_b_gate_evidence.py::StrictO2Tests.test_reviewed_baseline_rechecks_cases_instead_of_trusting_saved_metrics"
+    ]
+  },
+  "rationale": "Only a matching authenticated GitHub readback may supply a missing merge SHA. Independent review, merge chronology, scope, ancestry and byte-identical test checks remain mandatory. Strict O2 applies only to the unverifiable-data case and must be enforced on saved case evidence as well as fresh outputs. Human acceptance of the wording and of the real replay remains required before activation. This plan does not authorize a CI trust-policy change."
+}
