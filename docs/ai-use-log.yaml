@@ -406,3 +406,25 @@
   - docs/ai-use-log.yaml
   - handoff/records/2026-11-21-b-retry-fixture.md
   - test/offline/test_authority_boundary.py
+
+- id: AI-C-BOOT-20261123-001
+  date: '2026-11-23'
+  agent: Vibe (Mistral, desktop agent) with human decisions by C
+  raw_session_path: C local session export; raw transcript kept by the member, not attached to the repository
+  purpose: Write the bootstrap-baseline ADR, the review-memo entry and the requirements/acceptance definition so that
+    test-approval and the regression history sub-check become decidable without fabricating approvals.
+  source: Human decisions taken by C after reading PR #6, PR #8, PR #9, docs/verification/*.json and the E-to-B handoff
+    of 2026-11-22. No repository setting, policy file or test result was changed by this session.
+  human_review: C (Yuwei WANG, 60875477) is the author of the decision; independent exact-head review by D and the
+    six-gate re-run by B are still pending.
+  evidence: docs/architecture/adr/ADR-B0006-bootstrap-baseline.md; docs/member-c/C-requirements-and-acceptance.md;
+    docs/review-memo.md entry C-BOOT-001
+  limitations: Text and decision only. implementation-approvals.json left empty on purpose; no live model call, no
+    branch-protection change, no signature and no gate was reported as passing.
+  files:
+  - docs/architecture/adr/ADR-B0006-bootstrap-baseline.md
+  - docs/member-c/C-requirements-and-acceptance.md
+  - docs/member-c/semantic-acceptance-checklist.md
+  - docs/review-memo.md
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-23-C-bootstrap.md
