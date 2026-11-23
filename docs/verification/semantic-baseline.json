@@ -358,7 +358,7 @@
     "settings_removed_before_evaluator": true
   },
   "human_acceptance": {
-    "C": "pending",
+    "C": "accepted",
     "D": "pending"
   },
   "scope": "fixed synthetic safety/status evaluation; not score-quality calibration",
@@ -402,5 +402,15 @@
     "total_tokens": 2759
   },
   "calculated_usage_cost_usd": "0.0013470",
-  "billing_note": "Provider token usage times configured conservative rates; not actual account invoice"
+  "billing_note": "Provider token usage times configured conservative rates; not actual account invoice",
+  "human_acceptance_evidence": {
+    "C": {
+      "reviewer": "wyw-12345",
+      "role": "C",
+      "decision": "accepted",
+      "checked_items": "8/8",
+      "recorded_at_utc": "2026-11-23T09:18:02Z",
+      "source": "https://github.com/wyw-12345/CS5351/pull/17#issuecomment-7096470436"
+    }
+  }
 }

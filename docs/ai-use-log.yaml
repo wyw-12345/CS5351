@@ -430,7 +430,6 @@
   - docs/verification/api-surface.json
   - docs/verification/application-mutations.yaml
   - docs/verification/implementation-approvals.json
-  - docs/verification/permissions-snapshot.json
   - docs/verification/model-evaluation.json
   - docs/verification/permissions-snapshot.json
   - docs/verification/policy.json
@@ -624,3 +623,13 @@
   - handoff/records/2026-11-23-A-approved-proxy-to-CD.md
   - docs/ai-use-log.yaml
   limitations: Strict O2 applied by operator replay checker; permanent tools/semantic_eval.py remains outside the approved four-path implementation scope and needs separate reviewed integration.
+- id: AI-A-C-ACCEPTANCE-LOG-REPAIR-20261123-003
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Restore the untouched pre-implementation AI-use log prefix and append C's actual eight-item replay acceptance without changing D acceptance or model approval flags.
+  human_review: C (wyw-12345) accepted the replay in PR 17 comment 7096470436 at 2026-11-23T09:18:02Z; D remains pending.
+  evidence: https://github.com/wyw-12345/CS5351/pull/17#issuecomment-7096470436
+  files:
+  - docs/ai-use-log.yaml
+  - docs/verification/semantic-baseline.json
+  limitations: Original replay artifact remains unchanged; evaluation_approved is still false. This records C acceptance, not final D approval or semantic-gate completion.
