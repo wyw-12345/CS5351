@@ -28,6 +28,27 @@
     "mutation_compiles": true
   },
   {
+    "mutant": "INV-003-signature-verification",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-trusted-key-lookup",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-approval-binding",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_rubric_version_and_reason_bound",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
     "mutant": "INV-004-range",
     "status": "KILLED",
     "test": "test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected",
@@ -61,10 +82,5 @@
     "test": "test.offline.test_revision.SignedStoreTests.test_idempotency_and_conflicts",
     "baseline_passed": true,
     "mutation_compiles": true
-  },
-  {
-    "mutant": "INV-003-unverified-write-prevention",
-    "status": "NOT RUN",
-    "reason": "The signed-audit mutation covers the approved path; unverified-write refusal is covered by real negative tests, not by that mutation"
   }
 ]

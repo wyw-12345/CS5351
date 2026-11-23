@@ -595,6 +595,56 @@
   - docs/verification/test-plans/explicit-broker-proxy.json
   - handoff/records/2026-11-23-A-broker-proxy-tests.md
   - docs/ai-use-log.yaml
+- id: AI-A-EXPLICIT-PROXY-IMPLEMENTATION-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Implement only the four broker proxy paths approved in PR 16, starting from reviewed merge 8347ebc with test bytes unchanged.
+  human_review: unohhh1 APPROVED 833140d at 2026-11-23T08:47:54Z; PR 16 merged into test-baselines 8347ebc at 2026-11-23T09:00:47Z; current implementation exact-head review pending.
+  evidence: https://github.com/wyw-12345/CS5351/pull/16; docs/verification/implementation-approvals.json; artifacts/proxy-implementation-20261123/
+  files:
+  - src/contracts.py
+  - src/feedback_engine.py
+  - src/cli.py
+  - scripts/advisory_worker.py
+  - docs/verification/api-surface.json
+  - docs/verification/implementation-approvals.json
+  - docs/member-b/02-interface-contract.md
+  - docs/architecture/adr/ADR-0006-deployed-advisory-isolation.md
+  - docs/ai-use-log.yaml
+- id: AI-A-EXPLICIT-PROXY-REPLAY-20261123-002
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Execute five authorized deployed-worker calls on immutable 2e135bf and supply C/D v2 acceptance evidence with strict O2 and language views.
+  human_review: C/D scope is recorded in PR 12 v2; actual output wording and final acceptance remain pending C/D. No signatures or model approval flags filled by A.
+  evidence: docs/verification/semantic-baseline.json; handoff/records/2026-11-23-A-approved-proxy-to-CD.md; artifacts/proxy-implementation-20261123/
+  files:
+  - docs/verification/semantic-baseline.json
+  - docs/review-memo.md
+  - handoff/records/2026-11-23-A-approved-proxy-to-CD.md
+  - docs/ai-use-log.yaml
+  limitations: Strict O2 applied by operator replay checker; permanent tools/semantic_eval.py remains outside the approved four-path implementation scope and needs separate reviewed integration.
+- id: AI-A-C-ACCEPTANCE-LOG-REPAIR-20261123-003
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Restore the untouched pre-implementation AI-use log prefix and append C's actual eight-item replay acceptance without changing D acceptance or model approval flags.
+  human_review: C (wyw-12345) accepted the replay in PR 17 comment 7096470436 at 2026-11-23T09:18:02Z; D remains pending.
+  evidence: https://github.com/wyw-12345/CS5351/pull/17#issuecomment-7096470436
+  files:
+  - docs/ai-use-log.yaml
+  - docs/verification/semantic-baseline.json
+  limitations: Original replay artifact remains unchanged; evaluation_approved is still false. This records C acceptance, not final D approval or semantic-gate completion.
+- id: AI-A-D-ACCEPTANCE-RECORD-20261123-004
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Record D's actual replay acceptance and APPROVED implementation/API snapshot review at 05b69a3; correct the stale API source label and pending implementation note.
+  human_review: unohhh1 accepted the eight-item replay at 2026-11-23T09:40:32Z and APPROVED 05b69a3 at 2026-11-23T09:42:50Z. This metadata follow-up is not a new-head approval.
+  evidence: https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019343317; https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019371242
+  files:
+  - docs/verification/semantic-baseline.json
+  - docs/verification/api-surface.json
+  - docs/verification/permissions-snapshot.json
+  - docs/ai-use-log.yaml
+  limitations: No runtime, test, replay identity, model-evaluation flags, production O2 checker or CI changes. B owns remaining gate integration and final-head review coordination.
 - id: AI-B-GATE-EVIDENCE-TESTS-20261123-001
   date: '2026-11-23'
   agent: Codex

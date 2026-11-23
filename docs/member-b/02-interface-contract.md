@@ -1,5 +1,7 @@
 # B verification contract for the current A implementation
 
+2026-11-23 approved proxy follow-up: Settings adds optional proxy_url, default None; CLI reads only explicit GRADEAIDE_PROXY_URL. A configured proxy must be loopback HTTP with a port and no credentials/path/query/fragment, and the model endpoint must be HTTPS. Broker uses CONNECT without provider credentials, retains target TLS verification and removes proxy_url before sandbox IPC. No ambient HTTP(S)_PROXY inheritance, retry, redirect or new dependency. Reviewed tests/locators are unchanged from #16 merge 8347ebcee949572adc6ff824a79c2c8ba6ea6d43. The refreshed API snapshot awaits exact-head implementation review.
+
 Draft for exact-head review against `main` at `fab81cb`, including A `10f5b8d` and retrospective acceptance `5f05f01`.
 
 - The calculator exposes `calculate_score` and is the final-score authority. The feedback engine exposes `evaluate` and `validate_feedback`, escalates invalid or low-confidence advice, and treats model totals as non-authoritative.
