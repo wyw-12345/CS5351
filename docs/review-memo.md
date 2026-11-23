@@ -43,3 +43,57 @@ The semantic workflow remains offline. A must obtain authorization and record th
 B verified 77 offline tests, 57 governance tests, four deployed-isolation tests, 12 application mutations, six gate mutations, and the restart demo in WSL2 on Ubuntu 26.04 with bubblewrap 0.11.1. The 12 application mutations include the three signature/key/binding mutations and the actual removal of deployed sandbox enforcement. The requirements check maps 47 of 47 IDs.
 
 PR #12 remains a proposed record for the pre-`cdd6ce7` bootstrap scope. PR #13 revised the isolation tests in the same commit as implementation, outside that scope. No `test-baselines` ref or independent pre-implementation GitHub approval of the revised tests is available. Preserve the ordering failure and the empty approvals record. The two pending requirements are an agreed, reviewed history policy for the legacy scope and genuine prior approval for new work. The final semantic evidence is also pending. See `handoff/records/2026-11-23-b-isolation-ci.md` for the replay inputs and next review.
+
+## PR 8 release evidence references
+
+- C's bootstrap decision in [PR #12](https://github.com/wyw-12345/CS5351/pull/12) applies through cdd6ce7. D approved the documentation at 02597c8. [Exact-head review](https://github.com/wyw-12345/CS5351/pull/12#pullrequestreview-6020980889).
+- A's [PR #15](https://github.com/wyw-12345/CS5351/pull/15) records the separate #13 chronology deviation after that boundary. Keep the change's actual test and implementation order. [Source audit](https://github.com/wyw-12345/CS5351/blob/11b4b8a357ab121b819d40c8f73117c91038d644/handoff/records/2026-11-23-A-post-B-review.md).
+- Both records below are preserved as written. Their test counts, acceptance statements, and evidence references describe the recorded stage. PRs #16 and #18 are later approvals for their own scopes. The later authorized replay in #17 and the six-gate run in #19 have separate evidence. [Six-gate run for #19](https://github.com/wyw-12345/CS5351/actions/runs/45162380332).
+- Final review applies to the exact PR #8 head after integration. This memo records chronology and approvals without changing the gate rules.
+
+## C-BOOT-001 — bootstrap baseline decision (recorded, not an approval)
+
+- Date: 2026-11-23, Asia/Shanghai. Author: C (Yuwei WANG, 60875477), baseline owner. Authoring agent: Vibe (Mistral)
+  with human decisions taken by C. Raw session kept locally by C; not attached to the repository.
+- PR: `docs/member-c-bootstrap-baseline` → `main` (see PR body template). Base: `main` at `cdd6ce7`. Head: recorded in
+  the PR after the first push. This entry documents a governance decision and must not be read as an approval of any
+  code change.
+- Changed REQ/ADR/INV: `ADR-B0006` (new), `REQ-GOV-C01` (requirements change process), `REQ-GOV-B03` (traceability),
+  `REQ-GOV-B06` (AI-use log). No requirement text or threshold was relaxed by this entry.
+- Spec alignment: the course requires tests to be reviewed before implementation. For the window up to `cdd6ce7` that
+  requirement cannot be satisfied honestly, because PR #6 merged implementation, retrospective tests and gate tooling
+  together and `docs/verification/implementation-approvals.json` is empty. The deviation is accepted, dated and bounded;
+  it is described in the report rather than hidden.
+- Architecture alignment: no runtime, policy or interface change. The decision only affects how two gate sub-results are
+  interpreted. `main` keeps `policy.json` `status: active` with reviewers this-kong and unohhh1; the stale pending copy
+  carried on `ci/member-b-gates` must not overwrite it at merge time.
+- Code/test quality: no source file touched. The bootstrap decision does not cover `schema`, `static-analysis`,
+  `semantic-evaluation`, or the mutation sub-checks of `regression`; those remain open with their own owners
+  (B for test locators and mutations, A for the live model replay, D for the independent review).
+- Security/privacy: no credential, token or `.env` content involved. No approval, signature or commit authorship was
+  fabricated; the empty `implementation-approvals.json` was deliberately left empty.
+- Latency/token/cost: not applicable to this change.
+- Six gate run URLs: to be added by B after the merge of PR #8 and the re-run on the merged head. Before that, the honest
+  status is "bootstrap deviation recorded; test-approval and regression history sub-check decidable; other four gates as
+  reported in the latest CI run".
+- Negative/mutation evidence: unchanged by this entry. `INV-003-signing` and `INV-007-advisory-authority` are still
+  NOT RUN and must not be reported as passing.
+- Debt changes: `debt-register.md` unchanged; the bootstrap deviation is now an explicit, dated item instead of an
+  undocumented gap.
+- Runtime fallback: reverting this entry and `ADR-B0006` restores the previous state — both gates red — with no effect on
+  application code.
+- Independent review: **not obtained in this entry**. D must record an exact-head review of PR #8 (non-author, account
+  unohhh1) for the static-analysis requirement, and must confirm or reject the bootstrap boundary in writing.
+- Verdict: **CHANGES REQUIRED** until (1) D's independent exact-head review is recorded, (2) PR #8 is merged with the
+  active policy preserved, (3) B re-runs the six checks on the merged head and links the run. C does not approve their
+  own governance change and does not sign for D.
+
+## A follow-up to hosted B verification — 2026-11-23
+
+At #14 revision 40e86b2, A audited #13's revised tests. Actual chat-user permission exists, but no independent pre-implementation tests-only GitHub approval was located. Tests and implementation were committed together in 328c381, after the cdd6ce7 bootstrap cutoff. D's later COMMENTED architecture/API acceptance is retained as scope review, not rewritten as prior approval. The chronology deviation is ready for inclusion in the process report; no approvals were backfilled.
+
+A then attempted authorised live replay via the actual isolated worker. First case english-supported escalated with unavailable-provider reason after about 30 seconds, no provider usage/feedback; four cases were not run and no retry occurred. No-key diagnostics found WSL direct Python HTTPS TLS timeout while proxy-aware curl received a response. Runtime proxy support or a directly reachable reviewed runner needs a separate decision; no sandbox bypass was used. This failed candidate execution is not semantic quality acceptance or a trusted baseline.
+
+The previously missing 25-call historical files are now supplied with hashes, explicitly pre-isolation and user-NOT-ACCEPTED. Full audit, execution evidence and report-ready paragraph: handoff/records/2026-11-23-A-post-B-review.md and artifacts/member-a-followup-20261123/. C/D must still freeze semantic scope; final exact-head approval remains pending.
+
+2026-11-22 · B integration. The active policy on main at `cdd6ce7d25a2f937d2880140386ff22c96d387de` was retained without edits. GitHub reports main protected. The detailed protection and `test-baselines` endpoints returned HTTP 404 to the current credential, so use E/admin readback for the individual rules. Code-owner configuration and the frozen calculator path can be checked in this PR.
