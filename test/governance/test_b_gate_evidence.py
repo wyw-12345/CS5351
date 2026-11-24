@@ -179,12 +179,20 @@ class StrictO2Tests(unittest.TestCase):
         trusted_baseline = {**identity, "real_provider": True, "passed": True, "cases": results,
                             "checks": [row["checks"] for row in results],
                             "human_acceptance": {"C": "accepted", "D": "accepted"}}
+        baseline_path = "docs/verification/semantic-baseline.json"
+
+        def existing_baseline(*args):
+            # Model the saved fixture as a file present on the synthetic base.
+            self.assertEqual(args, ("ls-tree", "trusted-base", "--", baseline_path))
+            return f"100644 blob {'a' * 40}\t{baseline_path}"
+
         with (
             patch("tools.semantic_eval.ROOT", root),
             patch("tools.semantic_eval.trusted_policy", return_value=self.policy),
             patch("tools.semantic_eval.read", side_effect=lambda path: config if path.endswith(
                 "model-evaluation.json") else read(path)),
             patch("tools.semantic_eval.base_read", return_value=trusted_baseline),
+            patch("tools.semantic_eval.git", side_effect=existing_baseline, create=True),
         ):
             self.assertTrue(run("trusted-base", replay=False)["passed"])
             unverifiable = next(row for row in results if row["id"] == self.case["id"])

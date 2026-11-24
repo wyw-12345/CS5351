@@ -679,5 +679,11 @@
         "methods": {}
       }
     }
+  },
+  "reviewed_head_baseline_followup": {
+    "scope": "Verification tool only; deployed public API and source fingerprints unchanged.",
+    "test_pr": 21,
+    "implementation_start": "0a6417d344b51fc8c54e9739fdb199334880f786",
+    "implementation_review": "pending independent exact-head review"
   }
 }

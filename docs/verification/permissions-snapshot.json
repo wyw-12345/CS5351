@@ -36,5 +36,5 @@
     "reviewed_commit": "05b69a3552624adfc747d0fc43c1a6f5a862ab8e",
     "review_source": "https://github.com/wyw-12345/CS5351/pull/17#pullrequestreview-6019371242"
   },
-  "offline_semantic_verification": "CI reads reviewed evidence from its base commit and rechecks case outputs. Pull request jobs retain read-only GitHub access and no provider credentials."
+  "offline_semantic_verification": "BASE evidence retains priority. Only genuine path absence permits the byte-identical PR20 artifact after current independent human approval and immutable blob verification. Current replay validation remains mandatory. GitHub access is read-only; no provider credentials or permission-policy changes."
 }

@@ -11,7 +11,18 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from tools.gates import ROOT, GateError, base_read, normalized_sha256, read, require, trusted_policy  # noqa: E402
+from tools.gates import (  # noqa: E402
+    ROOT,
+    GateError,
+    GitHub,
+    base_read,
+    git,
+    human_approval,
+    normalized_sha256,
+    read,
+    require,
+    trusted_policy,
+)
 
 
 def evaluate_case(case: dict[str, Any], raw: Any, normalized: Any,
@@ -103,10 +114,38 @@ def check_provider_result(advice: dict[str, Any]) -> None:
             "A transport/provider failure is not successful semantic escalation")
 
 
+def load_reviewed_baseline(base: str, api: GitHub | None = None) -> dict[str, Any]:
+    """REQ-GOV-B04: reuse PR20's reviewed blob only if BASE genuinely lacks it."""
+    path = "docs/verification/semantic-baseline.json"
+    require(base, "A trusted base is required for historical semantic evidence")
+    if git("ls-tree", base, "--", path):
+        return dict(base_read(path, base))
+
+    policy = trusted_policy(base)
+    repository = os.environ.get("GITHUB_REPOSITORY", "")
+    api = api if api is not None else GitHub(repository, os.environ.get("GITHUB_TOKEN", ""))
+    require(repository and api.repository == repository, "Replay approval repository differs")
+    try:
+        pr = api.get("pulls/20")
+        head = pr["head"]["sha"]
+        require(pr["number"] == 20 and pr["head"]["repo"]["full_name"] == repository
+                and pr["base"]["repo"]["full_name"] == repository and pr["base"]["ref"] == "main",
+                "Replay proposal must belong to this repository and target main")
+        require(pr["state"] == "open" or pr.get("merged") is True, "Replay proposal was withdrawn")
+        human_approval(api.pages("pulls/20/reviews"), pr["user"]["login"], head, policy["reviewers"])
+        artifact = api.get(f"contents/{path}?ref={head}")
+        require(artifact.get("type") == "file" and artifact.get("path") == path
+                and artifact.get("sha") == git("rev-parse", f"HEAD:{path}"),
+                "HEAD replay differs from the independently approved immutable file")
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+        raise GateError("Replay approval proof is unavailable or malformed") from exc
+    return dict(read(path))
+
+
 def check_reviewed_replay(base: str, config: dict[str, Any], identity: dict[str, str],
                           cases: list[dict[str, Any]], thresholds: dict[str, Any]) -> dict[str, Any]:
     require(base, "A trusted base is required for historical semantic evidence")
-    baseline = base_read("docs/verification/semantic-baseline.json", base)
+    baseline: Any = load_reviewed_baseline(base)
     require(isinstance(baseline, dict) and all(baseline.get(k) == v for k, v in identity.items()),
             "Semantic baseline is stale")
     require(baseline.get("real_provider") is True and baseline.get("passed") is True,

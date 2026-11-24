@@ -696,3 +696,59 @@
   - docs/review-memo.md
   - docs/ai-use-log.yaml
   - handoff/records/2026-11-23-C-bootstrap.md
+- id: AI-A-REVIEWED-HEAD-TESTS-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Specify fail-closed reviewed HEAD replay reuse only when target BASE has no semantic baseline, before implementation.
+  human_review: Tests-only proposal awaiting D exact-head approval and B protected-baseline incorporation; no implementation or exception approved here.
+  evidence: handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md; docs/verification/test-plans/reviewed-head-baseline.json
+  files:
+  - test/governance/test_a_reviewed_head_baseline.py
+  - docs/verification/test-map.yaml
+  - docs/verification/test-plans/reviewed-head-baseline.json
+  - handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md
+  - docs/ai-use-log.yaml
+
+- id: AI-A-REVIEWED-HEAD-IMPLEMENTATION-20261123-001
+  date: '2026-11-23'
+  agent: Codex AI assistant
+  purpose: Implement PR21-approved BASE-absence fallback with exact independent PR20 approval and immutable Git blob proof, retaining all replay checks.
+  human_review: unohhh1 APPROVED PR21 at 2c3bc8f before protected merge fbe7081 and implementation start 0a6417d; implementation exact-head review remains pending.
+  evidence: handoff/records/2026-11-23-A-reviewed-head-baseline-implementation.md
+  files:
+  - tools/semantic_eval.py
+  - docs/verification/implementation-approvals.json
+  - docs/verification/api-surface.json
+  - docs/verification/permissions-snapshot.json
+  - docs/architecture/adr/ADR-B0007-reviewed-head-semantic-baseline.md
+  - docs/member-b/02-interface-contract.md
+  - docs/review-memo.md
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-23-A-reviewed-head-baseline-implementation.md
+  limitations: The 13 approved tests pass; full governance exposes one existing strict-O2 fixture incompatibility. Reviewed tests are unchanged. No new provider replay, historical exception, implementation approval or merge is claimed. Raw session is the current Codex conversation; no exported transcript path is available.
+
+- id: AI-B-STRICT-O2-FIXTURE-20261123-001
+  date: '2026-11-23'
+  agent: Codex
+  purpose: Correct the strict O2 saved-evidence unit fixture by simulating successful Git lookup of the synthetic base.
+  human_review: Independent review of the fixture-only revision pending. Existing #18 and #21 approvals are unchanged.
+  evidence: handoff/records/2026-11-23-B-strict-o2-fixture.md
+  files:
+  - test/governance/test_b_gate_evidence.py
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-23-B-strict-o2-fixture.md
+
+- id: AI-A-PR23-BASELINE-REGRESSION-20261124-001
+  date: '2026-11-24'
+  agent: Codex AI assistant
+  purpose: Merge the separately approved PR23 O2 fixture baseline into PR22 and rerun full governance and offline regression without changing the implementation or PR21 tests.
+  human_review: unohhh1 APPROVED PR23 deee8b6 at 2026-11-24T08:11:56Z; protected merge aeb4bfba9cfe90e4e185e450f6cfe8dce04cf048. Final implementation review remains pending.
+  evidence: handoff/records/2026-11-24-A-PR23-regression-handoff.md
+  files:
+  - test/governance/test_b_gate_evidence.py
+  - handoff/records/2026-11-23-B-strict-o2-fixture.md
+  - handoff/records/2026-11-24-A-PR23-regression-handoff.md
+  - docs/review-memo.md
+  - docs/architecture/adr/ADR-B0007-reviewed-head-semantic-baseline.md
+  - docs/ai-use-log.yaml
+  limitations: Local full regression passes; no new live replay or claim of six-green CI, historical exception, final approval or merge.

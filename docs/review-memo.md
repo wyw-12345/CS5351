@@ -103,3 +103,25 @@ The previously missing 25-call historical files are now supplied with hashes, ex
 [PR #20](https://github.com/wyw-12345/CS5351/pull/20) contains the C/D-accepted replay from PR #17 at f1ea172. D approved a3063c3. The candidate preserves the same evidence blob, 9b36d685fe0fd7f62b60184aeede88076106d091. PR #20 still targets protected main and was awaiting all six required statuses when this integration was prepared. The release gate can read the reviewed replay only when the artifact is present at its trusted base.
 
 This integration also preserves C's entire added AI-use entry. Its multiline source field uses YAML block syntax so GitHub PR number signs are retained as text.
+
+## A reviewed HEAD fallback candidate — 2026-11-23
+
+PR21 approval is real: unohhh1 APPROVED `2c3bc8f530685deff4d4e982e88379eca6c88d53` at 2026-11-23T12:49:20Z, before implementation. The protected merge is `fbe7081122188f6bb4117da21af1a5127e20660e`; B's starting SHA `0a6417d344b51fc8c54e9739fdb199334880f786` also includes reviewed PR19 `8afdc5f`. Tests, plan and locators remain unchanged.
+
+The fallback breaks the missing-main-artifact dependency without relaxing protection: exact current independent PR20 approval plus immutable approved blob equality is required. BASE read/Git errors are not absence. Accepted outputs still undergo the existing strict-O2 and fingerprint checks. A read-only check using the real main SHA and actual GitHub proof returned passed=true for deepseek-flash; no model call occurred.
+
+The approved 13 tests and Linux's 84 offline tests pass. Full governance is 79 passed / 1 error: `StrictO2Tests.test_reviewed_baseline_rechecks_cases_instead_of_trusting_saved_metrics` mocks base_read but not the newly required Git presence lookup for its fictitious trusted-base. Do not weaken lookup or edit reviewed tests in this implementation. B/D should arrange an independently reviewed fixture-only adjustment, preserve its O2 assertions, and issue a protected start SHA. This candidate remains draft and is not regression-ready. All earlier memo records are retained; B must preserve #8's three historical records when integrating.
+
+## A PR23 regression follow-up — 2026-11-24
+
+The prior PR22 fixture blocker is resolved through D-approved tests-only PR23 (`deee8b6`, approval 2026-11-24T08:11:56Z) and protected merge `aeb4bfba9cfe90e4e185e450f6cfe8dce04cf048`. A merged that baseline into PR22 without changing runtime or PR21 tests. Full Linux regression now passes: 80 governance and 84 offline tests, no skips. Ruff, mypy and schema also pass. Both sides of the AI-log append conflict were retained. See `handoff/records/2026-11-24-A-PR23-regression-handoff.md`. B next integrates the approved fixture ancestry and implementation into PR8, keeps the separate review/blob provenance, and reruns six gates; D reviews the final exact SHA. Earlier memo entries record their historical state and are retained.
+
+## Test versions retained in the PR 8 integration
+
+| Scope | Exact approved head | Protected merge | Test Git blob |
+| --- | --- | --- | --- |
+| [#18 initial B approval API and O2 tests](https://github.com/wyw-12345/CS5351/pull/18) | 9da41cc | e4f36fe | 5a8a161c4bf4eb324f2d32ce3f397ea6851b4fbe |
+| [#21 A reviewed replay fallback tests](https://github.com/wyw-12345/CS5351/pull/21) | 2c3bc8f | fbe7081 | 773007ec77a05614a286e3c9041c172cd9d2d8fe |
+| [#23 B fixture-only correction to the O2 suite](https://github.com/wyw-12345/CS5351/pull/23) | deee8b6 | aeb4bfb | b7c88de4445df978388c7aa00d423a73363f43c7 |
+
+The final working O2 test file is the #23 blob. #18 remains the review of the earlier blob and its implementation scope. The #23 fixture approval was recorded separately after the A fallback implementation existed. The #21 fallback test, scope plan and locators are byte-identical to their protected merge. The #13 chronology finding and the early bootstrap documents remain in this memo.
