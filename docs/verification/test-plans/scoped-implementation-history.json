@@ -1,0 +1,22 @@
+{
+  "status": "proposed-awaiting-independent-review",
+  "implementation_paths": ["tools/gates.py"],
+  "requirement_ids": ["REQ-GOV-B01", "REQ-GOV-B05"],
+  "test_paths": ["test/governance/test_b_scoped_history.py"],
+  "test_locators": {
+    "REQ-GOV-B01": [
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_independently_approved_scopes_can_change_the_same_file",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_separately_approved_fixture_change_keeps_earlier_evidence",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_reviewed_path_does_not_authorize_a_later_unreviewed_commit",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_concurrent_code_and_test_with_no_prior_approval_are_blocked",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_unreviewed_edits_to_the_later_fixture_are_blocked"
+    ],
+    "REQ-GOV-B05": [
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_regression_history_uses_the_scope_that_introduced_the_test",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_separately_approved_fixture_change_keeps_earlier_evidence",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_concurrent_code_and_test_with_no_prior_approval_are_blocked",
+      "test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_unreviewed_edits_to_the_later_fixture_are_blocked"
+    ]
+  },
+  "rationale": "Use independent GitHub test approval evidence and the exact implementation commits for each scope. Verify all implementation changes, including later edits to the same path. A separately approved test-only correction preserves the older test evidence and binds the final test blob. Both history checks still reject mixed or unapproved history."
+}

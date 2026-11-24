@@ -191,6 +191,11 @@ REQ-COST-005:
   - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
 REQ-GOV-B01:
   tests:
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_independently_approved_scopes_can_change_the_same_file
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_separately_approved_fixture_change_keeps_earlier_evidence
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_reviewed_path_does_not_authorize_a_later_unreviewed_commit
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_concurrent_code_and_test_with_no_prior_approval_are_blocked
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_unreviewed_edits_to_the_later_fixture_are_blocked
   - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_merge_sha_from_current_api_works_without_fallback
   - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_omitted_sha_uses_matching_legacy_evidence
   - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_no_merge_sha_in_either_response_blocks
@@ -272,6 +277,10 @@ REQ-GOV-B04:
     evaluation need separate evidence.
 REQ-GOV-B05:
   tests:
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_regression_history_uses_the_scope_that_introduced_the_test
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_separately_approved_fixture_change_keeps_earlier_evidence
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_concurrent_code_and_test_with_no_prior_approval_are_blocked
+  - test/governance/test_b_scoped_history.py::ReviewedScopesTests.test_unreviewed_edits_to_the_later_fixture_are_blocked
   - test/governance/test_gates.py::GateTests.test_history_test_change_rejected
   - test/governance/test_gates.py::GateTests.test_empty_and_skipped_suites_rejected
   pending_evidence: Enable CI to run deterministic suites on each change and verify rejection of an unapproved baseline change.
