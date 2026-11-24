@@ -629,3 +629,15 @@
   - test/governance/test_b_gate_evidence.py
   - docs/ai-use-log.yaml
   - handoff/records/2026-11-23-B-strict-o2-fixture.md
+- id: AI-B-SCOPED-HISTORY-TESTS-20261124-001
+  date: '2026-11-24'
+  agent: Codex
+  purpose: Specify representative Git histories and fail-closed checks for independent per-scope approval.
+  human_review: Independent review is pending. This change proposes tests and scope before implementation.
+  evidence: handoff/records/2026-11-24-B-scoped-history-tests.md
+  files:
+  - test/governance/test_b_scoped_history.py
+  - docs/verification/test-map.yaml
+  - docs/verification/test-plans/scoped-implementation-history.json
+  - handoff/records/2026-11-24-B-scoped-history-tests.md
+  - docs/ai-use-log.yaml

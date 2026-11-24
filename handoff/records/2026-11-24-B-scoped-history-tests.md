@@ -1,0 +1,11 @@
+# Scoped history checker tests
+
+PR #8 at `2730816` selected the first CI implementation commit `8d51e2c` for the entire diff. Both history checks rejected a later test from #21. The protected #21 test merge `fbe7081` actually precedes its own implementation `6137806` and the approved test file is unchanged. #18 also has its own prior test approval. #23 is a separately reviewed fixture correction with a new blob. [PR 8 CI](https://github.com/wyw-12345/CS5351/actions/runs/45363806445/attempts/2)
+
+The fixtures run the public approval and history commands on disposable Git repositories and supply synthetic GitHub responses. They test multiple approved scopes touching the same file, a separately approved fixture correction, a later unreviewed edit to a previously approved code path, a mixed code-and-test commit and an edit to a previously approved test blob.
+
+On the current checker, six tests collect. Four fail for the expected gaps. The approval and regression history commands reject independently approved consecutive scopes. The approval command also rejects the separately approved fixture correction and wrongly passes a later unapproved edit to a previously approved code path. The two negative cases for mixed commits and unapproved fixture edits pass. Ruff and strict traceability validation pass.
+
+The proposed record names each scope's implementation commit IDs in addition to its planned paths. The checker must verify the independent test approval, protected merge, actual ancestry, test blobs and concrete changed paths. A later maintenance entry must resolve to its own independent tests-only PR and the correct original scope. It authenticates the new test blob while retaining the original blob at the implementation commit. The checker must cover all implementation changes and refuse inconsistent or incomplete evidence.
+
+These fixtures do not approve the existing #8 history, add an exception or change policy. The #13 sequence deviation remains recorded in [C's Section 10.2](https://github.com/wyw-12345/CS5351/pull/12#issuecomment-7101187875). Correcting the global comparison still leaves that genuine gap in the current release scope. Review this tests-only proposal independently before changing `tools/gates.py`.
