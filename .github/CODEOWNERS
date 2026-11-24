@@ -1,0 +1,20 @@
+# GradeAide code owners — safety-critical paths (D3/D7).
+# Changes to these paths require review by at least one listed owner.
+# NOTE: add the remaining teammates' GitHub usernames (C/A/B) once known.
+
+# Frozen calculator (REQ-GOV-E02) — any change needs ADR + independent human approval
+/src/score_calculator.py   @this-kong @unohhh1
+
+# Authoritative grade store + advisory boundary (REQ-INV-007, REQ-SEC-006)
+/src/grade_store.py        @this-kong @unohhh1
+/src/feedback_engine.py    @this-kong @unohhh1
+
+# Governance / permission / rules (E-owned, human-only)
+/AGENTS.md                 @this-kong
+/.opencode/                @this-kong
+/.agent/                   @this-kong
+
+# Verification snapshots + CI + gates (B-owned; add B's username when known)
+/docs/verification/        @unohhh1 @this-kong
+/.github/                  @unohhh1 @this-kong
+/tools/                    @unohhh1 @this-kong

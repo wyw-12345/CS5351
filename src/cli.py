@@ -13,7 +13,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from .contracts import ValidationError, canonical, digest, parse_json, read_text, text_value
-from .feedback_engine import Settings, evaluate
+from .contracts import Settings
+from scripts.advisory_worker import invoke_worker
 from .grade_store import GradeStore, approval_binding, sign_approval
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +38,7 @@ def settings_from_env() -> Settings:
             max_input_bytes=int(os.environ.get("GRADEAIDE_MAX_INPUT_BYTES", "12000")),
             price_source=required("PRICE_SOURCE"),
             thinking=os.environ.get("GRADEAIDE_THINKING") or None,
+            proxy_url=os.environ.get("GRADEAIDE_PROXY_URL") or None,
         )
     except (ValueError, OverflowError) as exc:
         raise ValidationError("invalid or missing GradeAide configuration") from exc
@@ -126,12 +128,9 @@ def main(argv: list[str] | None = None) -> int:
                 settings = Settings("http://127.0.0.1/unused", "synthetic-fixture", "unused", "0", "0", "0",
                                     price_source="synthetic fixture: no provider charge")
 
-                def fixture_transport(_: dict[str, Any], __: Settings) -> dict[str, Any]:
-                    return envelope
-
-                advice = evaluate(essay, rubric, prompt, settings, fixture_transport, mode="synthetic_fixture")
+                advice = invoke_worker(essay, rubric, prompt, settings, envelope)
             else:
-                advice = evaluate(essay, rubric, prompt, settings_from_env())
+                advice = invoke_worker(essay, rubric, prompt, settings_from_env())
             with GradeStore(args.db, trusted_keys=trusted_keys_from_env()) as store:
                 result = store.create(essay, rubric, advice, submission_id=args.submission_id)
         else:

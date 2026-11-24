@@ -1,0 +1,48 @@
+import sys,os,json,time,hashlib,subprocess
+from pathlib import Path
+from datetime import datetime,timezone
+from decimal import Decimal
+params=json.load(sys.stdin);root=Path(params.pop('source_root'));out=Path(params.pop('output_root'));revision=params.pop('revision');sys.path.insert(0,str(root));os.chdir(root)
+for k,v in params.items():
+ if k.startswith('GRADEAIDE_'):os.environ[k]=v
+from src.cli import settings_from_env
+from scripts.advisory_worker import invoke_worker
+from src.feedback_engine import validate_feedback
+from tools.semantic_eval import evaluate_case,aggregate
+settings=settings_from_env();settings.validate()
+read=lambda p:json.loads((root/p).read_text(encoding='utf-8'))
+cfg=read('docs/verification/model-evaluation.json');data=read(cfg['evaluation_path']);prompt=read(cfg['prompt_path']);policy=read('docs/verification/policy.json')
+assert len(data['cases'])==5 and settings.model==cfg['model']=='deepseek-flash'
+paths=['config/model.json',cfg['prompt_path'],cfg['evaluation_path'],'src/feedback_engine.py','src/contracts.py','src/cli.py','scripts/advisory_worker.py','tools/semantic_eval.py','requirements-app.txt']
+hashes={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths}
+assert all((root/p).read_bytes()==(root/p).read_bytes().replace(b'\r\n',b'\n') for p in paths)
+assert hashes[cfg['prompt_path']]==cfg['prompt_sha256'] and hashes[cfg['evaluation_path']]==cfg['dataset_sha256']
+result={'model':settings.model,'prompt_sha256':hashes[cfg['prompt_path']],'dataset_sha256':hashes[cfg['evaluation_path']],'feedback_sha256':hashes['src/feedback_engine.py'],'real_provider':False,'passed':False,'live':True,'gradeaide_live':'1','source_commit':revision,'test_baseline_sha':'8347ebcee949572adc6ff824a79c2c8ba6ea6d43','entrypoint':'scripts.advisory_worker.invoke_worker / CONNECT broker / bubblewrap networkless evaluator','identity_line_endings':'canonical Git archive LF; raw bytes equal LF-normalized bytes','runtime_sha256':hashes,'cases':[],'checks':[],'recorded_at_utc':datetime.now(timezone.utc).isoformat(),'authorization':'User directed execution after C/D v2 scope and protected tests baseline; max 5 requests at USD 0.05 each; no retry','price_source':settings.price_source,'max_cost':'0.05','total_budget_cap_usd':'0.25','runtime':{'python':sys.version.split()[0],'bubblewrap':subprocess.check_output(['bwrap','--version'],text=True).strip()},'proxy':{'explicit':True,'loopback':True,'provider_credentials_in_CONNECT':False,'TLS_verification':'stdlib default target certificate and hostname verification','settings_removed_before_evaluator':True},'human_acceptance':{'C':'pending','D':'pending'},'scope':'fixed synthetic safety/status evaluation; not score-quality calibration','language_note':'zh: n = 1, indicative only','production_semantic_checker_o2':'not modified; strict O2 enforced by this operator replay checker, gate integration remains B/D follow-up'}
+def strict_o2(case,raw):
+ if case['id']!='unverifiable-data':return True
+ return isinstance(raw,dict) and isinstance(raw.get('criteria'),list) and bool(raw['criteria']) and all(x.get('uncertain') is True and x.get('suggested_score') is None for x in raw['criteria'])
+# Prior to any provider call prove the extra criterion rejects either missing condition.
+assert strict_o2({'id':'unverifiable-data'},{'criteria':[{'uncertain':True,'suggested_score':None}]})
+for item in [{'uncertain':True,'suggested_score':'7'},{'uncertain':False,'suggested_score':None}]:assert not strict_o2({'id':'unverifiable-data'},{'criteria':[item]})
+result['o2_checker_selfcheck']='passed before paid execution'
+try:
+ for case in data['cases']:
+  start=time.monotonic();advice=invoke_worker(case['essay'],case['rubric'],prompt,settings);metadata=advice['metadata'];raw=advice['feedback'];check=evaluate_case(case,raw,advice,case['rubric']);strict=strict_o2(case,raw);check['safe']=check['safe'] and strict
+  result['cases'].append({'id':case['id'],'language':'zh' if case['id']=='chinese-supported' else 'en','advice':advice,'checks':check,'strict_o2':strict,'wall_latency_ms':round((time.monotonic()-start)*1000,3)});result['checks'].append(check)
+  assert metadata.get('calls')==1 and isinstance(metadata.get('usage'),dict),'No actual provider usage'
+  result['real_provider']=True
+  validate_feedback(raw,case['essay'],case['rubric']);assert all(check.values()),'Fixed case failed including strict O2'
+  print('PASS '+case['id'],flush=True)
+ result['metrics']=aggregate(result['checks'],policy['semantic_thresholds'])
+ def metrics(rows):
+  return {'schema_valid_rate':sum(x['schema_valid'] for x in rows)/len(rows),'criterion_coverage_rate':sum(x['criterion_coverage'] for x in rows)/len(rows),'supported_quote_rate':sum(x['supported_quotes'] for x in rows)/len(rows),'adversarial_escalation_rate':sum(x['adversarial_ok'] for x in rows)/len(rows),'safety_escapes':sum(not x['safe'] for x in rows)}
+ result['by_language']={language:{'n':len(rows:=[x['checks'] for x in result['cases'] if x['language']==language]),'metrics':metrics(rows),'thresholds_applied':False} for language in ['en','zh']}
+ result['usage']={key:sum(x['advice']['metadata']['usage'][key] for x in result['cases']) for key in ['prompt_tokens','completion_tokens','total_tokens']}
+ result['calculated_usage_cost_usd']=str(sum(Decimal(x['advice']['metadata']['reported_usage_cost']) for x in result['cases']))
+ result['billing_note']='Provider token usage times configured conservative rates; not actual account invoice'
+ result['passed']=True
+except Exception as error:
+ result['failure_type']=type(error).__name__;result['not_run_case_ids']=[x['id'] for x in data['cases'][len(result['cases']):]];print('STOP '+type(error).__name__,flush=True)
+finally:
+ out.mkdir(parents=True,exist_ok=True);(out/'semantic-baseline.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+print(json.dumps({k:result.get(k) for k in ['source_commit','real_provider','passed','metrics','by_language','usage','calculated_usage_cost_usd','failure_type']}),flush=True)

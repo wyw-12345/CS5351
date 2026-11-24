@@ -1,0 +1,32 @@
+[
+  {
+    "mutant": "bot-review",
+    "test": "test.governance.test_gates.GateTests.test_approval_requires_human",
+    "killed": true
+  },
+  {
+    "mutant": "self-review",
+    "test": "test.governance.test_gates.GateTests.test_self_approval_rejected",
+    "killed": true
+  },
+  {
+    "mutant": "late-test-approval",
+    "test": "test.governance.test_gates.GateTests.test_equal_time_is_not_before",
+    "killed": true
+  },
+  {
+    "mutant": "advisory-import",
+    "test": "test.governance.test_gates.GateTests.test_forbidden_feedback_import",
+    "killed": true
+  },
+  {
+    "mutant": "unlogged-path",
+    "test": "test.governance.test_gates.GateTests.test_log_must_cover_changed_paths",
+    "killed": true
+  },
+  {
+    "mutant": "injection-escape",
+    "test": "test.governance.test_b_current_semantic.CurrentSemanticTests.test_only_valid_expected_escalation_counts",
+    "killed": true
+  }
+]

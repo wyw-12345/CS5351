@@ -1,0 +1,10 @@
+{
+  "status": "example-only-not-an-approval",
+  "implementation_paths": ["src/score_calculator.py"],
+  "requirement_ids": ["REQ-INV-005"],
+  "test_paths": ["test/offline/test_calculator.py"],
+  "test_locators": {
+    "REQ-INV-005": ["test/offline/test_calculator.py::CalculatorTests.test_exact_half_cent_after_recurring_division"]
+  },
+  "rationale": "Replace this example with the actual changed tests and review it before implementation."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "approved",
+  "source_commit": "2e135bf1f931330723edb8bd1ee8c1c2f25bfab0",
+  "test_baseline_sha": "8347ebcee949572adc6ff824a79c2c8ba6ea6d43",
+  "model": "deepseek-flash",
+  "prompt_path": "prompts/prompt_v1.2.yaml",
+  "prompt_sha256": "f60a427951c9be559c316795f76481f246e7255a16f746ec1b1db3b638415369",
+  "evaluation_path": "test/live/fixed-cases.json",
+  "dataset_sha256": "67f89aaba09b30b9276ce941d9570b9a9c6be02695e68681e19b21677f1022ca",
+  "evaluation_approved": true,
+  "live": true,
+  "case_count": 5,
+  "required_environment": [
+    "GRADEAIDE_ENDPOINT",
+    "GRADEAIDE_MODEL",
+    "GRADEAIDE_API_KEY",
+    "GRADEAIDE_INPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_OUTPUT_PRICE_PER_MILLION",
+    "GRADEAIDE_MAX_COST",
+    "GRADEAIDE_PRICE_SOURCE"
+  ],
+  "provenance": "A executed five authorized deployed worker replays at 2e135bf. C and D accepted the recorded results in PR #17. CI rechecks the trusted saved case outputs with strict O2 and zero safety escapes. Chinese n=1 is indicative only."
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array", "minItems": 1,
+  "items": {
+    "type": "object", "additionalProperties": false,
+    "required": ["id", "type", "statement", "fit_criterion", "priority", "source", "tradeoff", "status"],
+    "properties": {
+      "id": {"type": "string", "pattern": "^REQ-[A-Z]+-[A-Z0-9]+$"},
+      "type": {"enum": ["functional", "invariant", "quality", "performance", "cost", "governance", "security"]},
+      "statement": {"type": "string", "minLength": 20},
+      "fit_criterion": {"type": "object", "additionalProperties": false, "required": ["metric", "threshold", "verification"], "properties": {"metric": {"type": "string", "minLength": 3}, "threshold": {"type": ["number", "string"]}, "verification": {"type": "string", "minLength": 5}}},
+      "priority": {"enum": ["Must", "Should", "Could", "Wont"]},
+      "source": {"type": "string", "minLength": 5},
+      "tradeoff": {"type": "string", "minLength": 5},
+      "status": {"const": "proposed"}
+    }
+  }
+}

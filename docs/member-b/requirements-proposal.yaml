@@ -1,0 +1,112 @@
+- id: REQ-INV-001
+  type: invariant
+  statement: Final persisted score equals the deterministic calculator result; model totals never override it.
+  fit_criterion: {metric: authority_escape_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_model_total_cannot_override'}
+  priority: Must
+  source: Group allocation sections 1 and 5; project specification safety boundary
+  tradeoff: Sacrifice model discretion for reproducible scores.
+  status: proposed
+- id: REQ-INV-002
+  type: invariant
+  statement: Missing, duplicate, unknown or uncertain criterion advice must escalate without a numeric final grade or persistence.
+  fit_criterion: {metric: unsafe_automatic_grade_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_advice_escalates'}
+  priority: Must
+  source: Group allocation safety boundary
+  tradeoff: More human review for zero silent default scores.
+  status: proposed
+- id: REQ-INV-003
+  type: invariant
+  statement: No grade is persisted without authentic human approval bound to the exact submission, rubric and advice.
+  fit_criterion: {metric: unauthorized_write_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_unapproved_write_is_rejected'}
+  priority: Must
+  source: Group allocation architecture grade-store boundary
+  tradeoff: Approval latency in exchange for accountable grade writes.
+  status: proposed
+- id: REQ-INV-004
+  type: invariant
+  statement: Reject nonfinite or boolean numbers, invalid weights, out-of-range scores and mismatched criteria before calculating or writing.
+  fit_criterion: {metric: accepted_invalid_numeric_input_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_invalid_numeric_inputs_rejected'}
+  priority: Must
+  source: B analysis of weighted score safety boundary
+  tradeoff: Strict validation instead of permissive coercion.
+  status: proposed
+- id: REQ-INV-005
+  type: invariant
+  statement: Scores are deterministic Decimal percentages rounded once to two decimal places using ROUND_HALF_UP.
+  fit_criterion: {metric: differing_results_for_identical_input_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_exact_weighted_score'}
+  priority: Must
+  source: B analysis of deterministic-authoritative requirement
+  tradeoff: Fixed arithmetic and rounding policy limits numeric flexibility.
+  status: proposed
+- id: REQ-INV-006
+  type: invariant
+  statement: Every persisted grade preserves advisory scores, authoritative score, rubric and essay digests and human reviewer identity in the same durable record.
+  fit_criterion: {metric: incomplete_audit_record_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources'}
+  priority: Must
+  source: Group allocation B direction and audit requirement
+  tradeoff: Additional storage with privacy-safe hashes rather than essay text.
+  status: proposed
+- id: REQ-INV-007
+  type: invariant
+  statement: The advisory feedback component has no grade-store write authority and cannot execute instructions embedded in essays or returned text.
+  fit_criterion: {metric: advisory_side_effect_or_injection_escape_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory'}
+  priority: Must
+  source: Group allocation AI read-only and no direct write contract
+  tradeoff: More orchestration code in exchange for restricted AI authority.
+  status: proposed
+- id: REQ-INV-008
+  type: invariant
+  statement: Retrying an approved identical submission is idempotent; conflicting content under the same submission ID is rejected without overwriting the original.
+  fit_criterion: {metric: duplicate_or_overwritten_grade_count, threshold: 0, verification: 'test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent'}
+  priority: Must
+  source: B analysis of audit consistency and retries
+  tradeoff: Explicit conflict handling instead of last-write-wins.
+  status: proposed
+- id: REQ-GOV-B01
+  type: governance
+  statement: Tests for implementation changes require verified independent human approval before implementation.
+  fit_criterion: {metric: unapproved_implementation_merges, threshold: 0, verification: test/governance/test_gates.py}
+  priority: Must
+  source: Project specification section 6 gate 1
+  tradeoff: Two PRs per feature add review effort.
+  status: proposed
+- id: REQ-GOV-B02
+  type: governance
+  statement: Every commit receives static checks; safety PRs also need contracts, permissions and an ADR with human review.
+  fit_criterion: {metric: unchecked_safety_change_merges, threshold: 0, verification: test/governance/test_gates.py}
+  priority: Must
+  source: Project specification section 6 gate 2
+  tradeoff: Additional CI time for safety-critical changes.
+  status: proposed
+- id: REQ-GOV-B03
+  type: governance
+  statement: Official requirements must validate against the official JSON schema and all fit criteria must map to tests.
+  fit_criterion: {metric: invalid_or_untraced_requirement_count, threshold: 0, verification: test/governance/test_gates.py}
+  priority: Must
+  source: Project specification D4 and gate 3
+  tradeoff: Requirement changes also require evidence updates.
+  status: proposed
+- id: REQ-GOV-B04
+  type: governance
+  statement: Changes to prompts, model settings or the feedback engine replay a fixed real-model evaluation before merge.
+  fit_criterion: {metric: below_threshold_semantic_merges, threshold: 0, verification: test/governance/test_semantic_eval.py}
+  priority: Must
+  source: Project specification section 6 gate 4
+  tradeoff: Evaluation consumes API budget.
+  status: proposed
+- id: REQ-GOV-B05
+  type: governance
+  statement: All previous deterministic test suites run on every change, and removed tests require a separate approved baseline change.
+  fit_criterion: {metric: regression_escape_count, threshold: 0, verification: test/governance/test_gates.py}
+  priority: Must
+  source: Project specification section 6 gate 5
+  tradeoff: Full suite execution increases CI time.
+  status: proposed
+- id: REQ-GOV-B06
+  type: governance
+  statement: Every code, prompt or gate change adds an AI-use log entry describing agent identity, exact changed paths and human review status.
+  fit_criterion: {metric: unlogged_change_merges, threshold: 0, verification: test/governance/test_gates.py}
+  priority: Must
+  source: Project specification section 6 gate 6
+  tradeoff: Mandatory audit maintenance per change.
+  status: proposed

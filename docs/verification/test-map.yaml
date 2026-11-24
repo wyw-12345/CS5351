@@ -1,6 +1,6 @@
-# Member B draft against A 10f5b8d. A locator is not a passing result.
-# Empty tests intentionally keep the strict gate incomplete until evidence exists.
-# negative marks linked negative cases; it does not claim a completed mutation campaign.
+# B CI candidate against main fab81cb. Locators are distinct from actual acceptance.
+# Empty locators intentionally block strict release checks.
+# negative identifies a negative test; mutation status is separate.
 REQ-FUNC-001:
   tests:
   - test/offline/test_calculator.py::CalculatorTests.test_invalid_rubric_rejected
@@ -113,11 +113,17 @@ REQ-INV-006:
   negative: true
 REQ-INV-007:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator
   - test/offline/test_authority_boundary.py::AuthorityTests.test_prompt_injection_stays_advisory
   - test/offline/test_boundaries.py::BoundaryTests.test_engine_has_no_environment_or_authority_import
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_normal_path_returns_advice_without_touching_store
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_advisory_process_cannot_write_grade_data
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_removing_the_process_boundary_fails
+  - test/offline/test_deployed_isolation.py::DeployedIsolationTests.test_worker_rejects_invalid_ipc_and_unsupported_platform
+  - test/governance/test_b_current_semantic.py::CurrentSemanticTests.test_only_valid_expected_escalation_counts
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
+  - test/governance/test_semantic_eval.py::SemanticTests.test_adversarial_non_escalation_fails
   negative: true
-  pending_evidence: Application runtime filesystem and outbound network isolation, plus the applicable mutation check, remain
-    with E/B.
 REQ-INV-008:
   tests:
   - test/offline/test_authority_boundary.py::AuthorityTests.test_retry_is_idempotent
@@ -127,6 +133,7 @@ REQ-INV-008:
 REQ-QUAL-001:
   tests:
   - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
 REQ-QUAL-002:
   tests:
   - test/offline/test_authority_boundary.py::AuthorityTests.test_audit_records_both_sources
@@ -154,14 +161,16 @@ REQ-PERF-002:
   - test/offline/test_http.py::HttpTests.test_slow_trickle_is_stopped_by_connected_deadline
   - test/offline/test_http.py::HttpTests.test_invalid_json_encoding_envelope_and_response_limit
 REQ-PERF-003:
-  tests: []
+  tests:
+  - test/live/test_performance.py::LivePerformanceTests.test_twenty_attempt_latency_target
   evidence:
   - evidence/live-results.json
   - scripts/evaluate_live.py
-  pending_evidence: Run the approved selected deployment on at least 20 attempts and retain latency and failure counts. Historical
-    live results are linked for context.
+  pending_evidence: The opt-in performance test is ready. Current deployment measurement still requires authorization; historical
+    figures are context.
 REQ-COST-001:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_never_retries_or_follows_redirects
   - test/offline/test_feedback.py::FeedbackTests.test_valid_feedback_and_request_contract
 REQ-COST-002:
   tests:
@@ -181,54 +190,135 @@ REQ-COST-005:
   - test/offline/test_calculator.py::CalculatorTests.test_file_bounds_encoding_and_essay
   - test/offline/test_feedback.py::FeedbackTests.test_input_and_monetary_budget_block_before_transport
 REQ-GOV-B01:
-  tests: []
+  tests:
+  - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_merge_sha_from_current_api_works_without_fallback
+  - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_omitted_sha_uses_matching_legacy_evidence
+  - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_no_merge_sha_in_either_response_blocks
+  - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_legacy_sha_for_different_reviewed_head_blocks
+  - test/governance/test_b_gate_evidence.py::ApprovalAPICompatibilityTests.test_recovered_sha_must_remain_a_git_ancestor
+  - test/governance/test_gates.py::GateTests.test_approval_requires_human
+  - test/governance/test_gates.py::GateTests.test_self_approval_rejected
+  - test/governance/test_gates.py::GateTests.test_stale_approval_rejected
+  - test/governance/test_gates.py::GateTests.test_dismissed_approval_rejected
+  - test/governance/test_gates.py::GateTests.test_changes_requested_supersedes
+  - test/governance/test_gates.py::GateTests.test_unlisted_reviewer_rejected
+  - test/governance/test_gates.py::GateTests.test_valid_prior_review
+  - test/governance/test_gates.py::GateTests.test_unrelated_prior_tests_cannot_approve_new_code
+  - test/governance/test_gates.py::GateTests.test_reviewed_scope_requires_related_trace
+  - test/governance/test_gates.py::GateTests.test_reviewed_scope_can_keep_historical_locators
+  - test/governance/test_gates.py::GateTests.test_approval_after_implementation_rejected
+  - test/governance/test_gates.py::GateTests.test_equal_time_is_not_before
+  - test/governance/test_gates.py::GateTests.test_unmerged_test_pr_rejected
+  - test/governance/test_gates.py::GateTests.test_test_pr_containing_code_rejected
+  - test/governance/test_b_protection_readback.py::ProtectionReadbackTests.test_tests_baseline_accepts_missing_status_checks
   pending_evidence: Install the approval gate and obtain a real independent review and ancestry evidence. This retrospective
     test proposal cannot authorize previous implementation.
 REQ-GOV-B02:
-  tests: []
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_script_and_dependency_manifests_are_implementation
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_public_api_reports_signatures_and_methods
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_public_api_changes_with_keyword_only_defaults
+  - test/governance/test_gates.py::GateTests.test_forbidden_feedback_import
+  - test/governance/test_gates.py::GateTests.test_calculator_network_import_rejected
+  - test/governance/test_gates.py::GateTests.test_protection_requires_six_gates
+  - test/governance/test_b_protection_readback.py::ProtectionReadbackTests.test_review_and_check_settings_must_match_readback
+  - test/governance/test_b_protection_readback.py::ProtectionReadbackTests.test_check_command_only_reads_server
   pending_evidence: Integrate static analysis and obtain ADR, API, permission and exact-head human reviews for the affected
     PR.
 REQ-GOV-B03:
   tests:
   - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_registry_schema_and_each_mapped_locator
-  pending_evidence: Exact links are validated locally; missing executable locators keep C strict completeness open.
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_requirement_change_requires_coevolution
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_registered_test_ids_reject_unknown_ids
+  - test/governance/test_gates.py::GateTests.test_missing_registry_fails
+  - test/governance/test_gates.py::GateTests.test_missing_upstream_fails
+  - test/governance/test_gates.py::GateTests.test_duplicate_requirement_ids_rejected
+  - test/governance/test_gates.py::GateTests.test_nonzero_invariant_threshold_rejected
+  - test/governance/test_gates.py::GateTests.test_official_registry_needs_seven_types
+  - test/governance/test_gates.py::GateTests.test_proposal_trace_targets_exist
+  pending_evidence: Schema validates locators. Runtime enforcement and real GitHub approval evidence are checked separately.
 REQ-GOV-B04:
   tests:
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_existing_base_has_priority_without_github_or_head
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_only_missing_base_accepts_exact_independently_reviewed_head
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_existing_invalid_base_never_falls_back
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_git_lookup_failure_is_not_treated_as_missing_file
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_head_blob_must_match_approved_immutable_file
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_review_must_be_current_independent_human_and_allowlisted
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_missing_or_withdrawn_approval_blocks
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_api_failure_or_nonfile_proof_blocks
+  - test/governance/test_a_reviewed_head_baseline.py::ReviewedHeadBaselineTests.test_external_repository_or_non_main_proposal_is_rejected
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_fallback_preserves_fixed_case_and_threshold_revalidation
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_stale_runtime_or_incomplete_acceptance_is_rejected
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_saved_success_metrics_cannot_hide_strict_o2_failure
+  - test/governance/test_a_reviewed_head_baseline.py::HeadReplayValidationTests.test_missing_duplicate_or_unavailable_provider_case_is_rejected
+  - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_accepts_both_authorized_reasons_with_both_fields
+  - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_escalation_with_a_score_is_unsafe
+  - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_unverifiable_null_score_without_uncertainty_is_unsafe
+  - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_other_escalation_retains_its_existing_contract
+  - test/governance/test_b_gate_evidence.py::StrictO2Tests.test_reviewed_baseline_rechecks_cases_instead_of_trusting_saved_metrics
   - test/live/test_live_api.py::LiveTests.test_fixed_synthetic_cases
+  - test/governance/test_b_current_semantic.py::CurrentSemanticTests.test_current_confidence_boundary
+  - test/governance/test_b_current_semantic.py::CurrentSemanticTests.test_only_valid_expected_escalation_counts
+  - test/governance/test_b_current_semantic.py::CurrentSemanticTests.test_unreviewed_configuration_cannot_reach_provider_settings
+  - test/governance/test_semantic_eval.py::SemanticTests.test_adversarial_non_escalation_fails
+  - test/governance/test_semantic_eval.py::SemanticTests.test_unsupported_quote_fails
+  - test/governance/test_semantic_eval.py::SemanticTests.test_missing_criterion_fails
+  - test/governance/test_semantic_eval.py::SemanticTests.test_empty_dataset_fails
+  - test/governance/test_semantic_eval.py::SemanticTests.test_valid_fixture_metrics
+  - test/governance/test_semantic_eval.py::SemanticTests.test_permissive_normalizer_cannot_hide_invalid_score
+  - test/governance/test_semantic_eval.py::SemanticTests.test_missing_safety_threshold_rejected
   pending_evidence: The existing live test covers a replay path. CI enforcement, current live outcomes and human semantic
     evaluation need separate evidence.
 REQ-GOV-B05:
-  tests: []
+  tests:
+  - test/governance/test_gates.py::GateTests.test_history_test_change_rejected
+  - test/governance/test_gates.py::GateTests.test_empty_and_skipped_suites_rejected
   pending_evidence: Enable CI to run deterministic suites on each change and verify rejection of an unapproved baseline change.
 REQ-GOV-B06:
-  tests: []
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_script_and_dependency_manifests_are_implementation
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_script_change_requires_ai_log_entry
+  - test/governance/test_gates.py::GateTests.test_log_whitespace_change_rejected
+  - test/governance/test_gates.py::GateTests.test_log_must_cover_changed_paths
+  - test/governance/test_gates.py::GateTests.test_log_actual_new_entry_passes
+  - test/governance/test_gates.py::GateTests.test_log_cannot_rewrite_history
   pending_evidence: Enable CI to reject missing path coverage and past log rewrites; retain real run evidence.
 REQ-GOV-E01:
-  tests: []
+  tests:
+  - test/governance/test_e_control_readback.py::EControlReadbackTests.test_protected_defaults_match_the_declared_permission_policy
   evidence:
   - .opencode/permissions.jsonc
-  pending_evidence: E must show that the installed OpenCode loads the configuration and enforces deny and ask cases.
+  - docs/member-e/runtime-and-tool-evidence.md
+  pending_evidence: Current rule precedence fails the static deny check. E must also verify actual configuration loading.
 REQ-GOV-E02:
-  tests: []
+  tests:
+  - test/governance/test_e_control_readback.py::EControlReadbackTests.test_frozen_calculator_has_owners_from_the_active_policy
   evidence:
   - .opencode/permissions.jsonc
+  - .github/CODEOWNERS
+  - docs/member-e/runtime-and-tool-evidence.md
   - docs/code-governance/structural-constraints.md
-  pending_evidence: Administrator must configure real CODEOWNERS/protection and demonstrate an exact-head frozen-calculator
-    review gate.
+  pending_evidence: Main is protected. Confirm exact-head code-owner enforcement and preserve admin readback evidence.
 REQ-GOV-E03:
-  tests: []
+  tests:
+  - test/governance/test_b_module_snapshot.py::ModuleSnapshotTests.test_architectural_elements_keep_their_current_module_and_public_surface
   evidence:
   - architecture-blueprint.md
   - docs/code-governance/structural-constraints.md
-  pending_evidence: Verify the approved API and architecture-to-module boundaries against the current implementation.
+  pending_evidence: Local module/snapshot test is ready; A/D and the independent reviewer still need to confirm the boundary
+    and sign-off.
 REQ-GOV-E04:
-  tests: []
+  tests:
+  - test/governance/test_e_control_readback.py::EControlReadbackTests.test_verify_role_denies_commands_outside_the_declared_surface
   evidence:
   - docs/code-governance/mcp-tool-manifest.md
   - .opencode/permissions.jsonc
-  pending_evidence: E must verify the runtime tool manifest and refusal of unlisted or role-inappropriate tools.
+  - docs/member-e/runtime-and-tool-evidence.md
+  pending_evidence: Declared verify-role rules currently fail the unlisted-command check. Runtime refusal still needs E evidence.
 REQ-GOV-C01:
-  tests: []
+  tests:
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_requirement_change_requires_coevolution
   evidence:
   - docs/req/requirement-id-map.yaml
   - docs/architecture/trace-matrix.md
@@ -236,6 +326,11 @@ REQ-GOV-C01:
 REQ-GOV-C02:
   tests:
   - test/governance/test_b_local_evidence.py::LocalEvidenceTests.test_registry_schema_and_each_mapped_locator
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_requirement_change_requires_coevolution
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_public_api_reports_signatures_and_methods
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_public_api_changes_with_keyword_only_defaults
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_registered_test_ids_reject_unknown_ids
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_registered_test_ids_reject_prefix_confusion
   pending_evidence: Current test locators and docstrings are checked locally. Extend registered-ID validation to the remaining
     active architecture, CI and review artifacts.
 REQ-SEC-002:
@@ -245,15 +340,23 @@ REQ-SEC-002:
   - test/offline/test_revision.py::ConfidenceTests.test_confidence_does_not_waive_other_rules
 REQ-SEC-004:
   tests:
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_explicit_loopback_proxy_tunnels_only_to_model_endpoint
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_unconfigured_transport_ignores_ambient_proxy
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_configuration_rejects_credentials_and_external_targets
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_tls_failure_is_not_bypassed_or_retried
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_cli_loads_only_explicit_proxy_configuration
+  - test/offline/test_broker_proxy.py::BrokerProxyTests.test_proxy_not_provisioned_to_networkless_evaluator
   - test/offline/test_boundaries.py::BoundaryTests.test_missing_env_fails_without_secret_output
   - test/offline/test_env_launcher.py::EnvTests.test_aliases_are_data_not_shell_commands
   - test/offline/test_env_launcher.py::EnvTests.test_thinking_is_explicit_and_validated
   - test/offline/test_feedback.py::FeedbackTests.test_settings_repr_does_not_disclose_key
+  - test/governance/test_b_integration_guards.py::BIntegrationGuardTests.test_secret_scan_does_not_echo_secret
   pending_evidence: Connect repository secret checks and verify the deployed credential boundary; local tests cover config
     and redaction behavior.
 REQ-SEC-006:
   tests:
   - test/offline/test_cli.py::CliTests.test_authority_modules_keep_io_boundaries
+  - test/governance/test_gates.py::GateTests.test_calculator_network_import_rejected
 REQ-SEC-007:
   tests:
   - test/offline/test_calculator.py::CalculatorTests.test_json_duplicates_and_nonfinite_rejected

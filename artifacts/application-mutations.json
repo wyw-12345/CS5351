@@ -1,0 +1,86 @@
+[
+  {
+    "mutant": "INV-007-deployed-advisory-isolation",
+    "status": "KILLED",
+    "test": "test.offline.test_deployed_isolation.DeployedIsolationTests.test_advisory_process_cannot_write_grade_data",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-001-recompute",
+    "status": "KILLED",
+    "test": "test.offline.test_store.StoreTests.test_payload_and_grade_corruption_are_detected",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-002-uncertainty",
+    "status": "KILLED",
+    "test": "test.offline.test_feedback.FeedbackTests.test_uncertain_null_is_an_escalation_not_a_zero_score",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-verified-audit-association",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_approved_score_and_private_audit",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-signature-verification",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-trusted-key-lookup",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_unknown_forged_and_missing_signature",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-003-approval-binding",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_rubric_version_and_reason_bound",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-004-range",
+    "status": "KILLED",
+    "test": "test.offline.test_calculator.CalculatorTests.test_invalid_scores_rejected",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-005-half-up",
+    "status": "KILLED",
+    "test": "test.offline.test_calculator.CalculatorTests.test_exact_half_cent_after_recurring_division",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-006-atomicity",
+    "status": "KILLED",
+    "test": "test.offline.test_store.StoreTests.test_failed_audit_insert_rolls_back_status_and_grade",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-007-static-import-boundary",
+    "status": "KILLED",
+    "test": "test.offline.test_boundaries.BoundaryTests.test_engine_has_no_environment_or_authority_import",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  },
+  {
+    "mutant": "INV-008-retry",
+    "status": "KILLED",
+    "test": "test.offline.test_revision.SignedStoreTests.test_idempotency_and_conflicts",
+    "baseline_passed": true,
+    "mutation_compiles": true
+  }
+]
