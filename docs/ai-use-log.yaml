@@ -619,3 +619,13 @@
   - docs/verification/test-plans/reviewed-head-baseline.json
   - handoff/records/2026-11-23-A-reviewed-head-baseline-tests.md
   - docs/ai-use-log.yaml
+- id: AI-B-STRICT-O2-FIXTURE-20261123-001
+  date: '2026-11-23'
+  agent: Codex
+  purpose: Correct the strict O2 saved-evidence unit fixture by simulating successful Git lookup of the synthetic base.
+  human_review: Independent review of the fixture-only revision pending. Existing #18 and #21 approvals are unchanged.
+  evidence: handoff/records/2026-11-23-B-strict-o2-fixture.md
+  files:
+  - test/governance/test_b_gate_evidence.py
+  - docs/ai-use-log.yaml
+  - handoff/records/2026-11-23-B-strict-o2-fixture.md
