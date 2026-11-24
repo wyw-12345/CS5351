@@ -35,3 +35,5 @@ supplies a nonexistent trusted-base revision without replacing Git lookup.
 The full governance suite therefore exposes a fixture compatibility gap.
 Keep reviewed tests unchanged; any fixture revision needs a separate
 reviewed tests-only change and protected-baseline handoff before integration.
+
+2026-11-24 follow-up: the fixture compatibility gap above was resolved by independently approved tests-only PR23 and protected merge aeb4bfba9cfe90e4e185e450f6cfe8dce04cf048. With that exact fixture merged, 80 governance and 84 offline tests pass. The loader, strict O2 assertions and all PR21 acceptance tests are unchanged. Independent implementation/final-PR review remains separate.

@@ -715,3 +715,18 @@
   - test/governance/test_b_gate_evidence.py
   - docs/ai-use-log.yaml
   - handoff/records/2026-11-23-B-strict-o2-fixture.md
+
+- id: AI-A-PR23-BASELINE-REGRESSION-20261124-001
+  date: '2026-11-24'
+  agent: Codex AI assistant
+  purpose: Merge the separately approved PR23 O2 fixture baseline into PR22 and rerun full governance and offline regression without changing the implementation or PR21 tests.
+  human_review: unohhh1 APPROVED PR23 deee8b6 at 2026-11-24T08:11:56Z; protected merge aeb4bfba9cfe90e4e185e450f6cfe8dce04cf048. Final implementation review remains pending.
+  evidence: handoff/records/2026-11-24-A-PR23-regression-handoff.md
+  files:
+  - test/governance/test_b_gate_evidence.py
+  - handoff/records/2026-11-23-B-strict-o2-fixture.md
+  - handoff/records/2026-11-24-A-PR23-regression-handoff.md
+  - docs/review-memo.md
+  - docs/architecture/adr/ADR-B0007-reviewed-head-semantic-baseline.md
+  - docs/ai-use-log.yaml
+  limitations: Local full regression passes; no new live replay or claim of six-green CI, historical exception, final approval or merge.
